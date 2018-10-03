@@ -95,7 +95,7 @@
     root: '/',
     scheme: 'Pisces',
     version: '5.1.4',
-    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -140,7 +140,7 @@
     
   
 
-  <div class="container sidebar-position-right 
+  <div class="container sidebar-position-left 
   page-home">
     <div class="headband"></div>
 	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
@@ -188,22 +188,12 @@
         </li>
       
         
-        <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            关于
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            标签
+            归档
           </a>
         </li>
       
@@ -218,32 +208,22 @@
         </li>
       
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            归档
+            标签
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404.html" rel="section">
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
             
               <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
             
-            公益404
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-something">
-          <a href="/something" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
-            
-            有料
+            关于
           </a>
         </li>
       
@@ -293,7 +273,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/03/1.Struts2——初始&&配置&&Action的创建方式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="RickYinPeng">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/We.jpg">
     </span>
@@ -383,63 +363,17 @@
       
         
           
-            <p>今天我们来看看Struts2框架，真是类，其实之前这个框架已经看过了，但是全部忘了，所以只能重新看，心累<br><br>Struts2框架的核心功能就是拦截器</p>
-<h3 id="Struts2概念"><a href="#Struts2概念" class="headerlink" title="Struts2概念:"></a>Struts2概念:</h3><p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>初始Struts2</strong>：</font><br><img src="http://img.027cgb.com/606599/Struts/3.png" alt="image"></p>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Struts2的使用优势</strong>：</font></p>
-<ul>
-<li>自动封装参数<br></li>
-<li>参数校验<br></li>
-<li>结果的处理(转发|重定向)<br></li>
-<li>国际化<br></li>
-<li>显示等待页面<br></li>
-<li>表单的防止重复提交<br></li>
-</ul>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Struts2的使用优势</strong>：</font><br></p>
-<ol>
-<li>struts2与struts1区别就是技术上没有什么关系.<br></li>
-<li>struts2的前身时webwork框架.<br></li>
-</ol>
-<h3 id="搭建Struts2框架"><a href="#搭建Struts2框架" class="headerlink" title="搭建Struts2框架:"></a>搭建Struts2框架:</h3><p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>1.导包</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/4.png" alt="image"></p>
-<blockquote>
-<p>注意：Struts2需要导入的包没有像hibernate那样明确标明出来，需要自己去找，然而在Struts2的压缩包里面的apps文件夹下有个struts2-blank.war包，表示人家的案例项目，并且这个项目是个空项目（blank嘛），将其放在tomcat的webapp目录下，运行tomcat，然后发现其被解压了，然后点进去，在WEB-INF下面找到lib包，里面就是我们需要导入的Struts2的包了。</p>
-</blockquote>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>2.书写Action类</strong>：</font><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">package yp.itcast.a_hello;</span><br><span class="line"></span><br><span class="line">public class HelloAction &#123;</span><br><span class="line">	public String hello()&#123;</span><br><span class="line">		System.out.println(&quot;hello&quot;);</span><br><span class="line">		return &quot;success&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>3.书写src/struts.xml</strong>：</font><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">   &lt;!DOCTYPE struts PUBLIC</span><br><span class="line">	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot;</span><br><span class="line">	&quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line">&lt;struts&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;package name=&quot;hello&quot; namespace=&quot;/hello&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">		&lt;action name=&quot;HelloAction&quot; class=&quot;yp.itcast.a_hello.HelloAction&quot; method=&quot;hello&quot;&gt;</span><br><span class="line">			&lt;result name=&quot;success&quot; type=&quot;dispatcher&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	&lt;/package&gt;</span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>4.将Struts2的核心过滤器配置到web.xml</strong>：</font><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;web-app xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://java.sun.com/xml/ns/javaee&quot; xsi:schemaLocation=&quot;http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd&quot; id=&quot;WebApp_ID&quot; version=&quot;2.5&quot;&gt;</span><br><span class="line">  &lt;display-name&gt;struts2_day01&lt;/display-name&gt;</span><br><span class="line">  &lt;filter&gt;</span><br><span class="line">  	&lt;filter-name&gt;struts&lt;/filter-name&gt;</span><br><span class="line">  	&lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  </span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">  	&lt;filter-name&gt;struts&lt;/filter-name&gt;</span><br><span class="line">  	&lt;url-pattern&gt;/*&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/filter-mapping&gt;</span><br><span class="line">  </span><br><span class="line">  &lt;welcome-file-list&gt;</span><br><span class="line">    &lt;welcome-file&gt;index.html&lt;/welcome-file&gt;</span><br><span class="line">    &lt;welcome-file&gt;index.htm&lt;/welcome-file&gt;</span><br><span class="line">    &lt;welcome-file&gt;index.jsp&lt;/welcome-file&gt;</span><br><span class="line">    &lt;welcome-file&gt;default.html&lt;/welcome-file&gt;</span><br><span class="line">    &lt;welcome-file&gt;default.htm&lt;/welcome-file&gt;</span><br><span class="line">    &lt;welcome-file&gt;default.jsp&lt;/welcome-file&gt;</span><br><span class="line">  &lt;/welcome-file-list&gt;</span><br><span class="line">&lt;/web-app&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>注意：在这里我们需要几下Struts2的核心过滤类org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter</p>
-</blockquote>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>5.测试</strong>：</font><br></p>
-<blockquote>
-<p><a href="http://localhost:8080/struts2_day01/hello/HelloAction" target="_blank" rel="noopener">http://localhost:8080/struts2_day01/hello/HelloAction</a></p>
-</blockquote>
-<h3 id="Struts2框架访问流程-amp-Struts2架构"><a href="#Struts2框架访问流程-amp-Struts2架构" class="headerlink" title="Struts2框架访问流程&amp;Struts2架构:"></a>Struts2框架访问流程&amp;Struts2架构:</h3><p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>1.访问流程</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/7.png" alt="image"></p>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>2.Struts2架构</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/8.png" alt="image"></p>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>3.Aop面向切面编程</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/9.png" alt="image"></p>
-<h3 id="Struts2配置详解"><a href="#Struts2配置详解" class="headerlink" title="Struts2配置详解:"></a>Struts2配置详解:</h3><p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>1.struts.xml配置</strong>：</font><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">   &lt;!DOCTYPE struts PUBLIC</span><br><span class="line">	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot;</span><br><span class="line">	&quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line">&lt;struts&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- </span><br><span class="line">		package:将Action配置封装，就是可以在package中配置很多Action. </span><br><span class="line">			name属性：给包起个名字，起到标识符的作用，随便起，但是不能与其他包名重复</span><br><span class="line">			namespace属性：给Action的访问路径中定义一个命名空间</span><br><span class="line">			extends属性：继承一个指定包</span><br><span class="line">			abstract=&quot;true&quot;:包是否为抽象；标识性属性（给开发人员看的）	，标识该包不能独立运行，专门被继承</span><br><span class="line">	--&gt; </span><br><span class="line">	</span><br><span class="line">	&lt;package name=&quot;hello&quot; namespace=&quot;/hello&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">	&lt;!-- </span><br><span class="line">		action元素：配置action类</span><br><span class="line">			name属性：决定了Action访问资源名</span><br><span class="line">			class属性：Action类的完整类名（反射）</span><br><span class="line">			method属性：指定调用Action中的哪个方法来处理请求</span><br><span class="line">	 --&gt;</span><br><span class="line">		&lt;action name=&quot;HelloAction&quot; class=&quot;yp.itcast.a_hello.HelloAction&quot; method=&quot;hello&quot;&gt;</span><br><span class="line">	&lt;!--  </span><br><span class="line">		result元素：结果配置</span><br><span class="line">			name属性：标识结果处理的名称，与Action方法的返回值对应</span><br><span class="line">			type属性：指定调用哪一个result类来处理结果，默认使用转发</span><br><span class="line">			标签体：填写页面的路径</span><br><span class="line">	 --&gt;</span><br><span class="line">			&lt;result name=&quot;success&quot; type=&quot;dispatcher&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	&lt;/package&gt;</span><br><span class="line">	&lt;!-- 引入其他struts配置文件 --&gt;</span><br><span class="line">	&lt;include file=&quot;yp/itcast/b_dynamic/struts.xml&quot;&gt;&lt;/include&gt;</span><br><span class="line">	&lt;include file=&quot;yp/itcast/c_default/struts.xml&quot;&gt;&lt;/include&gt;</span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>2.Struts2常量配置</strong>：</font><br></p>
-<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Struts2默认常量配置位置</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/6.png" alt="image"></p>
-<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>修改Struts2常量配置（方式先后也是加载顺序）</strong>：</font><br><br>方式①：src/strust.xml</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">   &lt;!DOCTYPE struts PUBLIC</span><br><span class="line">	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot;</span><br><span class="line">	&quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line">&lt;struts&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- i18n：国际化. 解决post提交乱码 --&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.i18n.encoding&quot; value=&quot;UTF-8&quot;&gt;&lt;/constant&gt;</span><br><span class="line"></span><br><span class="line">	&lt;!-- 指定访问action时的后缀名 --&gt;</span><br><span class="line">	&lt;!-- &lt;constant name=&quot;struts.action.extension&quot; value=&quot;do&quot;&gt;&lt;/constant&gt; --&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.action.extension&quot; value=&quot;action,,&quot;&gt;&lt;/constant&gt;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 指定struts2是否以开发模式运行</span><br><span class="line">			1：热加载主配置。（不需要重启服务器）</span><br><span class="line">			2:提供更多的错误信息输出，方便开发时的调试。		</span><br><span class="line">	 --&gt;</span><br><span class="line">	&lt;constant name=&quot;struts.devMode&quot; value=&quot;true&quot;&gt;&lt;/constant&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;package name=&quot;hello&quot; namespace=&quot;/hello&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">		&lt;action name=&quot;HelloAction&quot; class=&quot;yp.itcast.a_hello.HelloAction&quot; method=&quot;hello&quot;&gt;</span><br><span class="line">			&lt;result name=&quot;success&quot; type=&quot;dispatcher&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	&lt;/package&gt;</span><br><span class="line">	&lt;!-- 引入其他struts配置文件 --&gt;</span><br><span class="line">	&lt;include file=&quot;yp/itcast/b_dynamic/struts.xml&quot;&gt;&lt;/include&gt;</span><br><span class="line">	&lt;include file=&quot;yp/itcast/c_default/struts.xml&quot;&gt;&lt;/include&gt;</span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
-<p>方式②：在src下创建struts.properties文件<br>方式③：在项目的web.xml文件中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 配置常量的第三种方式（会覆盖） --&gt;</span><br><span class="line">&lt;context-param&gt;</span><br><span class="line">	&lt;param-name&gt;struts.i18n.encoding&lt;/param-name&gt;</span><br><span class="line">	&lt;param-value&gt;UTF-8&lt;/param-value&gt;</span><br><span class="line">&lt;/context-param&gt;</span><br></pre></td></tr></table></figure>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>3.Struts2进阶配置</strong>：</font><br></p>
-<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>动态方法调用</strong>：</font><br><br>方式①和②：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">   &lt;!DOCTYPE struts PUBLIC</span><br><span class="line">	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot;</span><br><span class="line">	&quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line">&lt;struts&gt;</span><br><span class="line">	&lt;!-- 第一种方法 --&gt;</span><br><span class="line">	&lt;!-- 配置动态方法调用是否开启常量 </span><br><span class="line">			默认是关闭的，需要开启</span><br><span class="line">	</span><br><span class="line">	&lt;constant name=&quot;struts.enable.DynamicMethodInvocation&quot; value=&quot;true&quot;&gt;&lt;/constant&gt;</span><br><span class="line">	&lt;package name=&quot;dynamic&quot; namespace=&quot;/dynamic&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;action name=&quot;Demo1Action&quot; class=&quot;yp.itcast.b_dynamic.Demo1Action&quot;&gt;</span><br><span class="line">			&lt;result name=&quot;success&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	&lt;/package&gt; --&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;!-- 动态方法调用第二种方法：通配符</span><br><span class="line">			使用&#123;1&#125;	取出第一个*号匹配的内容</span><br><span class="line">	</span><br><span class="line">	 --&gt;</span><br><span class="line">	&lt;package name=&quot;dynamic&quot; namespace=&quot;/dynamic&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">		</span><br><span class="line">		&lt;action name=&quot;Demo1Action_*&quot; class=&quot;yp.itcast.b_dynamic.Demo1Action&quot; method=&quot;&#123;1&#125;&quot;&gt;</span><br><span class="line">			&lt;result name=&quot;add&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">			&lt;result name=&quot;delete&quot;&gt;/index.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	&lt;/package&gt; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
-<p><font size="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>Struts中默认配置</strong>：</font><br></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">   &lt;!DOCTYPE struts PUBLIC</span><br><span class="line">	&quot;-//Apache Software Foundation//DTD Struts Configuration 2.3//EN&quot;</span><br><span class="line">	&quot;http://struts.apache.org/dtds/struts-2.3.dtd&quot;&gt;</span><br><span class="line">&lt;struts&gt;</span><br><span class="line">	</span><br><span class="line">	&lt;package name=&quot;default&quot; namespace=&quot;/default&quot; extends=&quot;struts-default&quot;&gt;</span><br><span class="line">		&lt;!-- 放在后面会报错 </span><br><span class="line">			找不到包下的action，会使用Demo2Action作为默认action处理请求</span><br><span class="line">		--&gt;</span><br><span class="line">		&lt;default-action-ref name=&quot;Demo2Action&quot;&gt;&lt;/default-action-ref&gt;</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		&lt;!-- method属性：execute（默认值） --&gt;</span><br><span class="line">		&lt;!-- result的name属性：success（默认值） --&gt;</span><br><span class="line">		&lt;!-- result的type属性：dispatcher转发（默认值）--&gt;</span><br><span class="line">		&lt;!-- class属性：com.opensymphony.xwork2.ActionSupport（默认值） --&gt;</span><br><span class="line">		&lt;action name=&quot;Demo2Action&quot;  method=&quot;execute&quot;&gt;</span><br><span class="line">			&lt;result&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">		&lt;/action&gt;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	&lt;/package&gt; </span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/struts&gt;</span><br></pre></td></tr></table></figure>
-<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>Struts2中Action类的书写方式</strong>：</font><br><br>方式①：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">package yp.itcast.d_api;</span><br><span class="line"></span><br><span class="line">//方式一：创建一个类，可以是POJO</span><br><span class="line">//POJO:不用继承任何父类，也不需要实现任何接口</span><br><span class="line">//使struts2框架的代码侵入性更低</span><br><span class="line">public class Demo3Action &#123;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>方式②：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package yp.itcast.d_api;</span><br><span class="line"></span><br><span class="line">import com.opensymphony.xwork2.Action;</span><br><span class="line"></span><br><span class="line">//方式二：实现一个接口Action</span><br><span class="line">// 里面有execute方法，提供action方法的规范</span><br><span class="line">// Action接口预置了一些字符串,可以在返回结果时使用</span><br><span class="line">public class Demo4Action implements Action &#123;</span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>方式③：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package yp.itcast.d_api;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">import com.opensymphony.xwork2.ActionSupport;</span><br><span class="line"></span><br><span class="line">//方式三：继承一个类，ActionSupport</span><br><span class="line">//帮我们实现了Action, Validateable, ValidationAware, TextProvider, LocaleProvider, Serializable</span><br><span class="line">//如果我们需要用到这些接口的实现时，不需要自己来实现了</span><br><span class="line"></span><br><span class="line">public class Demo5Action extends ActionSupport&#123;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-          
+          今天我们来看看Struts2框架，真是类，其实之前这个框架已经看过了，但是全部忘了，所以只能重新看，心累Struts2框架的核心功能就是拦截器
+Struts2概念:&nbsp;&nbsp;&nbsp;&nbsp;初始Struts2：
+&nbsp;&nbsp;&nbsp;&nbsp;Struts2的使
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/10/03/1.Struts2——初始&&配置&&Action的创建方式/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -489,7 +423,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/29/你好/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="RickYinPeng">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/We.jpg">
     </span>
@@ -579,9 +513,16 @@
       
         
           
-            <p>使用Hexo，是一件非常简单的事。测试文本</p>
+          使用Hexo，是一件非常简单的事。测试文本
 
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/29/你好/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -631,7 +572,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/18/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="RickYinPeng">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/We.jpg">
     </span>
@@ -699,17 +640,15 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/09/18/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -780,9 +719,9 @@
             
               <img class="site-author-image" itemprop="image"
                 src="/images/We.jpg"
-                alt="John Doe" />
+                alt="RickYinPeng" />
             
-              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -857,7 +796,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
 
   
 </div>
