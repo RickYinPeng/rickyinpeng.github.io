@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="前端框架," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="LayUI开始使用 国人开发的前端框架，好看，又好用   官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─laydate│  │  ├─layer│  │  └─layim│  └─layui.css //核心样式">
+<meta name="keywords" content="前端框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LayUI学习">
+<meta property="og:url" content="http://yoursite.com/2018/10/13/1.LayUI学习/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="LayUI开始使用 国人开发的前端框架，好看，又好用   官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─laydate│  │  ├─layer│  │  └─layim│  └─layui.css //核心样式">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/1.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/2.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/3.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/1_131838799324080000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/2_131838804579236250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/3_131838807394392500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/4.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/5.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/6.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/7.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/8.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/9.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/10.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/11.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/LayUI/12.png">
+<meta property="og:updated_time" content="2018-10-13T08:42:31.494Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LayUI学习">
+<meta name="twitter:description" content="LayUI开始使用 国人开发的前端框架，好看，又好用   官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─laydate│  │  ├─layer│  │  └─layim│  └─layui.css //核心样式">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/LayUI/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/13/1.LayUI学习/"/>
+
+
+
+
+
+  <title>LayUI学习 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/13/1.LayUI学习/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">LayUI学习</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-13T16:41:30+08:00">
+                2018-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/LayUI/" itemprop="url" rel="index">
+                    <span itemprop="name">LayUI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="LayUI开始使用"><a href="#LayUI开始使用" class="headerlink" title="LayUI开始使用"></a>LayUI开始使用</h2><blockquote>
+<p>国人开发的前端框架，好看，又好用</p>
+</blockquote>
+<ol>
+<li><a href="https://www.layui.com/" target="_blank" rel="noopener">官网</a>首页下载 layui 的最新版，下载后解压出来的目录如下：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">├─css //css目录</span><br><span class="line">│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）</span><br><span class="line">│  │  ├─laydate</span><br><span class="line">│  │  ├─layer</span><br><span class="line">│  │  └─layim</span><br><span class="line">│  └─layui.css //核心样式文件</span><br><span class="line">├─font  //字体图标目录</span><br><span class="line">├─images //图片资源目录（目前只有layim和编辑器用到的GIF表情）</span><br><span class="line">│─lay //模块核心目录</span><br><span class="line">│  └─modules //各模块组件</span><br><span class="line">│─layui.js //基础核心库</span><br><span class="line">└─layui.all.js //包含layui.js和所有模块的合并文件</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>从官方文档中复制的</p>
+</blockquote>
+<ol start="2">
+<li>快速上手:<br>获得 layui 后，将其完整地部署到你的项目目录（或静态资源服务器），你只需要引入下述两个文件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">./layui/css/layui.css</span><br><span class="line">./layui/layui.js //提示：如果是采用非模块化方式（最下面有讲解），此处可换成：./layui/layui.all.js</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>博主的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;!-- 你的HTML代码 --&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //一般直接写在一个js文件中</span><br><span class="line">    layui.use([&apos;layer&apos;, &apos;form&apos;], function()&#123;</span><br><span class="line">            var layer = layui.layer,form = layui.form;</span><br><span class="line"></span><br><span class="line">            layer.msg(&apos;Hello World&apos;);</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>注意：引入css外部样式是这样：<link rel="stylesheet" href="要引入的css样式">，并且前面那个rel=”stylesheet”不能少，不懂自行去百度</p>
+</blockquote>
+<p>可能有人注意到我在script中写了代码，当然这个不是我写的，是从人家官方文档中复制的，但同样能说明问题<br><br>layui是采用模块化的方式来构建的，也就是说我们在使用layui的时候需要什么模块就去加载什么模块就好了，上面这段代码就代表这我去加载了模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">layui.use([&apos;layer&apos;, &apos;form&apos;], function()&#123;</span><br><span class="line">        var layer = layui.layer,form = layui.form;</span><br><span class="line"></span><br><span class="line">        layer.msg(&apos;Hello World&apos;);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/1.png" alt="image"><br>加载所需模块：<br><br>方法：layui.use([mods], callback)<br><br>Layui的内置模块并非默认就加载的，他必须在你执行该方法后才会加载。另外请注意，mods里面必须是一个合法的模块名，不能包含目录。</p>
+<h2 id="图标使用"><a href="#图标使用" class="headerlink" title="图标使用"></a>图标使用</h2><blockquote>
+<p>可以看出我跳过了layui的栅格布局，因为这个它的用处不是很大，反正我觉得是这样，颜色也就不多说了，官方文档说的很清楚</p>
+</blockquote>
+<p>当下比较流行的就是使用文字的形式来显示一个图标，就像阿里巴巴那样，而layui也是这样<br><br>&emsp;&emsp;layui 的所有图标全部采用字体形式，取材于阿里巴巴矢量图标库（iconfont）。因此你可以把一个 icon 看作是一个普通的文字，这意味着你直接用 css 控制文字属性，如 color、font-size，就可以改变图标的颜色和大小。你可以通过 font-class 或 unicode 来定义不同的图标。<br></p>
+<font size="3">使用方式</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;i class=&quot;layui-icon layui-icon-face-smile&quot;&gt;&lt;/i&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/2.png" alt="image"><br>我们可以使用文字的样式来修饰它，比如大小和颜色，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;i class=&quot;layui-icon layui-icon-face-smile&quot; style=&quot;font-size: 55px;color: red&quot;&gt;&lt;/i&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/3.png" alt="image"></p>
+<h2 id="动画和按钮"><a href="#动画和按钮" class="headerlink" title="动画和按钮"></a>动画和按钮</h2><p>学过CSS的都知道我们可以使用CSS来实现很多动画的效果，那么LayUI给吗提供了一些动态效果，来供我们使用，那我们来看看如何使用好吗<br><br><strong><font size="3">动画使用方式</font></strong><br><br>动画的使用非常简单，直接对元素赋值动画特定的 class 类名即可。如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">其中 layui-anim 是必须的，后面跟着的即是不同的动画类</span><br><span class="line">&lt;div class=&quot;layui-anim layui-anim-up&quot;&gt;&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">循环动画，追加：layui-anim-loop</span><br><span class="line">&lt;div class=&quot;layui-anim layui-anim-up layui-anim-loop&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>来我们对我们之前的那个红色笑脸加一个动画：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;!--其中 layui-anim 是必须的，后面跟着的即是不同的动画类--&gt;</span><br><span class="line">&lt;i class=&quot;layui-icon layui-icon-face-smile layui-anim layui-anim-rotate layui-anim-loop&quot; style=&quot;font-size: 55px;color: red&quot;&gt;&lt;/i&gt;</span><br><span class="line">&lt;!--&lt;div class=&quot;layui-anim layui-anim-up&quot; style=&quot;color: #0C0C0C&quot;&gt;asdsa&lt;/div&gt;--&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/1_131838799324080000.png" alt="image"><br><strong><font size="3">按钮使用方式</font></strong><br><br>我们先复制官方文档的代码来看一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;button class=&quot;layui-btn&quot;&gt;一个标准的按钮&lt;/button&gt;</span><br><span class="line">&lt;a href=&quot;http://www.layui.com&quot; class=&quot;layui-btn&quot;&gt;一个可跳转的按钮&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/2_131838804579236250.png" alt="image"></p>
+<p>官方文档中还给我们提供了很多，注意，我们只需要改变class属性即可，不必去在乎标签是什么<br><br>还有按钮组：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;layui-btn-group&quot;&gt;</span><br><span class="line">  &lt;button class=&quot;layui-btn&quot;&gt;增加&lt;/button&gt;</span><br><span class="line">  &lt;button class=&quot;layui-btn&quot;&gt;编辑&lt;/button&gt;</span><br><span class="line">  &lt;button class=&quot;layui-btn&quot;&gt;删除&lt;/button&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/3_131838807394392500.png" alt="image"></p>
+<h2 id="表单和导航"><a href="#表单和导航" class="headerlink" title="表单和导航"></a>表单和导航</h2><p><strong><font size="3">表单使用方式</font></strong><br><br>复制文档代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;form class=&quot;layui-form&quot; action=&quot;&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;输入框&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;text&quot; name=&quot;title&quot; required  lay-verify=&quot;required&quot; placeholder=&quot;请输入标题&quot; autocomplete=&quot;off&quot; class=&quot;layui-input&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;密码框&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-inline&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;password&quot; name=&quot;password&quot; required lay-verify=&quot;required&quot; placeholder=&quot;请输入密码&quot; autocomplete=&quot;off&quot; class=&quot;layui-input&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div class=&quot;layui-form-mid layui-word-aux&quot;&gt;辅助文字&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;选择框&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;select name=&quot;city&quot; lay-verify=&quot;required&quot;&gt;</span><br><span class="line">                &lt;option value=&quot;&quot;&gt;&lt;/option&gt;</span><br><span class="line">                &lt;option value=&quot;0&quot;&gt;北京&lt;/option&gt;</span><br><span class="line">                &lt;option value=&quot;1&quot;&gt;上海&lt;/option&gt;</span><br><span class="line">                &lt;option value=&quot;2&quot;&gt;广州&lt;/option&gt;</span><br><span class="line">                &lt;option value=&quot;3&quot;&gt;深圳&lt;/option&gt;</span><br><span class="line">                &lt;option value=&quot;4&quot;&gt;杭州&lt;/option&gt;</span><br><span class="line">            &lt;/select&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;复选框&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;checkbox&quot; name=&quot;like[write]&quot; title=&quot;写作&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;checkbox&quot; name=&quot;like[read]&quot; title=&quot;阅读&quot; checked&gt;</span><br><span class="line">            &lt;input type=&quot;checkbox&quot; name=&quot;like[dai]&quot; title=&quot;发呆&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;开关&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;checkbox&quot; name=&quot;switch&quot; lay-skin=&quot;switch&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;单选框&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;radio&quot; name=&quot;sex&quot; value=&quot;男&quot; title=&quot;男&quot;&gt;</span><br><span class="line">            &lt;input type=&quot;radio&quot; name=&quot;sex&quot; value=&quot;女&quot; title=&quot;女&quot; checked&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item layui-form-text&quot;&gt;</span><br><span class="line">        &lt;label class=&quot;layui-form-label&quot;&gt;文本域&lt;/label&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;textarea name=&quot;desc&quot; placeholder=&quot;请输入内容&quot; class=&quot;layui-textarea&quot;&gt;&lt;/textarea&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    &lt;div class=&quot;layui-form-item&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;layui-input-block&quot;&gt;</span><br><span class="line">            &lt;button class=&quot;layui-btn&quot; lay-submit lay-filter=&quot;formDemo&quot;&gt;立即提交&lt;/button&gt;</span><br><span class="line">            &lt;button type=&quot;reset&quot; class=&quot;layui-btn layui-btn-primary&quot;&gt;重置&lt;/button&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //Demo</span><br><span class="line">    layui.use(&apos;form&apos;, function()&#123;</span><br><span class="line">        var form = layui.form;</span><br><span class="line"></span><br><span class="line">        //监听提交</span><br><span class="line">        form.on(&apos;submit(formDemo)&apos;,function(data)&#123;</span><br><span class="line">            layer.msg(JSON.stringify(data.field));</span><br><span class="line">            return false;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/4.png" alt="image"><br>有人就说，这个表单怎么提交呢？<br><br>这样提交：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line">    //Demo</span><br><span class="line">    layui.use(&apos;form&apos;, function()&#123;</span><br><span class="line">        var form = layui.form;</span><br><span class="line"></span><br><span class="line">        //监听提交</span><br><span class="line">        form.on(&apos;submit(formDemo)&apos;,function(data)&#123;</span><br><span class="line">            layer.msg(JSON.stringify(data.field));</span><br><span class="line">            return true;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>return true;</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;form class=&quot;layui-form&quot; action=&quot;/index.jsp&quot;&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在表单的action中写上提交的地址就ok了，简单吧！！！</p>
+</blockquote>
+<p><strong><font size="3">导航栏使用方式</font></strong><br><br>我们复制文档中的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;ul class=&quot;layui-nav&quot; lay-filter=&quot;&quot;&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;最新活动&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item layui-this&quot;&gt;&lt;a href=&quot;&quot;&gt;产品&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;大数据&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;</span><br><span class="line">        &lt;a href=&quot;javascript:;&quot;&gt;解决方案&lt;/a&gt;</span><br><span class="line">        &lt;dl class=&quot;layui-nav-child&quot;&gt; &lt;!-- 二级菜单 --&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;移动模块&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;后台模版&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;电商平台&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">        &lt;/dl&gt;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;社区&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //注意：导航 依赖 element 模块，否则无法进行功能性操作</span><br><span class="line">    layui.use(&apos;element&apos;, function()&#123;</span><br><span class="line">        var element = layui.element;</span><br><span class="line"></span><br><span class="line">        //…</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：我们需要加载element模块，还有一些其他导航我就不说了</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/LayUI/5.png" alt="image"><br><br>我们复制侧边导航栏的代码到我们的代码里面去：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;ul class=&quot;layui-nav&quot; lay-filter=&quot;&quot;&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;最新活动&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item layui-this&quot;&gt;&lt;a href=&quot;&quot;&gt;产品&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;大数据&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;</span><br><span class="line">        &lt;a href=&quot;javascript:;&quot;&gt;解决方案&lt;/a&gt;</span><br><span class="line">        &lt;dl class=&quot;layui-nav-child&quot;&gt; &lt;!-- 二级菜单 --&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;移动模块&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;后台模版&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;电商平台&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">        &lt;/dl&gt;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;社区&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">&lt;ul class=&quot;layui-nav layui-nav-tree&quot; lay-filter=&quot;test&quot;&gt;</span><br><span class="line">    &lt;!-- 侧边导航: &lt;ul class=&quot;layui-nav layui-nav-tree layui-nav-side&quot;&gt; --&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item layui-nav-itemed&quot;&gt;</span><br><span class="line">        &lt;a href=&quot;javascript:;&quot;&gt;默认展开&lt;/a&gt;</span><br><span class="line">        &lt;dl class=&quot;layui-nav-child&quot;&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;javascript:;&quot;&gt;选项1&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;javascript:;&quot;&gt;选项2&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;跳转&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">        &lt;/dl&gt;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;</span><br><span class="line">        &lt;a href=&quot;javascript:;&quot;&gt;解决方案&lt;/a&gt;</span><br><span class="line">        &lt;dl class=&quot;layui-nav-child&quot;&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;移动模块&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;后台模版&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">            &lt;dd&gt;&lt;a href=&quot;&quot;&gt;电商平台&lt;/a&gt;&lt;/dd&gt;</span><br><span class="line">        &lt;/dl&gt;</span><br><span class="line">    &lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;产品&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">    &lt;li class=&quot;layui-nav-item&quot;&gt;&lt;a href=&quot;&quot;&gt;大数据&lt;/a&gt;&lt;/li&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //注意：导航 依赖 element 模块，否则无法进行功能性操作</span><br><span class="line">    layui.use(&apos;element&apos;, function()&#123;</span><br><span class="line">        var element = layui.element;</span><br><span class="line"></span><br><span class="line">        //…</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>效果：<br><br><img src="http://img.027cgb.com/606599/LayUI/6.png" alt="image"></p>
+<h2 id="选项卡、进度条、表格"><a href="#选项卡、进度条、表格" class="headerlink" title="选项卡、进度条、表格"></a>选项卡、进度条、表格</h2><p><strong><font size="3">选项卡使用方式</font></strong><br><br>老方法，复制文档代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;开始使用&lt;/title&gt;</span><br><span class="line">    &lt;link rel=&quot;stylesheet&quot; href=&quot;layui/css/layui.css&quot;&gt;</span><br><span class="line">    &lt;script src=&quot;layui/layui.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class=&quot;layui-tab &quot;&gt;</span><br><span class="line">    &lt;ul class=&quot;layui-tab-title&quot;&gt;</span><br><span class="line">        &lt;li class=&quot;layui-this&quot;&gt;网站设置&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;用户管理&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;权限分配&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;商品管理&lt;/li&gt;</span><br><span class="line">        &lt;li&gt;订单管理&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">    &lt;div class=&quot;layui-tab-content&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;layui-tab-item layui-show&quot;&gt;内容1&lt;/div&gt;</span><br><span class="line">        &lt;div class=&quot;layui-tab-item&quot;&gt;内容2&lt;/div&gt;</span><br><span class="line">        &lt;div class=&quot;layui-tab-item&quot;&gt;内容3&lt;/div&gt;</span><br><span class="line">        &lt;div class=&quot;layui-tab-item&quot;&gt;内容4&lt;/div&gt;</span><br><span class="line">        &lt;div class=&quot;layui-tab-item&quot;&gt;内容5&lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //注意：选项卡 依赖 element 模块，否则无法进行功能性操作</span><br><span class="line">    layui.use(&apos;element&apos;, function()&#123;</span><br><span class="line">        var element = layui.element;</span><br><span class="line"></span><br><span class="line">        //…</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/7.png" alt="image"></p>
+<blockquote>
+<p>同样需要加载element模块，否则无法进行功能性操作</p>
+</blockquote>
+<p>当然还有其他一些Tabs的风格，我们只需要改变class的一些属性，再加一些属性即可改变风格：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;layui-tab layui-tab-brief&quot; lay-filter=&quot;docDemoTabBrief&quot;&gt;</span><br><span class="line">  &lt;ul class=&quot;layui-tab-title&quot;&gt;</span><br><span class="line">    &lt;li class=&quot;layui-this&quot;&gt;网站设置&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;用户管理&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;权限分配&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;商品管理&lt;/li&gt;</span><br><span class="line">    &lt;li&gt;订单管理&lt;/li&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">  &lt;div class=&quot;layui-tab-content&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/8.png" alt="image"><br><strong><font size="3">进度条使用方式</font></strong><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;layui-progress&quot;&gt;</span><br><span class="line">    &lt;div class=&quot;layui-progress-bar&quot; lay-percent=&quot;10%&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    //注意进度条依赖 element 模块，否则无法进行正常渲染和功能性操作</span><br><span class="line">    layui.use(&apos;element&apos;, function()&#123;</span><br><span class="line">        var element = layui.element;</span><br><span class="line">    &#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>这个没啥说的，大家可以看一下。<br><strong><font size="3">面板使用方式</font></strong><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class=&quot;layui-collapse&quot;&gt;</span><br><span class="line">  &lt;div class=&quot;layui-colla-item&quot;&gt;</span><br><span class="line">    &lt;h2 class=&quot;layui-colla-title&quot;&gt;杜甫&lt;/h2&gt;</span><br><span class="line">    &lt;div class=&quot;layui-colla-content layui-show&quot;&gt;内容区域&lt;/div&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div class=&quot;layui-colla-item&quot;&gt;</span><br><span class="line">    &lt;h2 class=&quot;layui-colla-title&quot;&gt;李清照&lt;/h2&gt;</span><br><span class="line">    &lt;div class=&quot;layui-colla-content layui-show&quot;&gt;内容区域&lt;/div&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">  &lt;div class=&quot;layui-colla-item&quot;&gt;</span><br><span class="line">    &lt;h2 class=&quot;layui-colla-title&quot;&gt;鲁迅&lt;/h2&gt;</span><br><span class="line">    &lt;div class=&quot;layui-colla-content layui-show&quot;&gt;内容区域&lt;/div&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"> </span><br><span class="line">&lt;script&gt;</span><br><span class="line">//注意：折叠面板 依赖 element 模块，否则无法进行功能性操作</span><br><span class="line">layui.use(&apos;element&apos;, function()&#123;</span><br><span class="line">  var element = layui.element;</span><br><span class="line">  </span><br><span class="line">  //…</span><br><span class="line">&#125;);</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/LayUI/9.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/LayUI/10.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/LayUI/11.png" alt="image"><br><br><strong><font size="3">表格使用方式</font></strong><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;table class=&quot;layui-table&quot; lay-skin=&quot;line&quot; lay-size=&quot;lg&quot;&gt;</span><br><span class="line">    &lt;colgroup&gt;</span><br><span class="line">        &lt;col width=&quot;150&quot;&gt;</span><br><span class="line">        &lt;col width=&quot;200&quot;&gt;</span><br><span class="line">        &lt;col&gt;</span><br><span class="line">    &lt;/colgroup&gt;</span><br><span class="line">    &lt;thead&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">        &lt;th&gt;昵称&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;加入时间&lt;/th&gt;</span><br><span class="line">        &lt;th&gt;签名&lt;/th&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">    &lt;/thead&gt;</span><br><span class="line">    &lt;tbody&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">        &lt;td&gt;贤心&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;2016-11-29&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;人生就像是一场修行&lt;/td&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">    &lt;tr&gt;</span><br><span class="line">        &lt;td&gt;许闲心&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;2016-11-28&lt;/td&gt;</span><br><span class="line">        &lt;td&gt;于千万人之中遇见你所遇见的人，于千万年之中，时间的无涯的荒野里…&lt;/td&gt;</span><br><span class="line">    &lt;/tr&gt;</span><br><span class="line">    &lt;/tbody&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个不需要去加载什么模块</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/LayUI/12.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端框架/" rel="tag"># 前端框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/13/11.旋转图像/" rel="next" title="LeetCode-48：旋转图像">
+                <i class="fa fa-chevron-left"></i> LeetCode-48：旋转图像
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#LayUI开始使用"><span class="nav-number">1.</span> <span class="nav-text">LayUI开始使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图标使用"><span class="nav-number">2.</span> <span class="nav-text">图标使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动画和按钮"><span class="nav-number">3.</span> <span class="nav-text">动画和按钮</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#表单和导航"><span class="nav-number">4.</span> <span class="nav-text">表单和导航</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选项卡、进度条、表格"><span class="nav-number">5.</span> <span class="nav-text">选项卡、进度条、表格</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
