@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="JavaSE," />
 
 
 
@@ -79,21 +79,28 @@
 
 
 
-<meta name="description" content="做法是维护两个指针，一个保留当前有效元素的长度，一个从前往后扫，然后跳过那些重复的元素。因为数组是有序的，所以重复元素一定相邻，不需要额外记录。时间复杂度是O(n)，空间复杂度O(1)。代码如下： 12345678910111213141516171819class Solution &amp;#123;    public int removeDuplicates(int[] nums) &amp;#123;">
-<meta name="keywords" content="算法">
+<meta name="description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
+<meta name="keywords" content="JavaSE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode-26：删除排序数组中的重复项">
-<meta property="og:url" content="http://yoursite.com/2018/10/03/1.删除排序数组中的重复项/index.html">
+<meta property="og:title" content="1.初识JavaSE">
+<meta property="og:url" content="http://yoursite.com/2018/10/15/1.初始JavaSE/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="做法是维护两个指针，一个保留当前有效元素的长度，一个从前往后扫，然后跳过那些重复的元素。因为数组是有序的，所以重复元素一定相邻，不需要额外记录。时间复杂度是O(n)，空间复杂度O(1)。代码如下： 12345678910111213141516171819class Solution &amp;#123;    public int removeDuplicates(int[] nums) &amp;#123;">
+<meta property="og:description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://img.027cgb.com/606599/LeetCode/%E5%9F%BA%E7%A1%80/1.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/LeetCode/%E5%9F%BA%E7%A1%80/2.png">
-<meta property="og:updated_time" content="2018-10-03T14:32:16.239Z">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9.png">
+<meta property="og:updated_time" content="2018-10-15T07:08:50.268Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode-26：删除排序数组中的重复项">
-<meta name="twitter:description" content="做法是维护两个指针，一个保留当前有效元素的长度，一个从前往后扫，然后跳过那些重复的元素。因为数组是有序的，所以重复元素一定相邻，不需要额外记录。时间复杂度是O(n)，空间复杂度O(1)。代码如下： 12345678910111213141516171819class Solution &amp;#123;    public int removeDuplicates(int[] nums) &amp;#123;">
-<meta name="twitter:image" content="http://img.027cgb.com/606599/LeetCode/%E5%9F%BA%E7%A1%80/1.png">
+<meta name="twitter:title" content="1.初识JavaSE">
+<meta name="twitter:description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png">
 
 
 
@@ -123,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/03/1.删除排序数组中的重复项/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/15/1.初始JavaSE/"/>
 
 
 
 
 
-  <title>LeetCode-26：删除排序数组中的重复项 | RickYinPeng's blog</title>
+  <title>1.初识JavaSE | RickYinPeng's blog</title>
   
 
 
@@ -277,7 +284,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/03/1.删除排序数组中的重复项/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/1.初始JavaSE/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -294,7 +301,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode-26：删除排序数组中的重复项</h1>
+          <h1 class="post-title" itemprop="name headline">1.初识JavaSE</h1>
         
 
         <div class="post-meta">
@@ -306,8 +313,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-03T22:27:08+08:00">
-                2018-10-03
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T15:06:44+08:00">
+                2018-10-15
               </time>
             
 
@@ -329,8 +336,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/LeetCode/" itemprop="url" rel="index">
-                    <span itemprop="name">LeetCode</span>
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
                   </a>
                 </span>
 
@@ -366,9 +373,52 @@
       
 
       
-        <p><img src="http://img.027cgb.com/606599/LeetCode/%E5%9F%BA%E7%A1%80/1.png" alt="image"><br><img src="http://img.027cgb.com/606599/LeetCode/%E5%9F%BA%E7%A1%80/2.png" alt="image"></p>
-<p>做法是维护两个指针，一个保留当前有效元素的长度，一个从前往后扫，然后跳过那些重复的元素。因为数组是有序的，所以重复元素一定相邻，不需要额外记录。时间复杂度是O(n)，空间复杂度O(1)。代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">    public int removeDuplicates(int[] nums) &#123;</span><br><span class="line">        if(nums==null || nums.length==0)&#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">        int index = 1;</span><br><span class="line">        for(int i = 1;i&lt;nums.length;i++)&#123;</span><br><span class="line">            </span><br><span class="line">            if(nums[i]!=nums[i-1])&#123;</span><br><span class="line">                </span><br><span class="line">                nums[index]=nums[i];</span><br><span class="line">                </span><br><span class="line">                index++;</span><br><span class="line">            &#125;                </span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        return index;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h3 id="Java应用程序的运行机制"><a href="#Java应用程序的运行机制" class="headerlink" title="Java应用程序的运行机制"></a>Java应用程序的运行机制</h3><p>计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png" alt="image"><br><br>之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2.png" alt="image"></p>
+<h3 id="JVM、JRE和JDK"><a href="#JVM、JRE和JDK" class="headerlink" title="JVM、JRE和JDK"></a>JVM、JRE和JDK</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4.png" alt="image"><br><br>他们三者的关系如下图<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6.png" alt="image"><br></p>
+<h3 id="配置Java运行环境"><a href="#配置Java运行环境" class="headerlink" title="配置Java运行环境"></a>配置Java运行环境</h3><p>这里我就不说了，大家自己百度，JDK环境变量配置等等。。。</p>
+<h3 id="Java跨平台原理"><a href="#Java跨平台原理" class="headerlink" title="Java跨平台原理"></a>Java跨平台原理</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7.png" alt="image"><br><br>C语言跨平台原理：<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8.png" alt="image"><br><br><strong>总结1</strong>：Java运行过程<br></p>
+<ul>
+<li>Java程序的运行分为两步：先编译再解释执行</li>
+<li>通过“编译器”将Java源程序编译成Java字节码文件（.class）(字节码文件采用结构中立的中间文件格式)</li>
+<li>通过不同的“虚拟机”将Java字节码文件解释为对应机器语言并执行<br></li>
+</ul>
+<p><strong>总结2</strong>：Java跨平台和C跨平台的区别<br></p>
+<ul>
+<li>Java：一次编译，到处运行 C：多次编译，到处运行</li>
+<li>在互联网情况下，平台各异，Java的跨平台更具有优势</li>
+<li>Java可以跨所有平台吗：要看有没有提供并安装相应的虚拟机</li>
+<li>Java的运行速度没有C语言快</li>
+<li>Java需要将class文件解释成机器码再执行；C执行执行机器码</li>
+</ul>
+<p><strong>总结3</strong>：字节码文件bytecode<br></p>
+<ul>
+<li>.class文件 二进制文件</li>
+<li>格式中立、平台无关的二进制文件</li>
+<li>是编译的产物，是解释的原料</li>
+</ul>
+<p><strong>总结4</strong>：Java虚拟机 JVM<br></p>
+<ul>
+<li>JVM是Java Virtual Machine（Java虚拟机）的缩写</li>
+<li>JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。</li>
+<li>JVM就是一个虚拟的用于执行bytecodes字节码的计算机</li>
+<li>Java虚拟机是Java最核心技术，也是跨平台的基础。</li>
+<li>Java语言使用Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。</li>
+<li>Java虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。这就是Java的能够“一次编译，到处运行”的原因</li>
+</ul>
+<h3 id="Java程序解析"><a href="#Java程序解析" class="headerlink" title="Java程序解析"></a>Java程序解析</h3><ul>
+<li>Java对大小写敏感，如果出现了大小写拼写错误，程序无法运行</li>
+<li>关键字public被称作访问修饰符（access modifier），用于控制程序的其它部分对这段代码的访问级别</li>
+<li>关键字class的意思是类。Java是面向对象的语言，所以代码必须位于类里面</li>
+<li><font size="3" color="red">一个源文件中至多只能声明一个public的类,也就是说源文件其他类不能声明为public</font>，其他类的个数不限，如果源文件中包含一个public类，源文件名必须和其中定义的public的类名相同，且以”.java”为扩展名</li>
+<li><font size="3" color="red">一个源文件可以包含多个类</font></li>
+<li>正确编译后的源文件，会得到相应的字节码文件，编译器为每个类生成独立的字节码文件，且将字节码文件自动命名为类的名字以”.class”为扩展名</li>
+<li><font size="3" color="red">main方法是Java应用程序的入口方法</font>，它有固定的书写格式</li>
+<li>程序中的全部内容都包含在类中，Java是一种面向对象的语言。</li>
+<li>public static void main(String[] args ) {…}</li>
+<li>在Java中，用花括号划分程序的各个部分，任何方法的代码都必须以“{”开始，以“}”结束， 由于编译器忽略空格，所以花括号风格不受限制</li>
+<li>Java中每个语句必须以封号结束，回车不是语句的结束标志，所以一个语句可以跨多行</li>
+</ul>
+<h3 id="最常用的DOC命令"><a href="#最常用的DOC命令" class="headerlink" title="最常用的DOC命令"></a>最常用的DOC命令</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9.png" alt="image"></p>
 
       
     </div>
@@ -386,7 +436,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
           
         </div>
       
@@ -399,8 +449,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/03/1.Struts2——初始&&配置&&Action的创建方式/" rel="next" title="一.Struts2——初始&&配置&&Action的创建方式">
-                <i class="fa fa-chevron-left"></i> 一.Struts2——初始&&配置&&Action的创建方式
+              <a href="/2018/10/14/12.反转字符串/" rel="next" title="LeetCode-344：反转字符串（没啥难度，不过有我的心事）">
+                <i class="fa fa-chevron-left"></i> LeetCode-344：反转字符串（没啥难度，不过有我的心事）
               </a>
             
           </div>
@@ -408,10 +458,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/" rel="prev" title="二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装">
-                二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -463,8 +509,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -544,6 +599,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java应用程序的运行机制"><span class="nav-number">1.</span> <span class="nav-text">Java应用程序的运行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM、JRE和JDK"><span class="nav-number">2.</span> <span class="nav-text">JVM、JRE和JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Java运行环境"><span class="nav-number">3.</span> <span class="nav-text">配置Java运行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java跨平台原理"><span class="nav-number">4.</span> <span class="nav-text">Java跨平台原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java程序解析"><span class="nav-number">5.</span> <span class="nav-text">Java程序解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最常用的DOC命令"><span class="nav-number">6.</span> <span class="nav-text">最常用的DOC命令</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
