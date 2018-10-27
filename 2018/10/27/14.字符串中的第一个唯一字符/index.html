@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JavaSE," />
+  <meta name="keywords" content="算法," />
 
 
 
@@ -79,20 +79,18 @@
 
 
 
-<meta name="description" content="注释为了方便程序的阅读，Java语言允许程序员在程序中写上一些说明性的文字，用来提高程序的可读性，这些文字性的说明就称为注释。 注释不会出现在字节码文件中，即Java编译器编译时会跳过注释语句。 在Java中根据注释的功能不同，主要分为单行注释、多行注释和文档注释。  单行注释:使用“//”开头，“//”后面的单行内容均为注释。 多行注释: 以”/  “开头以”/“结尾，在”/ “和”  /“之间">
-<meta name="keywords" content="JavaSE">
+<meta name="description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta name="keywords" content="算法">
 <meta property="og:type" content="article">
-<meta property="og:title" content="2.数据类型和运算符">
-<meta property="og:url" content="http://yoursite.com/2018/10/16/2.数据类型和运算符/index.html">
+<meta property="og:title" content="LeetCode-387：字符串中第一个唯一字符">
+<meta property="og:url" content="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="注释为了方便程序的阅读，Java语言允许程序员在程序中写上一些说明性的文字，用来提高程序的可读性，这些文字性的说明就称为注释。 注释不会出现在字节码文件中，即Java编译器编译时会跳过注释语句。 在Java中根据注释的功能不同，主要分为单行注释、多行注释和文档注释。  单行注释:使用“//”开头，“//”后面的单行内容均为注释。 多行注释: 以”/  “开头以”/“结尾，在”/ “和”  /“之间">
+<meta property="og:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131840693614531250.png">
-<meta property="og:updated_time" content="2018-10-16T00:14:39.824Z">
+<meta property="og:updated_time" content="2018-10-27T10:05:58.667Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="2.数据类型和运算符">
-<meta name="twitter:description" content="注释为了方便程序的阅读，Java语言允许程序员在程序中写上一些说明性的文字，用来提高程序的可读性，这些文字性的说明就称为注释。 注释不会出现在字节码文件中，即Java编译器编译时会跳过注释语句。 在Java中根据注释的功能不同，主要分为单行注释、多行注释和文档注释。  单行注释:使用“//”开头，“//”后面的单行内容均为注释。 多行注释: 以”/  “开头以”/“结尾，在”/ “和”  /“之间">
-<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131840693614531250.png">
+<meta name="twitter:title" content="LeetCode-387：字符串中第一个唯一字符">
+<meta name="twitter:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
 
 
 
@@ -122,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/16/2.数据类型和运算符/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/"/>
 
 
 
 
 
-  <title>2.数据类型和运算符 | RickYinPeng's blog</title>
+  <title>LeetCode-387：字符串中第一个唯一字符 | RickYinPeng's blog</title>
   
 
 
@@ -276,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/16/2.数据类型和运算符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -293,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">2.数据类型和运算符</h1>
+          <h1 class="post-title" itemprop="name headline">LeetCode-387：字符串中第一个唯一字符</h1>
         
 
         <div class="post-meta">
@@ -305,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-16T08:13:52+08:00">
-                2018-10-16
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T18:02:30+08:00">
+                2018-10-27
               </time>
             
 
@@ -328,8 +326,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">Java基础</span>
+                  <a href="/categories/LeetCode/" itemprop="url" rel="index">
+                    <span itemprop="name">LeetCode</span>
                   </a>
                 </span>
 
@@ -365,35 +363,15 @@
       
 
       
-        <h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>为了方便程序的阅读，Java语言允许程序员在程序中写上一些说明性的文字，用来提高程序的可读性，这些文字性的说明就称为注释。 注释不会出现在字节码文件中，即Java编译器编译时会跳过注释语句。 在Java中根据注释的功能不同，主要分为单行注释、多行注释和文档注释。<br></p>
-<ul>
-<li>单行注释:使用“//”开头，“//”后面的单行内容均为注释。</li>
-<li>多行注释: 以”/ <em> “开头以”</em>/“结尾，在”/ <em>“和” </em> /“之间的内容为注释，我们也可以使用多行注释作为行内注释。但是在使用时要注意，多行注释不能嵌套使用。</li>
-<li>文档注释：   以”/ *<em> “开头以” </em>/“结尾，注释中包含一些说明性的文字及一些JavaDoc标签(后期写项目时，可以生成项目的API)</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName TestComment</span><br><span class="line"> * @Description 我是文档注释</span><br><span class="line"> * @date 2018/10/15/17:03</span><br><span class="line"> */</span><br><span class="line">public class TestComment &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 文档注释</span><br><span class="line">     * @param args</span><br><span class="line">     */</span><br><span class="line">    //单行注释</span><br><span class="line">    public static void main(String[] args/*行内注释*/) &#123;</span><br><span class="line">        System.out.println(&quot;注释&quot;);</span><br><span class="line">        /*</span><br><span class="line">        我是多行注释</span><br><span class="line">         */</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="标识符"><a href="#标识符" class="headerlink" title="标识符"></a>标识符</h3><p>标识符是用来给变量、类、方法以及包进行命名的，如Welcome、main、System、age、name、gender等。标识符需要遵守一定的规则：<br></p>
-<ul>
-<li><font size="3" color="red">标识符必须以字母、下划线_、美元符号$开头。</font> </li>
-<li>标识符其它部分可以是字母、下划线“_”、美元符“$”和数字的任意组合。</li>
-<li>Java 标识符大小写敏感，且长度无限制。</li>
-<li>标识符不可以是Java的关键字。</li>
-</ul>
-<h4 id="标识符使用规范"><a href="#标识符使用规范" class="headerlink" title="标识符使用规范"></a>标识符使用规范</h4><ul>
-<li>表示类名的标识符：每个单词的首字母大写，如Man, GoodMan</li>
-<li>表示方法和变量的标识符：第一个单词小写，从第二个单词开始首字母大写，我们称之为“<font size="3" color="red">驼峰原则</font>”，如eat(), eatFood()</li>
-</ul>
-<p><font size="3" color="red">注意：Java不采用通常语言使用的ASCII字符集，而是采用Unicode这样标准的国际字符集。因此，这里字母的含义不仅仅是英文，还包括汉字等等。但是不建议大家使用汉字来定义标识符！</font></p>
-<blockquote>
-<p>我们前面不是说标识符的构成有字母，下划线，美元符，还有数字吗？这里的字母就是上面说的，包括汉字等！！！</p>
+        <blockquote>
+<p>本题为LeetCode中第387道题，较为简单</p>
 </blockquote>
-<p>如下合法的标识符:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">int  a = 3;</span><br><span class="line">int  _123 = 3;</span><br><span class="line">int  $12aa = 3;</span><br><span class="line">int  变量1 = 55;  //合法，但是不建议使用中文命名的标识符</span><br></pre></td></tr></table></figure></p>
-<p>不合法标识符：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int  1a = 3;   //不能用数字开头</span><br><span class="line">int  a# = 3;   //不能包含#这样的特殊字符</span><br><span class="line">int  int = 3;  //不能使用关键字</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Testdentifer</span><br><span class="line"> * @Description 标识符定义</span><br><span class="line"> * @date 2018/10/15/17:21</span><br><span class="line"> */</span><br><span class="line">public class Testdentifer &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int a123 = 1;</span><br><span class="line">//        int 123abc = 2;   //数字不能开头</span><br><span class="line">        int $a = 3;</span><br><span class="line">        int _abc = 4;</span><br><span class="line">//        int #abc = 5;</span><br><span class="line">        int 年龄 = 6;       //可以使用汉字但是不建议</span><br><span class="line">//        int class = 7;    //关键字不能作为标识符</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Java中的关键字-保留字"><a href="#Java中的关键字-保留字" class="headerlink" title="Java中的关键字/保留字"></a>Java中的关键字/保留字</h3><p> Java关键字是Java语言保留供内部使用的，如class用于定义类。 关键字也可以称为保留字，它们的意思是一样的，我们不能使用关键字作为变量名或方法名。<br><br> <img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131840693614531250.png" alt="image"><br></p>
-<blockquote>
-<p> 出于应试教育的惯性思维，很多新手很可能去背上面的单词，从实战思维出发，我们不需要刻意去记！随着学习的深入，自然就非常熟悉了。</p>
-</blockquote>
+<p>给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。<br></p>
+<p><strong>案例:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;leetcode&quot;</span><br><span class="line">返回 0.</span><br><span class="line"></span><br><span class="line">s = &quot;loveleetcode&quot;,</span><br><span class="line">返回 2.</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意事项：</strong> 您可以假定该字符串只包含小写字母。<br></p>
+<p>先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为有序，我们最先进去的字母就是最前面的字母),换成HashMap就不行，因为我们最终需要输出只出现一次的最早的字母，记住是最早出现且只出现了一次的字母，所以我们需要用LinkedHashMap来保证有序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName First_Unique_Character_in_a_String</span><br><span class="line"> * @Description LeetCode中第387道题</span><br><span class="line"> * @date 2018/10/27/17:36</span><br><span class="line"> *</span><br><span class="line"> * 题目名称：字符串中的第一个唯一字符</span><br><span class="line"> */</span><br><span class="line">public class First_Unique_Character_in_a_String &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;loveleetcode&quot;;</span><br><span class="line">        int i = firstUniqChar(s);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 博主的笨办法</span><br><span class="line">     * @param s</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static int firstUniqChar(String s) &#123;</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map = new LinkedHashMap&lt;&gt;();</span><br><span class="line">        for(int i = 0;i&lt;s.length();i++)&#123;</span><br><span class="line">            char index = s.charAt(i);</span><br><span class="line">            if(!map.containsKey(index))&#123;</span><br><span class="line">                map.put(index,1);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                map.put(index,map.get(index)+1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(Map.Entry&lt;Character,Integer&gt; entry: map.entrySet())&#123;</span><br><span class="line">            if(entry.getValue()==1)&#123;</span><br><span class="line">                Character key = entry.getKey();</span><br><span class="line">                int indexOf = s.indexOf(key);</span><br><span class="line">                return indexOf;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再来看看排行榜第一的大佬：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 这可能就是大佬吧，记下就行了</span><br><span class="line"> * @param s</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public static int firstUniqChar_2(String s)&#123;</span><br><span class="line">    int res = -1;</span><br><span class="line"></span><br><span class="line">    for(char ch=&apos;a&apos;; ch&lt;=&apos;z&apos;; ch++) &#123;</span><br><span class="line">        int index = s.indexOf(ch);</span><br><span class="line">        if(index != -1 &amp;&amp; index == s.lastIndexOf(ch)) &#123;</span><br><span class="line">            res = res == -1?index:Math.min(res, index);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -411,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
+            <a href="/tags/算法/" rel="tag"># 算法</a>
           
         </div>
       
@@ -424,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/15/1.初始JavaSE/" rel="next" title="1.初识JavaSE">
-                <i class="fa fa-chevron-left"></i> 1.初识JavaSE
+              <a href="/2018/10/27/2.2.3Java内存区域——堆，栈，方法区等/" rel="next" title="2.2.3——Java内存区域--堆、栈、方法区等">
+                <i class="fa fa-chevron-left"></i> 2.2.3——Java内存区域--堆、栈、方法区等
               </a>
             
           </div>
@@ -433,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/20/SSM框架搭建之坑/" rel="prev" title="SSM框架搭建之在classes中找不到spring等配置文件">
-                SSM框架搭建之在classes中找不到spring等配置文件 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -488,17 +462,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -578,22 +543,6 @@
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注释"><span class="nav-number">1.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#标识符"><span class="nav-number">2.</span> <span class="nav-text">标识符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标识符使用规范"><span class="nav-number">2.1.</span> <span class="nav-text">标识符使用规范</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java中的关键字-保留字"><span class="nav-number">3.</span> <span class="nav-text">Java中的关键字/保留字</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
