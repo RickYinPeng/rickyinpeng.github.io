@@ -79,28 +79,23 @@
 
 
 
-<meta name="description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
+<meta name="description" content="4.8this关键字对象创建的过程和this的本质构造方法是创建Java对象的重要途径，通过new关键字调用构造器时，构造器也确实返回该类的对象，但这个对象并不是完全由构造器负责创建。创建一个对象分为如下四步：  分配对象空间，并将对象成员变量初始化为0或空 执行属性值的显示初始化 执行构造方法 返回对象的地址给相关的变量  this的本质就是“创建好的对象的地址”! 由于在构造方法调用前，对象已">
 <meta name="keywords" content="JavaSE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="1.初识JavaSE">
-<meta property="og:url" content="http://yoursite.com/2018/10/15/1.初始JavaSE/index.html">
+<meta property="og:title" content="4.8this关键字_4.9static关键字_4.10静态初始化块">
+<meta property="og:url" content="http://yoursite.com/2018/11/07/4.8this关键字_4.9static关键字_4.10静态初始化块/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
+<meta property="og:description" content="4.8this关键字对象创建的过程和this的本质构造方法是创建Java对象的重要途径，通过new关键字调用构造器时，构造器也确实返回该类的对象，但这个对象并不是完全由构造器负责创建。创建一个对象分为如下四步：  分配对象空间，并将对象成员变量初始化为0或空 执行属性值的显示初始化 执行构造方法 返回对象的地址给相关的变量  this的本质就是“创建好的对象的地址”! 由于在构造方法调用前，对象已">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9.png">
-<meta property="og:updated_time" content="2018-10-15T07:08:50.268Z">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131860719438631250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131860719444100000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131860722369568750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131860735362537500.png">
+<meta property="og:updated_time" content="2018-11-07T14:17:20.272Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="1.初识JavaSE">
-<meta name="twitter:description" content="Java应用程序的运行机制计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。 JVM、JRE和J">
-<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png">
+<meta name="twitter:title" content="4.8this关键字_4.9static关键字_4.10静态初始化块">
+<meta name="twitter:description" content="4.8this关键字对象创建的过程和this的本质构造方法是创建Java对象的重要途径，通过new关键字调用构造器时，构造器也确实返回该类的对象，但这个对象并不是完全由构造器负责创建。创建一个对象分为如下四步：  分配对象空间，并将对象成员变量初始化为0或空 执行属性值的显示初始化 执行构造方法 返回对象的地址给相关的变量  this的本质就是“创建好的对象的地址”! 由于在构造方法调用前，对象已">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131860719438631250.png">
 
 
 
@@ -130,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/15/1.初始JavaSE/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/07/4.8this关键字_4.9static关键字_4.10静态初始化块/"/>
 
 
 
 
 
-  <title>1.初识JavaSE | RickYinPeng's blog</title>
+  <title>4.8this关键字_4.9static关键字_4.10静态初始化块 | RickYinPeng's blog</title>
   
 
 
@@ -284,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/1.初始JavaSE/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/07/4.8this关键字_4.9static关键字_4.10静态初始化块/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -301,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">1.初识JavaSE</h1>
+          <h1 class="post-title" itemprop="name headline">4.8this关键字_4.9static关键字_4.10静态初始化块</h1>
         
 
         <div class="post-meta">
@@ -313,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T15:06:44+08:00">
-                2018-10-15
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-07T22:16:22+08:00">
+                2018-11-07
               </time>
             
 
@@ -373,52 +368,53 @@
       
 
       
-        <h3 id="Java应用程序的运行机制"><a href="#Java应用程序的运行机制" class="headerlink" title="Java应用程序的运行机制"></a>Java应用程序的运行机制</h3><p>计算机高级语言的类型主要有编译型（C,C++）和解释型（PHP，javascript，Python），而Java语言是两种类型的结合，即Java在运行的过程中既有编译过程也有解释过程。<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1.png" alt="image"><br><br>之前说Java是安全的，为什么是安全的，就是它每次会在jre中有个字节码校验器，这个时候是jvm来帮我们和操作系统打交道的,实现跨平台的一个机制(Jre包含了JVM，)。<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2.png" alt="image"></p>
-<h3 id="JVM、JRE和JDK"><a href="#JVM、JRE和JDK" class="headerlink" title="JVM、JRE和JDK"></a>JVM、JRE和JDK</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4.png" alt="image"><br><br>他们三者的关系如下图<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6.png" alt="image"><br></p>
-<h3 id="配置Java运行环境"><a href="#配置Java运行环境" class="headerlink" title="配置Java运行环境"></a>配置Java运行环境</h3><p>这里我就不说了，大家自己百度，JDK环境变量配置等等。。。</p>
-<h3 id="Java跨平台原理"><a href="#Java跨平台原理" class="headerlink" title="Java跨平台原理"></a>Java跨平台原理</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7.png" alt="image"><br><br>C语言跨平台原理：<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8.png" alt="image"><br><br><strong>总结1</strong>：Java运行过程<br></p>
-<ul>
-<li>Java程序的运行分为两步：先编译再解释执行</li>
-<li>通过“编译器”将Java源程序编译成Java字节码文件（.class）(字节码文件采用结构中立的中间文件格式)</li>
-<li>通过不同的“虚拟机”将Java字节码文件解释为对应机器语言并执行<br></li>
-</ul>
-<p><strong>总结2</strong>：Java跨平台和C跨平台的区别<br></p>
-<ul>
-<li>Java：一次编译，到处运行 C：多次编译，到处运行</li>
-<li>在互联网情况下，平台各异，Java的跨平台更具有优势</li>
-<li>Java可以跨所有平台吗：要看有没有提供并安装相应的虚拟机</li>
-<li>Java的运行速度没有C语言快</li>
-<li>Java需要将class文件解释成机器码再执行；C执行执行机器码</li>
-</ul>
-<p><strong>总结3</strong>：字节码文件bytecode<br></p>
-<ul>
-<li>.class文件 二进制文件</li>
-<li>格式中立、平台无关的二进制文件</li>
-<li>是编译的产物，是解释的原料</li>
-</ul>
-<p><strong>总结4</strong>：Java虚拟机 JVM<br></p>
-<ul>
-<li>JVM是Java Virtual Machine（Java虚拟机）的缩写</li>
-<li>JVM是一种用于计算设备的规范，它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。</li>
-<li>JVM就是一个虚拟的用于执行bytecodes字节码的计算机</li>
-<li>Java虚拟机是Java最核心技术，也是跨平台的基础。</li>
-<li>Java语言使用Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。</li>
-<li>Java虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。这就是Java的能够“一次编译，到处运行”的原因</li>
-</ul>
-<h3 id="Java程序解析"><a href="#Java程序解析" class="headerlink" title="Java程序解析"></a>Java程序解析</h3><ul>
-<li>Java对大小写敏感，如果出现了大小写拼写错误，程序无法运行</li>
-<li>关键字public被称作访问修饰符（access modifier），用于控制程序的其它部分对这段代码的访问级别</li>
-<li>关键字class的意思是类。Java是面向对象的语言，所以代码必须位于类里面</li>
-<li><font size="3" color="red">一个源文件中至多只能声明一个public的类,也就是说源文件其他类不能声明为public</font>，其他类的个数不限，如果源文件中包含一个public类，源文件名必须和其中定义的public的类名相同，且以”.java”为扩展名</li>
-<li><font size="3" color="red">一个源文件可以包含多个类</font></li>
-<li>正确编译后的源文件，会得到相应的字节码文件，编译器为每个类生成独立的字节码文件，且将字节码文件自动命名为类的名字以”.class”为扩展名</li>
-<li><font size="3" color="red">main方法是Java应用程序的入口方法</font>，它有固定的书写格式</li>
-<li>程序中的全部内容都包含在类中，Java是一种面向对象的语言。</li>
-<li>public static void main(String[] args ) {…}</li>
-<li>在Java中，用花括号划分程序的各个部分，任何方法的代码都必须以“{”开始，以“}”结束， 由于编译器忽略空格，所以花括号风格不受限制</li>
-<li>Java中每个语句必须以封号结束，回车不是语句的结束标志，所以一个语句可以跨多行</li>
-</ul>
-<h3 id="最常用的DOC命令"><a href="#最常用的DOC命令" class="headerlink" title="最常用的DOC命令"></a>最常用的DOC命令</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9.png" alt="image"></p>
+        <h3 id="4-8this关键字"><a href="#4-8this关键字" class="headerlink" title="4.8this关键字"></a>4.8this关键字</h3><h4 id="对象创建的过程和this的本质"><a href="#对象创建的过程和this的本质" class="headerlink" title="对象创建的过程和this的本质"></a>对象创建的过程和this的本质</h4><p>构造方法是创建Java对象的重要途径，通过new关键字调用构造器时，构造器也确实返回该类的对象，但这个对象并不是完全由构造器负责创建。创建一个对象分为如下四步：</p>
+<ol>
+<li>分配对象空间，并将对象成员变量初始化为0或空</li>
+<li>执行属性值的显示初始化</li>
+<li>执行构造方法</li>
+<li>返回对象的地址给相关的变量</li>
+</ol>
+<p>this的本质就是“创建好的对象的地址”! 由于在构造方法调用前，对象已经创建。因此，在构造方法中也可以使用this代表“当前对象” 。</p>
+<p><strong>this最常的用法</strong>：</p>
+<ol>
+<li>在程序中产生二义性之处，应使用this来指明当前对象;普通方法中，this总是指向调用该方法的对象。构造方法中，this总是指向正要初始化的对象。</li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131860719438631250.png" alt="image"><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131860719444100000.png" alt="image"></p>
+<ol start="2">
+<li>使用this关键字调用重载的构造方法，避免相同的初始化代码。但只能在构造方法中用，并且必须位于构造方法的第一句。</li>
+</ol>
+<ol start="3">
+<li><font size="3" color="red">this不能用于static方法中。</font>
+
+</li>
+</ol>
+<h3 id="4-9-static-关键字"><a href="#4-9-static-关键字" class="headerlink" title="4.9 static 关键字"></a>4.9 static 关键字</h3><p>在类中，用static声明的成员变量为静态成员变量，也称为类变量。 类变量的生命周期和类相同，在整个应用程序执行期间都有效。它有如下特点：</p>
+<ol>
+<li>为该类的公用变量，属于类，被该类的所有实例共享，在类被载入时被显式初始化。</li>
+<li>对于该类的所有对象来说，static成员变量只有一份。被该类的所有对象共享!!</li>
+<li>一般用“类名.类属性/方法”来调用。(也可以通过对象引用或类名(不需要实例化)访问静态成员。)</li>
+<li>在static方法中不可直接访问非static的成员。</li>
+</ol>
+<h4 id="核心要点："><a href="#核心要点：" class="headerlink" title="核心要点："></a>核心要点：</h4><font size="3" color="red">static修饰的成员变量和方法，从属于类。</font>
+
+<font size="3" color="red">普通变量和方法从属于对象的。</font>
+
+<h4 id="static关键字的使用"><a href="#static关键字的使用" class="headerlink" title="static关键字的使用"></a>static关键字的使用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 测试static关键字的用法</span><br><span class="line"> * @author </span><br><span class="line"> *</span><br><span class="line"> */</span><br><span class="line">public class User2 &#123;</span><br><span class="line">    int id; // id</span><br><span class="line">    String name; // 账户名</span><br><span class="line">    String pwd; // 密码</span><br><span class="line">     </span><br><span class="line">    static String company = &quot;北京尚学堂&quot;; // 公司名称</span><br><span class="line">     </span><br><span class="line">     </span><br><span class="line">    public User2(int id, String name) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    public void login() &#123;</span><br><span class="line">        printCompany();</span><br><span class="line">        System.out.println(company); </span><br><span class="line">        System.out.println(&quot;登录：&quot; + name);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    public static void printCompany() &#123;</span><br><span class="line">//         login();//调用非静态成员，编译就会报错</span><br><span class="line">        System.out.println(company);</span><br><span class="line">    &#125;</span><br><span class="line">     </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        User2 u = new User2(101, &quot;高小七&quot;);</span><br><span class="line">        User2.printCompany();</span><br><span class="line">        User2.company = &quot;北京阿里爷爷&quot;;</span><br><span class="line">        User2.printCompany();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131860722369568750.png" alt="image"></p>
+<h3 id="4-10-静态初始化块"><a href="#4-10-静态初始化块" class="headerlink" title="4.10 静态初始化块"></a>4.10 静态初始化块</h3><p>构造方法用于对象的初始化!</p>
+<font size="3" color="red">静态初始化块用于类的初始化操作!在静态初始化块中不能直接访问非static成员。</font>
+
+<blockquote>
+<p>你想啊，static修饰的代码块啊，方法啊，变量啊都是随着类的加载而加载的，你的类加载的时候，那些普通的方法并没有加载，你想你能在static方法中调用普通方法吗？？（显然不行啊，因为那些非static修饰的方法还没有加载啊）这样理解就比较好一点了</p>
+</blockquote>
+<h4 id="注意事项："><a href="#注意事项：" class="headerlink" title="注意事项："></a>注意事项：</h4><p>静态初始化块执行顺序(学完继承再看这里)：</p>
+<ol>
+<li><p><font size="3" color="red">上溯到Object类，先执行Object的静态初始化块，再向下执行子类的静态初始化块，直到我们的类的静态初始化块为止。</font><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131860735362537500.png" alt="image"></p>
+</li>
+<li><p>构造方法执行顺序和上面顺序一样!!!(也就是说也是先上溯到顶层父类，执行完顶层父类的构造方法再向下执行直到当前类的构造方法)(这个先不急，先看看，学完继承就好多了)</p>
+</li>
+</ol>
 
       
     </div>
@@ -449,8 +445,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/14/12.反转字符串/" rel="next" title="LeetCode-344：反转字符串（没啥难度，不过有我的心事）">
-                <i class="fa fa-chevron-left"></i> LeetCode-344：反转字符串（没啥难度，不过有我的心事）
+              <a href="/2018/11/06/4.7垃圾回收机制(Garbage Collection)/" rel="next" title="4.7垃圾回收机制(Garbage Collection)">
+                <i class="fa fa-chevron-left"></i> 4.7垃圾回收机制(Garbage Collection)
               </a>
             
           </div>
@@ -458,10 +454,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/16/2.数据类型和运算符/" rel="prev" title="2.数据类型和运算符">
-                2.数据类型和运算符 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -613,7 +605,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java应用程序的运行机制"><span class="nav-number">1.</span> <span class="nav-text">Java应用程序的运行机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JVM、JRE和JDK"><span class="nav-number">2.</span> <span class="nav-text">JVM、JRE和JDK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置Java运行环境"><span class="nav-number">3.</span> <span class="nav-text">配置Java运行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java跨平台原理"><span class="nav-number">4.</span> <span class="nav-text">Java跨平台原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java程序解析"><span class="nav-number">5.</span> <span class="nav-text">Java程序解析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最常用的DOC命令"><span class="nav-number">6.</span> <span class="nav-text">最常用的DOC命令</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-8this关键字"><span class="nav-number">1.</span> <span class="nav-text">4.8this关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对象创建的过程和this的本质"><span class="nav-number">1.1.</span> <span class="nav-text">对象创建的过程和this的本质</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-9-static-关键字"><span class="nav-number">2.</span> <span class="nav-text">4.9 static 关键字</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#核心要点："><span class="nav-number">2.1.</span> <span class="nav-text">核心要点：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static关键字的使用"><span class="nav-number">2.2.</span> <span class="nav-text">static关键字的使用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-10-静态初始化块"><span class="nav-number">3.</span> <span class="nav-text">4.10 静态初始化块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意事项："><span class="nav-number">3.1.</span> <span class="nav-text">注意事项：</span></a></li></ol></li></ol></div>
             
 
           </div>
