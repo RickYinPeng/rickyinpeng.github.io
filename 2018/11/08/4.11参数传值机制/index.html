@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="JavaSE," />
 
 
 
@@ -79,18 +79,23 @@
 
 
 
-<meta name="description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
-<meta name="keywords" content="算法">
+<meta name="description" content="4.11 参数传值机制Java中，方法中所有参数都是“值传递”，也就是“传递的是值的副本”。 也就是说，我们得到的是“原参数的复印件，而不是原件”。因此，复印件改变不会影响原件。  基本数据类型参数的传值传递的是值的副本。 副本改变不会影响原件。 引用类型参数的传值传递的是值的副本。但是引用类型指的是“对象的地址”。因此，副本和原参数都指向了同一个“地址”，改变“副本指向地址对象的值，也意味着原参">
+<meta name="keywords" content="JavaSE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta property="og:url" content="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/index.html">
+<meta property="og:title" content="4.11参数传值机制(干货)">
+<meta property="og:url" content="http://yoursite.com/2018/11/08/4.11参数传值机制/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta property="og:description" content="4.11 参数传值机制Java中，方法中所有参数都是“值传递”，也就是“传递的是值的副本”。 也就是说，我们得到的是“原参数的复印件，而不是原件”。因此，复印件改变不会影响原件。  基本数据类型参数的传值传递的是值的副本。 副本改变不会影响原件。 引用类型参数的传值传递的是值的副本。但是引用类型指的是“对象的地址”。因此，副本和原参数都指向了同一个“地址”，改变“副本指向地址对象的值，也意味着原参">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-27T10:05:58.667Z">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131861485138312500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131861485142218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131861494478000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131861494481906250.png">
+<meta property="og:updated_time" content="2018-11-08T11:35:36.475Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta name="twitter:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta name="twitter:title" content="4.11参数传值机制(干货)">
+<meta name="twitter:description" content="4.11 参数传值机制Java中，方法中所有参数都是“值传递”，也就是“传递的是值的副本”。 也就是说，我们得到的是“原参数的复印件，而不是原件”。因此，复印件改变不会影响原件。  基本数据类型参数的传值传递的是值的副本。 副本改变不会影响原件。 引用类型参数的传值传递的是值的副本。但是引用类型指的是“对象的地址”。因此，副本和原参数都指向了同一个“地址”，改变“副本指向地址对象的值，也意味着原参">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131861485138312500.png">
 
 
 
@@ -120,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/11/08/4.11参数传值机制/"/>
 
 
 
 
 
-  <title>LeetCode-387：字符串中第一个唯一字符 | RickYinPeng's blog</title>
+  <title>4.11参数传值机制(干货) | RickYinPeng's blog</title>
   
 
 
@@ -274,7 +279,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/08/4.11参数传值机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -291,7 +296,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode-387：字符串中第一个唯一字符</h1>
+          <h1 class="post-title" itemprop="name headline">4.11参数传值机制(干货)</h1>
         
 
         <div class="post-meta">
@@ -303,8 +308,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T18:02:30+08:00">
-                2018-10-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-08T19:34:29+08:00">
+                2018-11-08
               </time>
             
 
@@ -326,8 +331,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/LeetCode/" itemprop="url" rel="index">
-                    <span itemprop="name">LeetCode</span>
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
                   </a>
                 </span>
 
@@ -363,15 +368,15 @@
       
 
       
-        <blockquote>
-<p>本题为LeetCode中第387道题，较为简单</p>
-</blockquote>
-<p>给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。<br></p>
-<p><strong>案例:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;leetcode&quot;</span><br><span class="line">返回 0.</span><br><span class="line"></span><br><span class="line">s = &quot;loveleetcode&quot;,</span><br><span class="line">返回 2.</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意事项：</strong> 您可以假定该字符串只包含小写字母。<br></p>
-<p>先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为有序，我们最先进去的字母就是最前面的字母),换成HashMap就不行，因为我们最终需要输出只出现一次的最早的字母，记住是最早出现且只出现了一次的字母，所以我们需要用LinkedHashMap来保证有序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName First_Unique_Character_in_a_String</span><br><span class="line"> * @Description LeetCode中第387道题</span><br><span class="line"> * @date 2018/10/27/17:36</span><br><span class="line"> *</span><br><span class="line"> * 题目名称：字符串中的第一个唯一字符</span><br><span class="line"> */</span><br><span class="line">public class First_Unique_Character_in_a_String &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;loveleetcode&quot;;</span><br><span class="line">        int i = firstUniqChar(s);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 博主的笨办法</span><br><span class="line">     * @param s</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static int firstUniqChar(String s) &#123;</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map = new LinkedHashMap&lt;&gt;();</span><br><span class="line">        for(int i = 0;i&lt;s.length();i++)&#123;</span><br><span class="line">            char index = s.charAt(i);</span><br><span class="line">            if(!map.containsKey(index))&#123;</span><br><span class="line">                map.put(index,1);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                map.put(index,map.get(index)+1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(Map.Entry&lt;Character,Integer&gt; entry: map.entrySet())&#123;</span><br><span class="line">            if(entry.getValue()==1)&#123;</span><br><span class="line">                Character key = entry.getKey();</span><br><span class="line">                int indexOf = s.indexOf(key);</span><br><span class="line">                return indexOf;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再来看看排行榜第一的大佬：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 这可能就是大佬吧，记下就行了</span><br><span class="line"> * @param s</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public static int firstUniqChar_2(String s)&#123;</span><br><span class="line">    int res = -1;</span><br><span class="line"></span><br><span class="line">    for(char ch=&apos;a&apos;; ch&lt;=&apos;z&apos;; ch++) &#123;</span><br><span class="line">        int index = s.indexOf(ch);</span><br><span class="line">        if(index != -1 &amp;&amp; index == s.lastIndexOf(ch)) &#123;</span><br><span class="line">            res = res == -1?index:Math.min(res, index);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h3 id="4-11-参数传值机制"><a href="#4-11-参数传值机制" class="headerlink" title="4.11 参数传值机制"></a>4.11 参数传值机制</h3><font size="3" color="orange">Java中，方法中所有参数都是“值传递”，也就是“传递的是值的副本”。 也就是说，我们得到的是“原参数的复印件，而不是原件”。因此，复印件改变不会影响原件。</font>
+
+<h4 id="基本数据类型参数的传值"><a href="#基本数据类型参数的传值" class="headerlink" title="基本数据类型参数的传值"></a>基本数据类型参数的传值</h4><p>传递的是值的<font size="3" color="red">副本</font>。 副本改变不会影响原件。</p>
+<h4 id="引用类型参数的传值"><a href="#引用类型参数的传值" class="headerlink" title="引用类型参数的传值"></a>引用类型参数的传值</h4><p>传递的是值的副本。但是引用类型指的是“对象的地址”。因此，<font size="3" color="red">副本和原参数都指向了同一个“地址”，改变“副本指向地址对象的值，也意味着原参数指向对象的值也发生了改变”。</font></p>
+<h4 id="下面我来看一组实例："><a href="#下面我来看一组实例：" class="headerlink" title="下面我来看一组实例："></a>下面我来看一组实例：</h4><p>先写一个User对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class User&#123;</span><br><span class="line">    int id;</span><br><span class="line">    String name;</span><br><span class="line">    String pwd;</span><br><span class="line"></span><br><span class="line">    //无参构造</span><br><span class="line">    public User() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //带两个参数的构造</span><br><span class="line">    public User(int id, String name) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void testParameterTransfer01(User u)&#123;</span><br><span class="line">        u.name=&quot;风清扬&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void testparametertransfer02(User u)&#123;</span><br><span class="line">        u = new User(200,&quot;东方不败&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在写一个测试值传递的类(里面掉了user的方法)：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Y_01_测试值传递 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        User user = new User(100,&quot;张三丰&quot;);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line"></span><br><span class="line">        user.testParameterTransfer01(user);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line"></span><br><span class="line">        user.testparametertransfer02(user);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们来分析一下：<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131861485138312500.png" alt="image"><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131861485142218750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131861494478000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131861494481906250.png" alt="image"></p>
 
       
     </div>
@@ -389,7 +394,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
           
         </div>
       
@@ -402,8 +407,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/27/2.2.3Java内存区域——堆，栈，方法区等/" rel="next" title="2.2.3——Java内存区域--堆、栈、方法区等">
-                <i class="fa fa-chevron-left"></i> 2.2.3——Java内存区域--堆、栈、方法区等
+              <a href="/2018/11/08/17.最长公共前缀/" rel="next" title="LeetCode-14：最长公共前缀">
+                <i class="fa fa-chevron-left"></i> LeetCode-14：最长公共前缀
               </a>
             
           </div>
@@ -411,10 +416,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/28/NoSql/" rel="prev" title="NoSQL概述">
-                NoSQL概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -466,8 +467,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -547,6 +557,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-11-参数传值机制"><span class="nav-number">1.</span> <span class="nav-text">4.11 参数传值机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本数据类型参数的传值"><span class="nav-number">1.1.</span> <span class="nav-text">基本数据类型参数的传值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#引用类型参数的传值"><span class="nav-number">1.2.</span> <span class="nav-text">引用类型参数的传值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#下面我来看一组实例："><span class="nav-number">1.3.</span> <span class="nav-text">下面我来看一组实例：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
