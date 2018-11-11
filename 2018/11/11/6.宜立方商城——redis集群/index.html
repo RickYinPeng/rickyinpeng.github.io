@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.课程计划1234561、首页轮播图展示(已经完成)2、Redis服务器搭建3、向业务逻辑中添加缓存。4、使用redis做缓存5、缓存同步。6、Solr服务器安装 2.Redis集群的搭建2.1.redis-cluster架构图&amp;emsp;(redis官方给出的集群方案) redis-cluster投票:容错  架构细节: 所有的redis节点彼此互联(PING-PONG机制),内部使用二进制协">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="6.宜立方商城——redis集群">
+<meta property="og:url" content="http://yoursite.com/2018/11/11/6.宜立方商城——redis集群/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="1.课程计划1234561、首页轮播图展示(已经完成)2、Redis服务器搭建3、向业务逻辑中添加缓存。4、使用redis做缓存5、缓存同步。6、Solr服务器安装 2.Redis集群的搭建2.1.redis-cluster架构图&amp;emsp;(redis官方给出的集群方案) redis-cluster投票:容错  架构细节: 所有的redis节点彼此互联(PING-PONG机制),内部使用二进制协">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131863118326125000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131863118889406250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131863120127218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131863132439250000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131863132441750000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131863132444562500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131863132448000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131863132452062500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131863132454718750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131863132459562500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131863132462375000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131863330641593750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131863330645812500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131863330648000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131863330650500000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131863330653625000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131863330657218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131863330659875000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131863330662531250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131863330664875000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131863330667218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131863330669875000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131863330672531250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131863330674562500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131863330677687500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131863330679875000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131863952552687500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131863952555343750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131863952558312500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131863952561750000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131863952564250000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131863952566906250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131863952569250000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131863952571593750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131863952574562500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131863952576593750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131863952581125000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131863952583000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131863952586593750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131863952588781250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131863952591281250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131863952594093750.png">
+<meta property="og:updated_time" content="2018-11-11T07:43:44.527Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="6.宜立方商城——redis集群">
+<meta name="twitter:description" content="1.课程计划1234561、首页轮播图展示(已经完成)2、Redis服务器搭建3、向业务逻辑中添加缓存。4、使用redis做缓存5、缓存同步。6、Solr服务器安装 2.Redis集群的搭建2.1.redis-cluster架构图&amp;emsp;(redis官方给出的集群方案) redis-cluster投票:容错  架构细节: 所有的redis节点彼此互联(PING-PONG机制),内部使用二进制协">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131863118326125000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/11/6.宜立方商城——redis集群/"/>
+
+
+
+
+
+  <title>6.宜立方商城——redis集群 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/11/6.宜立方商城——redis集群/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">6.宜立方商城——redis集群</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-11T15:42:37+08:00">
+                2018-11-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/项目/" itemprop="url" rel="index">
+                    <span itemprop="name">项目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="1-课程计划"><a href="#1-课程计划" class="headerlink" title="1.课程计划"></a>1.课程计划</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、首页轮播图展示(已经完成)</span><br><span class="line">2、Redis服务器搭建</span><br><span class="line">3、向业务逻辑中添加缓存。</span><br><span class="line">4、使用redis做缓存</span><br><span class="line">5、缓存同步。</span><br><span class="line">6、Solr服务器安装</span><br></pre></td></tr></table></figure>
+<h3 id="2-Redis集群的搭建"><a href="#2-Redis集群的搭建" class="headerlink" title="2.Redis集群的搭建"></a>2.Redis集群的搭建</h3><h4 id="2-1-redis-cluster架构图-emsp-redis官方给出的集群方案"><a href="#2-1-redis-cluster架构图-emsp-redis官方给出的集群方案" class="headerlink" title="2.1.redis-cluster架构图&emsp;(redis官方给出的集群方案)"></a>2.1.redis-cluster架构图&emsp;(redis官方给出的集群方案)</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131863118326125000.png" alt="image"></p>
+<p><strong>redis-cluster投票:容错</strong></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131863118889406250.png" alt="image"></p>
+<h4 id="架构细节"><a href="#架构细节" class="headerlink" title="架构细节:"></a>架构细节:</h4><ol>
+<li>所有的redis节点彼此互联(PING-PONG机制),内部使用二进制协议优化传输速度和带宽.</li>
+<li>节点的fail是通过集群中超过半数的节点检测失效时才生效.</li>
+<li>客户端与redis节点直连,不需要中间proxy层.客户端不需要连接集群所有节点,连接集群中任何一个可用节点即可</li>
+<li>redis-cluster把所有的物理节点映射到[0-16383]slot上,cluster 负责维护node<->slot<->value</-></-></li>
+</ol>
+<blockquote>
+<p>Redis 集群中内置了 16384 个哈希槽，当需要在 Redis 集群中放置一个 key-value 时，redis 先对 key 使用 crc16 算法算出一个结果，然后把结果对 16384 求余数，这样每个 key 都会对应一个编号在 0-16383 之间的哈希槽，redis 会根据节点数量大致均等的将哈希槽映射到不同的节点</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131863120127218750.png" alt="image"></p>
+<h4 id="5-2Redis集群的搭建"><a href="#5-2Redis集群的搭建" class="headerlink" title="5.2Redis集群的搭建"></a>5.2Redis集群的搭建</h4><p>Redis集群中至少应该有三个节点。要保证集群的高可用，需要每个节点有一个备份机。<br>Redis集群至少需要6台服务器。<br><br>搭建伪分布式。可以使用一台虚拟机运行6个redis实例。需要修改redis的端口号7001-7006</p>
+<h4 id="5-3搭建步骤"><a href="#5-3搭建步骤" class="headerlink" title="5.3搭建步骤"></a>5.3搭建步骤</h4><p>需要6台redis服务器。搭建伪分布式。<br><br>需要6个redis实例。<br><br>需要运行在不同的端口7001-7006<br></p>
+<p><strong><font size="3">第一步</font></strong>：创建redis-cluster目录，并修改配置文件，删除无用文件<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131863132439250000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131863132441750000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131863132444562500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131863132448000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131863132452062500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131863132454718750.png" alt="image"></p>
+<p><strong><font size="3">第二步</font></strong>：复制实例（6个）<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131863132459562500.png" alt="image"></p>
+<p><strong><font size="3">第三步</font></strong>：修改六个实例的端口号<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131863132462375000.png" alt="image"></p>
+<p><strong><font size="3">第四步</font></strong>：写批处理文件</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131863330641593750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131863330645812500.png" alt="image"></p>
+<p><strong><font size="3">第五步</font></strong>：修改批处理文件的权限</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131863330648000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131863330650500000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131863330653625000.png" alt="image"></p>
+<p><strong><font size="3">第六步</font></strong>：运行批处理文件</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131863330657218750.png" alt="image"></p>
+<p><strong><font size="3">第七步</font></strong>：拷贝redis集群所用的工具</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131863330659875000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131863330662531250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131863330664875000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131863330667218750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131863330669875000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131863330672531250.png" alt="image"></p>
+<p><strong><font size="3">第八步</font></strong>：安装ruby的运行环境</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131863330674562500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131863330677687500.png" alt="image"></p>
+<p><strong><font size="3">第九步</font></strong>：导入ruby所用的一个第三方类库</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131863330679875000.png" alt="image"></p>
+<p><strong><font size="3">第十步</font></strong>：安装这个类库</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28.png" alt="image"></p>
+<p><strong><font size="3">第十一步</font></strong>：运行redis-trib.rb这个工具（用来构建redis集群）</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32.png" alt="image"></p>
+<p><strong>恭喜你！！！搭建成功！！！！</strong></p>
+<h3 id="3-Jedis"><a href="#3-Jedis" class="headerlink" title="3.Jedis"></a>3.Jedis</h3><p>需要把jedis依赖的jar包添加到工程中。Maven工程中需要把jedis的坐标添加到依赖。</p>
+<p>推荐添加到服务层。E3-content-Service工程中。</p>
+<h4 id="3-1连接单机版"><a href="#3-1连接单机版" class="headerlink" title="3.1连接单机版"></a>3.1连接单机版</h4><p>第一步：创建一个Jedis对象。需要指定服务端的ip及端口。<br><br>第二步：使用Jedis对象操作数据库，每个redis命令对应一个方法。<br><br>第三步：打印结果。<br><br>第四步：关闭Jedis<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testJedis() throws Exception&#123;</span><br><span class="line">    //创建一个连接jedis对象，参数：host、port</span><br><span class="line">    Jedis jedis = new Jedis(&quot;192.168.25.128&quot;,6379);</span><br><span class="line">    //直接使用jedis操作redis，所有jedis的命令都对应一个方法</span><br><span class="line">    jedis.set(&quot;test123&quot;,&quot;my first jedis test&quot;);</span><br><span class="line">    String test123 = jedis.get(&quot;test123&quot;);</span><br><span class="line">    System.out.println(test123);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    //关闭连接</span><br><span class="line">    jedis.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-2连接单机版使用连接池"><a href="#3-2连接单机版使用连接池" class="headerlink" title="3.2连接单机版使用连接池"></a>3.2连接单机版使用连接池</h4><p>第一步：创建一个JedisPool对象。需要指定服务端的ip及端口。<br><br>第二步：从JedisPool中获得Jedis对象。<br><br>第三步：使用Jedis操作redis服务器。<br><br>第四步：操作完毕后关闭jedis对象，连接池回收资源。<br><br>第五步：关闭JedisPool对象。<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">    public void testJedisPool()&#123;</span><br><span class="line">        //创建一个连接池，两个参数host、port</span><br><span class="line">        JedisPool jedisPool = new JedisPool(&quot;192.168.25.128&quot;,6379);</span><br><span class="line">        //从连接池获得一个连接，就是一个jedis对象</span><br><span class="line">        Jedis jedis = jedisPool.getResource();</span><br><span class="line">        //使用jedis操作redis</span><br><span class="line">        String test123 = jedis.get(&quot;test123&quot;);</span><br><span class="line">        System.out.println(test123);</span><br><span class="line"></span><br><span class="line">        //关闭连接，每次使用完毕后关闭连接，连接池回收资源</span><br><span class="line">        jedis.close();</span><br><span class="line">        //关闭连接池</span><br><span class="line">        jedisPool.close();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="3-3连接集群版"><a href="#3-3连接集群版" class="headerlink" title="3.3连接集群版"></a>3.3连接集群版</h4><p>第一步：使用JedisCluster对象。需要一个Set<hostandport>参数。Redis节点的列表。<br><br>第二步：直接使用JedisCluster对象操作redis。在系统中单例存在。<br><br>第三步：打印结果<br><br>第四步：系统关闭前，关闭JedisCluster对象。<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">    public void testJedisCluster() throws Exception&#123;</span><br><span class="line">        //创建一个JedisCluster对象。有一个参数nodes是一个set类型。set中包含若干个HostAndPort对象</span><br><span class="line">        Set&lt;HostAndPort&gt; nodes = new HashSet&lt;&gt;();</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7001));</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7002));</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7003));</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7004));</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7005));</span><br><span class="line">        nodes.add(new HostAndPort(&quot;192.168.25.128&quot;,7006));</span><br><span class="line">        JedisCluster jedisCluster = new JedisCluster(nodes);</span><br><span class="line"></span><br><span class="line">        //直接使用JedisCluster对象操作redis</span><br><span class="line">        jedisCluster.set(&quot;test&quot;,&quot;123&quot;);</span><br><span class="line">        String test = jedisCluster.get(&quot;test&quot;);</span><br><span class="line">        System.out.println(test);</span><br><span class="line">        //关闭JedisCluster对象</span><br><span class="line">        jedisCluster.close();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></hostandport></p>
+<h3 id="4-向业务逻辑中添加缓存"><a href="#4-向业务逻辑中添加缓存" class="headerlink" title="4.向业务逻辑中添加缓存"></a>4.向业务逻辑中添加缓存</h3><h4 id="4-1接口封装"><a href="#4-1接口封装" class="headerlink" title="4.1接口封装"></a>4.1接口封装</h4><p>常用的操作redis的方法提取出一个接口，分别对应单机版和集群版创建两个实现类。</p>
+<h5 id="4-1-1接口定义"><a href="#4-1-1接口定义" class="headerlink" title="4.1.1接口定义"></a>4.1.1接口定义</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public interface JedisClient &#123;</span><br><span class="line"></span><br><span class="line">	String set(String key, String value);</span><br><span class="line">	String get(String key);</span><br><span class="line">	Boolean exists(String key);</span><br><span class="line">	Long expire(String key, int seconds);</span><br><span class="line">	Long ttl(String key);</span><br><span class="line">	Long incr(String key);</span><br><span class="line">	Long hset(String key, String field, String value);</span><br><span class="line">	String hget(String key, String field);</span><br><span class="line">	Long hdel(String key, String... field);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-1-2单机版实现类"><a href="#4-1-2单机版实现类" class="headerlink" title="4.1.2单机版实现类"></a>4.1.2单机版实现类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line">public class JedisClientPool implements JedisClient &#123;</span><br><span class="line">	</span><br><span class="line">	private JedisPool jedisPool;</span><br><span class="line"></span><br><span class="line">    public JedisPool getJedisPool() &#123;</span><br><span class="line">        return jedisPool;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setJedisPool(JedisPool jedisPool) &#123;</span><br><span class="line">        this.jedisPool = jedisPool;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">	public String set(String key, String value) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		String result = jedis.set(key, value);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String get(String key) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		String result = jedis.get(key);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Boolean exists(String key) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Boolean result = jedis.exists(key);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long expire(String key, int seconds) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Long result = jedis.expire(key, seconds);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long ttl(String key) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Long result = jedis.ttl(key);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long incr(String key) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Long result = jedis.incr(key);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long hset(String key, String field, String value) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Long result = jedis.hset(key, field, value);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String hget(String key, String field) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		String result = jedis.hget(key, field);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long hdel(String key, String... field) &#123;</span><br><span class="line">		Jedis jedis = jedisPool.getResource();</span><br><span class="line">		Long result = jedis.hdel(key, field);</span><br><span class="line">		jedis.close();</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131863952552687500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131863952555343750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131863952558312500.png" alt="image"></p>
+<h5 id="4-1-3集群版实现类"><a href="#4-1-3集群版实现类" class="headerlink" title="4.1.3集群版实现类"></a>4.1.3集群版实现类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">public class JedisClientCluster implements JedisClient &#123;</span><br><span class="line">	</span><br><span class="line">	private JedisCluster jedisCluster;</span><br><span class="line"></span><br><span class="line">	public JedisCluster getJedisCluster() &#123;</span><br><span class="line">		return jedisCluster;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setJedisCluster(JedisCluster jedisCluster) &#123;</span><br><span class="line">		this.jedisCluster = jedisCluster;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String set(String key, String value) &#123;</span><br><span class="line">		return jedisCluster.set(key, value);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String get(String key) &#123;</span><br><span class="line">		return jedisCluster.get(key);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Boolean exists(String key) &#123;</span><br><span class="line">		return jedisCluster.exists(key);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long expire(String key, int seconds) &#123;</span><br><span class="line">		return jedisCluster.expire(key, seconds);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long ttl(String key) &#123;</span><br><span class="line">		return jedisCluster.ttl(key);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long incr(String key) &#123;</span><br><span class="line">		return jedisCluster.incr(key);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long hset(String key, String field, String value) &#123;</span><br><span class="line">		return jedisCluster.hset(key, field, value);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String hget(String key, String field) &#123;</span><br><span class="line">		return jedisCluster.hget(key, field);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public Long hdel(String key, String... field) &#123;</span><br><span class="line">		return jedisCluster.hdel(key, field);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131863952561750000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131863952564250000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131863952566906250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131863952569250000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131863952571593750.png" alt="image"></p>
+<h5 id="4-1-4封装代码测试"><a href="#4-1-4封装代码测试" class="headerlink" title="4.1.4封装代码测试"></a>4.1.4封装代码测试</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">	public void testJedisClient() throws Exception &#123;</span><br><span class="line">		//初始化Spring容器</span><br><span class="line">		ApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;classpath:spring/applicationContext-redis.xml&quot;);</span><br><span class="line">		//从容器中获得JedisClient对象</span><br><span class="line">		JedisClient jedisClient = applicationContext.getBean(JedisClient.class);</span><br><span class="line">		jedisClient.set(&quot;first&quot;, &quot;100&quot;);</span><br><span class="line">		String result = jedisClient.get(&quot;first&quot;);</span><br><span class="line">		System.out.println(result);</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-2添加缓存"><a href="#4-2添加缓存" class="headerlink" title="4.2添加缓存"></a>4.2添加缓存</h4><h5 id="4-2-1功能分析"><a href="#4-2-1功能分析" class="headerlink" title="4.2.1功能分析"></a>4.2.1功能分析</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">查询内容列表时添加缓存。</span><br><span class="line">1、查询数据库之前先查询缓存。</span><br><span class="line">2、查询到结果，直接响应结果。</span><br><span class="line">3、查询不到，缓存中没有需要查询数据库。</span><br><span class="line">4、把查询结果添加到缓存中。</span><br><span class="line">5、返回结果。</span><br><span class="line"></span><br><span class="line">向redis中添加缓存：</span><br><span class="line">Key：cid</span><br><span class="line">Value：内容列表。需要把java对象转换成json。</span><br><span class="line"></span><br><span class="line">使用hash对key进行归类。</span><br><span class="line">HASH_KEY:HASH</span><br><span class="line">            |--KEY:VALUE</span><br><span class="line">            |--KEY:VALUE</span><br><span class="line">            |--KEY:VALUE</span><br><span class="line">            |--KEY:VALUE</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：添加缓存不能影响正常业务逻辑。</p>
+</blockquote>
+<h5 id="4-2-1代码实现"><a href="#4-2-1代码实现" class="headerlink" title="4.2.1代码实现"></a>4.2.1代码实现</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public List&lt;TbContent&gt; getContentListByCid(long cid) &#123;</span><br><span class="line">        //查询缓存</span><br><span class="line">        //如果缓存中有，就直接返回</span><br><span class="line">        try &#123;</span><br><span class="line">            String json = jedisClient.hget(CONTENT_LIST, cid + &quot;&quot;);</span><br><span class="line">            System.out.println(&quot;json:&quot;+json);</span><br><span class="line">            if(StringUtils.isNotBlank(json))&#123;</span><br><span class="line">                List&lt;TbContent&gt; tbContents = JsonUtils.jsonToList(json, TbContent.class);</span><br><span class="line"></span><br><span class="line">                return tbContents;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            //写日志</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //如果没有就查询数据库</span><br><span class="line">        TbContentExample tbContentExample = new TbContentExample();</span><br><span class="line">        TbContentExample.Criteria criteria = tbContentExample.createCriteria();</span><br><span class="line">        criteria.andCategoryIdEqualTo(cid);</span><br><span class="line">        List&lt;TbContent&gt; tbContents = tbContentMapper.selectByExampleWithBLOBs(tbContentExample);</span><br><span class="line"></span><br><span class="line">        //把结果添加到缓存</span><br><span class="line">        try &#123;</span><br><span class="line">            jedisClient.hset(CONTENT_LIST,cid+&quot;&quot;, JsonUtils.objectToJson(tbContents));</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            //写日志</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return tbContents;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131863952574562500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131863952576593750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131863952581125000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131863952583000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131863952586593750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131863952588781250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131863952591281250.png" alt="image"></p>
+<h5 id="4-2-1缓存同步"><a href="#4-2-1缓存同步" class="headerlink" title="4.2.1缓存同步"></a>4.2.1缓存同步</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public E3Result addContent(TbContent tbContent) &#123;</span><br><span class="line">        //补全内容，因为数据库中有update和creatDate</span><br><span class="line">        tbContent.setCreated(new Date());</span><br><span class="line">        tbContent.setUpdated(new Date());</span><br><span class="line">        //将内容插入内容表</span><br><span class="line">        tbContentMapper.insert(tbContent);</span><br><span class="line"></span><br><span class="line">        //缓存同步</span><br><span class="line">        jedisClient.hdel(CONTENT_LIST,tbContent.getCategoryId().toString());</span><br><span class="line"></span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131863952594093750.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/4.11参数传值机制/" rel="next" title="4.11参数传值机制(干货)">
+                <i class="fa fa-chevron-left"></i> 4.11参数传值机制(干货)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-课程计划"><span class="nav-number">1.</span> <span class="nav-text">1.课程计划</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Redis集群的搭建"><span class="nav-number">2.</span> <span class="nav-text">2.Redis集群的搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-redis-cluster架构图-emsp-redis官方给出的集群方案"><span class="nav-number">2.1.</span> <span class="nav-text">2.1.redis-cluster架构图 (redis官方给出的集群方案)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#架构细节"><span class="nav-number">2.2.</span> <span class="nav-text">架构细节:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2Redis集群的搭建"><span class="nav-number">2.3.</span> <span class="nav-text">5.2Redis集群的搭建</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-3搭建步骤"><span class="nav-number">2.4.</span> <span class="nav-text">5.3搭建步骤</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Jedis"><span class="nav-number">3.</span> <span class="nav-text">3.Jedis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1连接单机版"><span class="nav-number">3.1.</span> <span class="nav-text">3.1连接单机版</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2连接单机版使用连接池"><span class="nav-number">3.2.</span> <span class="nav-text">3.2连接单机版使用连接池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3连接集群版"><span class="nav-number">3.3.</span> <span class="nav-text">3.3连接集群版</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-向业务逻辑中添加缓存"><span class="nav-number">4.</span> <span class="nav-text">4.向业务逻辑中添加缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-1接口封装"><span class="nav-number">4.1.</span> <span class="nav-text">4.1接口封装</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-1接口定义"><span class="nav-number">4.1.1.</span> <span class="nav-text">4.1.1接口定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-2单机版实现类"><span class="nav-number">4.1.2.</span> <span class="nav-text">4.1.2单机版实现类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-3集群版实现类"><span class="nav-number">4.1.3.</span> <span class="nav-text">4.1.3集群版实现类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-1-4封装代码测试"><span class="nav-number">4.1.4.</span> <span class="nav-text">4.1.4封装代码测试</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2添加缓存"><span class="nav-number">4.2.</span> <span class="nav-text">4.2添加缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-1功能分析"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1功能分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-1代码实现"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.1代码实现</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-2-1缓存同步"><span class="nav-number">4.2.3.</span> <span class="nav-text">4.2.1缓存同步</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
