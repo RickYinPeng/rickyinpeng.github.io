@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.课程计划：1234567第三天：1、商品类目选择2、图片上传a)图片服务器FastDFSb)图片上传功能实现3、富文本编辑器的使用KindEditor4、商品添加功能完成  主讲nginx  二.商品类目选择：&amp;emsp;&amp;emsp;2.1 原型页面分析： &amp;emsp;&amp;emsp;2.2 前端代码分析：        展示商品分类列表，使用EasyUI的tree控件展示。 初始化tree请求的">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三.宜立方商城——nginx搭建">
+<meta property="og:url" content="http://yoursite.com/2019/01/05/3.宜立方商城——nginx搭建/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.课程计划：1234567第三天：1、商品类目选择2、图片上传a)图片服务器FastDFSb)图片上传功能实现3、富文本编辑器的使用KindEditor4、商品添加功能完成  主讲nginx  二.商品类目选择：&amp;emsp;&amp;emsp;2.1 原型页面分析： &amp;emsp;&amp;emsp;2.2 前端代码分析：        展示商品分类列表，使用EasyUI的tree控件展示。 初始化tree请求的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830231705815000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830231694643125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131830235408080625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131830235417690000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131830240308783750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131830240311440000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131830240313705625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131830250195268125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131830250199096250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131830301995268125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131830301999877500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131830309870346250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131830309873315000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131830302004877500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131830302010736875.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131830302015893125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131830302020893125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131830302026596250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131830426289799375.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131830428061127500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131830430994018125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131830454701674375.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830946299096250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830946305268125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131831798552143125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131831795320111875.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131831795324565000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131831795315502500.png">
+<meta property="og:updated_time" content="2019-01-05T14:30:49.491Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="三.宜立方商城——nginx搭建">
+<meta name="twitter:description" content="一.课程计划：1234567第三天：1、商品类目选择2、图片上传a)图片服务器FastDFSb)图片上传功能实现3、富文本编辑器的使用KindEditor4、商品添加功能完成  主讲nginx  二.商品类目选择：&amp;emsp;&amp;emsp;2.1 原型页面分析： &amp;emsp;&amp;emsp;2.2 前端代码分析：        展示商品分类列表，使用EasyUI的tree控件展示。 初始化tree请求的">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830231705815000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/05/3.宜立方商城——nginx搭建/"/>
+
+
+
+
+
+  <title>三.宜立方商城——nginx搭建 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/05/3.宜立方商城——nginx搭建/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">三.宜立方商城——nginx搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-05T22:30:11+08:00">
+                2019-01-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/项目/" itemprop="url" rel="index">
+                    <span itemprop="name">项目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-课程计划："><a href="#一-课程计划：" class="headerlink" title="一.课程计划："></a>一.课程计划：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">第三天：</span><br><span class="line">1、商品类目选择</span><br><span class="line">2、图片上传</span><br><span class="line">a)图片服务器FastDFS</span><br><span class="line">b)图片上传功能实现</span><br><span class="line">3、富文本编辑器的使用KindEditor</span><br><span class="line">4、商品添加功能完成</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>主讲nginx</p>
+</blockquote>
+<h2 id="二-商品类目选择："><a href="#二-商品类目选择：" class="headerlink" title="二.商品类目选择："></a>二.商品类目选择：</h2><h3 id="emsp-emsp-2-1-原型页面分析："><a href="#emsp-emsp-2-1-原型页面分析：" class="headerlink" title="&emsp;&emsp;2.1 原型页面分析："></a>&emsp;&emsp;2.1 原型页面分析：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830231705815000.png" alt="image"></p>
+<h3 id="emsp-emsp-2-2-前端代码分析："><a href="#emsp-emsp-2-2-前端代码分析：" class="headerlink" title="&emsp;&emsp;2.2 前端代码分析："></a>&emsp;&emsp;2.2 前端代码分析：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830231694643125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131830235408080625.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131830235417690000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131830240308783750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131830240311440000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131830240313705625.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131830250195268125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131830250199096250.png" alt="image"></p>
+<p><strong>展示商品分类列表，使用EasyUI的tree控件展示。</strong></p>
+<p>初始化tree请求的url：/item/cat/list</p>
+<p>参数：</p>
+<p>初始化tree时只需要把第一级节点展示，子节点异步加载。</p>
+<p>long id（父节点id）</p>
+<p>返回值：json。数据格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[&#123;    </span><br><span class="line">    &quot;id&quot;: 1,    </span><br><span class="line">    &quot;text&quot;: &quot;Node 1&quot;,    </span><br><span class="line">    &quot;state&quot;: &quot;closed&quot;</span><br><span class="line">&#125;,&#123;    </span><br><span class="line">    &quot;id&quot;: 2,    </span><br><span class="line">    &quot;text&quot;: &quot;Node 2&quot;,    </span><br><span class="line">    &quot;state&quot;: &quot;closed&quot;   </span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure>
+<p><strong>state：如果节点下有子节点“closed”，如果没有子节点“open”</strong></p>
+<p>创建一个pojo来描述tree的节点信息，包含三个属性id、text、state。放到e3-common工程中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">public class EasyUITreeNode implements Serializable&#123;</span><br><span class="line"></span><br><span class="line">    //数据库中主键</span><br><span class="line">    private long id;</span><br><span class="line">    //数据库中的分类名字name</span><br><span class="line">    private String text;</span><br><span class="line">    //分类是否为父节点</span><br><span class="line">    private String state;</span><br><span class="line"></span><br><span class="line">    public long getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(long id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getText() &#123;</span><br><span class="line">        return text;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setText(String text) &#123;</span><br><span class="line">        this.text = text;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getState() &#123;</span><br><span class="line">        return state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setState(String state) &#123;</span><br><span class="line">        this.state = state;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;EasyUITreeNode&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, text=&apos;&quot; + text + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, state=&apos;&quot; + state + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<font size="3/">查询的表：<br>tb_item_cat <br><br><br><font size="3/">查询列：<br>Id、name、isparent<br><br><br><font size="3/">查询条件:parentId<br><br>### &emsp;&emsp;2.3 dao层：<br>tb_item_cat<br>可以使用逆向工程生成的代码<br><br>### &emsp;&emsp;2.4 Service层：<br><font size="3/"><br>参数：long parentId(你想啊，你需要拿着这个父id去查询父id为这个值的信息)<br><br><br>业务逻辑：<br><br>1、根据parentId查询节点列表<br><br>2、转换成EasyUITreeNode列表。(根据EasyUI所需要的json格式)<br><br>3、返回。<br><br>返回值：List<easyuitreenode><br></easyuitreenode></font>
+
+
+
+
+<h4 id="emsp-emsp-emsp-emsp-2-4-1-Service接口："><a href="#emsp-emsp-emsp-emsp-2-4-1-Service接口：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;2.4.1 Service接口："></a>&emsp;&emsp;&emsp;&emsp;2.4.1 Service接口：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public interface ItemCatService &#123;</span><br><span class="line"></span><br><span class="line">    List&lt;EasyUITreeNode&gt; getItemCatList(long parentId);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="emsp-emsp-emsp-emsp-2-4-2-Service实现类："><a href="#emsp-emsp-emsp-emsp-2-4-2-Service实现类：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;2.4.2 Service实现类："></a>&emsp;&emsp;&emsp;&emsp;2.4.2 Service实现类：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 商品分类管理</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class ItemCatServiceImpl  implements ItemCatService&#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private TbItemCatMapper tbItemCatMapper;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;EasyUITreeNode&gt; getItemCatList(long parentId) &#123;</span><br><span class="line">        //根据parentID查询子结果</span><br><span class="line">        TbItemCatExample tbItemCatExample = new TbItemCatExample();</span><br><span class="line">        TbItemCatExample.Criteria criteria = tbItemCatExample.createCriteria();</span><br><span class="line">        //设置查询条件</span><br><span class="line">        //所有字段都会有方法(别怕)</span><br><span class="line">        criteria.andParentIdEqualTo(parentId);</span><br><span class="line">        List&lt;TbItemCat&gt; tbItemCatList = tbItemCatMapper.selectByExample(tbItemCatExample);</span><br><span class="line">        //把列表转换成EasyUITreeNode列表</span><br><span class="line">        List&lt;EasyUITreeNode&gt; list = new ArrayList&lt;EasyUITreeNode&gt;();</span><br><span class="line">        for (TbItemCat tbItemCat: tbItemCatList) &#123;</span><br><span class="line">            EasyUITreeNode easyUITreeNode = new EasyUITreeNode();</span><br><span class="line">            easyUITreeNode.setId(tbItemCat.getId());</span><br><span class="line">            easyUITreeNode.setText(tbItemCat.getName());</span><br><span class="line">            easyUITreeNode.setState(tbItemCat.getIsParent()==true?&quot;closed&quot;:&quot;open&quot;);</span><br><span class="line">            list.add(easyUITreeNode);</span><br><span class="line">        &#125;</span><br><span class="line">        //返回结果</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131830301995268125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131830301999877500.png" alt="image"></p>
+<h4 id="emsp-emsp-emsp-emsp-2-4-3-Controller层："><a href="#emsp-emsp-emsp-emsp-2-4-3-Controller层：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;2.4.3 Controller层："></a>&emsp;&emsp;&emsp;&emsp;2.4.3 Controller层：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 商品分类管理Controller</span><br><span class="line"> */</span><br><span class="line">@Controller</span><br><span class="line">public class ItemCatController &#123;</span><br><span class="line">    @Autowired</span><br><span class="line">    private ItemCatService itemCatService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/item/cat/list&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public List&lt;EasyUITreeNode&gt;</span><br><span class="line">        getItemCatList(@RequestParam(name = &quot;id&quot;,defaultValue = &quot;0&quot;) Long parentId)&#123;</span><br><span class="line">        //调用服务查询结点列表</span><br><span class="line">        List&lt;EasyUITreeNode&gt; itemCatList = itemCatService.getItemCatList(parentId);</span><br><span class="line">        return itemCatList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-2-5-发布服务："><a href="#emsp-emsp-2-5-发布服务：" class="headerlink" title="&emsp;&emsp;2.5 发布服务："></a>&emsp;&emsp;2.5 发布服务：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131830309870346250.png" alt="image"></p>
+<h3 id="emsp-emsp-2-6-引用服务："><a href="#emsp-emsp-2-6-引用服务：" class="headerlink" title="&emsp;&emsp;2.6 引用服务："></a>&emsp;&emsp;2.6 引用服务：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131830309873315000.png" alt="image"></p>
+<h3 id="emsp-emsp-2-7-效果分析："><a href="#emsp-emsp-2-7-效果分析：" class="headerlink" title="&emsp;&emsp;2.7 效果分析："></a>&emsp;&emsp;2.7 效果分析：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131830302004877500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131830302010736875.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131830302015893125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131830302020893125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131830302026596250.png" alt="image"></p>
+<h2 id="三-图片上传分析："><a href="#三-图片上传分析：" class="headerlink" title="三.图片上传分析："></a>三.图片上传分析：</h2><ul>
+<li><font size="3/">传统方式：</font></li>
+</ul>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131830426289799375.png" alt="image"></p>
+<ul>
+<li><font size="3/">集群方式：</font></li>
+</ul>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131830428061127500.png" alt="image"> </p>
+<p><font size="3/"><br>解决方案：<br><br>搭建一个图片服务器，专门保存图片。可以使用分布式文件系统==FastDFS==。</font></p>
+<h2 id="四-什么事nginx"><a href="#四-什么事nginx" class="headerlink" title="四.什么事nginx:"></a>四.什么事nginx:</h2><p><font size="3/"><br>Nginx是一款高性能的http 服务器/反向代理服务器及电子邮件（IMAP/POP3）代理服务器。由俄罗斯的程序设计师Igor Sysoev所开发，官方测试nginx能够支支撑5万并发链接，并且cpu、内存等资源消耗却非常低，运行非常稳定。</font></p>
+<h2 id="五-应用场景"><a href="#五-应用场景" class="headerlink" title="五.应用场景:"></a>五.应用场景:</h2><p><font size="3/"><br>1、http服务器。Nginx是一个http服务可以独立提供http服务。可以做网页静态服务器。<br><br>2、虚拟主机。可以实现在一台服务器虚拟出多个网站。例如个人网站使用的虚拟主机。<br><br>3、反向代理，负载均衡。当网站的访问量达到一定程度后，单台服务器不能满足用户的请求时，需要用多台服务器集群可以使用nginx做反向代理。并且多台服务器可以平均分担负载，不会因为某台服务器负载高宕机而某台服务器闲置的情况。</font></p>
+<h2 id="六-nginx安装"><a href="#六-nginx安装" class="headerlink" title="六.nginx安装:"></a>六.nginx安装:</h2><p>下载nginx：</p>
+<p>官方网站：<br><br><a href="http://nginx.org/" target="_blank" rel="noopener">http://nginx.org/</a><br><br>使用的版本是1.8.0版本。<br></p>
+<blockquote>
+<p>我是安装在了Linux上</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131830430994018125.png" alt="image"></p>
+<p><strong>Nginx提供的源码。</strong></p>
+<h3 id="emsp-emsp-6-1-要求的安装环境"><a href="#emsp-emsp-6-1-要求的安装环境" class="headerlink" title="&emsp;&emsp;6.1 要求的安装环境"></a>&emsp;&emsp;6.1 要求的安装环境</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">1、需要安装gcc的环境。yum install gcc-c++</span><br><span class="line">2、第三方的开发包。</span><br><span class="line">  PCRE</span><br><span class="line">	PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</span><br><span class="line">yum install -y pcre pcre-devel</span><br><span class="line">注：pcre-devel是使用pcre开发的一个二次开发库。nginx也需要此库。</span><br><span class="line">  zlib</span><br><span class="line">	zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</span><br><span class="line">yum install -y zlib zlib-devel</span><br><span class="line"></span><br><span class="line">  openssl</span><br><span class="line">	OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。</span><br><span class="line">	nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。</span><br><span class="line">yum install -y openssl openssl-devel</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-6-2-安装步骤："><a href="#emsp-emsp-6-2-安装步骤：" class="headerlink" title="&emsp;&emsp;6.2 安装步骤："></a>&emsp;&emsp;6.2 安装步骤：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">第一步：把nginx的源码包上传到linux系统</span><br><span class="line">第二步：解压缩</span><br><span class="line">[root@localhost ~]# tar zxf nginx-1.8.0.tar.gz </span><br><span class="line">第三步：使用configure命令创建一makeFile文件。</span><br><span class="line">./configure \</span><br><span class="line">--prefix=/usr/local/nginx \</span><br><span class="line">--pid-path=/var/run/nginx/nginx.pid \</span><br><span class="line">--lock-path=/var/lock/nginx.lock \</span><br><span class="line">--error-log-path=/var/log/nginx/error.log \</span><br><span class="line">--http-log-path=/var/log/nginx/access.log \</span><br><span class="line">--with-http_gzip_static_module \</span><br><span class="line">--http-client-body-temp-path=/var/temp/nginx/client \</span><br><span class="line">--http-proxy-temp-path=/var/temp/nginx/proxy \</span><br><span class="line">--http-fastcgi-temp-path=/var/temp/nginx/fastcgi \</span><br><span class="line">--http-uwsgi-temp-path=/var/temp/nginx/uwsgi \</span><br><span class="line">--http-scgi-temp-path=/var/temp/nginx/scgi</span><br></pre></td></tr></table></figure>
+<p>==注意：启动nginx之前，上边将临时文件目录指定为/var/temp/nginx，需要在/var下创建temp及nginx目录==<br><br>[root@localhost sbin]# mkdir /var/temp/nginx/client -p</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">第四步：make</span><br><span class="line">第五步：make install</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-6-3-启动nginx："><a href="#emsp-emsp-6-3-启动nginx：" class="headerlink" title="&emsp;&emsp;6.3 启动nginx："></a>&emsp;&emsp;6.3 启动nginx：</h3><font size="3">
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">进入sbin目录&lt;br/&gt;</span><br><span class="line">[root@localhost sbin]# ./nginx </span><br><span class="line"></span><br><span class="line">关闭nginx：</span><br><span class="line">[root@localhost sbin]# ./nginx -s stop</span><br><span class="line">推荐使用：</span><br><span class="line">[root@localhost sbin]# ./nginx -s quit</span><br><span class="line"></span><br><span class="line">重启nginx：</span><br><span class="line">1、先关闭后启动。</span><br><span class="line">2、刷新配置文件：</span><br><span class="line">[root@localhost sbin]# ./nginx -s reload</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-6-4-访问nginx："><a href="#emsp-emsp-6-4-访问nginx：" class="headerlink" title="&emsp;&emsp;6.4 访问nginx："></a>&emsp;&emsp;6.4 访问nginx：</h3><p><a href="http://http://192.168.157.128" target="_blank" rel="noopener">http://http://192.168.157.128</a></p>
+<p>默认是80端口。<br>注意：是否关闭防火墙</p>
+<h2 id="七-配置虚拟主机"><a href="#七-配置虚拟主机" class="headerlink" title="七.配置虚拟主机"></a>七.配置虚拟主机</h2><p><font size="3"><br>就是在一台服务器启动多个网站。<br><br>如何区分不同的网站：<br><br>1、域名不同<br><br>2、端口不同<br></font></p>
+<h3 id="emsp-emsp-7-1-通过端口区分不同虚拟机"><a href="#emsp-emsp-7-1-通过端口区分不同虚拟机" class="headerlink" title="&emsp;&emsp;7.1 通过端口区分不同虚拟机:"></a>&emsp;&emsp;7.1 通过端口区分不同虚拟机:</h3><p><font size="3"><br>Nginx的配置文件：<br><br>/usr/local/nginx/conf/nginx.conf</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>==一个server节点就是一个虚拟主机==<br><br>==Html是nginx安装目录下的html目录==<br></p>
+<p><strong>可以配置多个server，配置了多个虚拟主机。</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       81;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html-81;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新加载配置文件<br>[root@localhost nginx]# sbin/nginx -s reload</p>
+<blockquote>
+<p>重新加载配置文件很重要</p>
+</blockquote>
+<h3 id="emsp-emsp-7-2-通过域名区分虚拟主机"><a href="#emsp-emsp-7-2-通过域名区分虚拟主机" class="headerlink" title="&emsp;&emsp;7.2 通过域名区分虚拟主机:"></a>&emsp;&emsp;7.2 通过域名区分虚拟主机:</h3><h4 id="emsp-emsp-emsp-emsp-7-2-1-什么是域名"><a href="#emsp-emsp-emsp-emsp-7-2-1-什么是域名" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;7.2.1  什么是域名"></a>&emsp;&emsp;&emsp;&emsp;7.2.1  什么是域名</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">域名就是网站。</span><br><span class="line">www.baidu.com</span><br><span class="line">www.taobao.com</span><br><span class="line">www.jd.com</span><br><span class="line">Tcp/ip</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Dns服务器：把域名解析为ip地址。保存的就是域名和ip的映射关系。</span><br><span class="line">一级域名：</span><br><span class="line">Baidu.com</span><br><span class="line">Taobao.com</span><br><span class="line">Jd.com</span><br><span class="line">二级域名：</span><br><span class="line">www.baidu.com</span><br><span class="line">Image.baidu.com</span><br><span class="line">Item.baidu.com</span><br><span class="line">三级域名：</span><br><span class="line">1.Image.baidu.com</span><br><span class="line">Aaa.image.baidu.com</span><br></pre></td></tr></table></figure>
+<p>一个域名对应一个ip地址，一个ip地址可以被多个域名绑定。</p>
+<p>本地测试可以修改hosts文件。<br><br>修改window的hosts文件：（C:\Windows\System32\drivers\etc）<br><br>可以配置域名和ip的映射关系，如果hosts文件中配置了域名和ip的对应关系，不需要走dns服务器。<br></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131830454701674375.png" alt="image"></p>
+<h4 id="emsp-emsp-emsp-emsp-7-2-2-Nginx的配置"><a href="#emsp-emsp-emsp-emsp-7-2-2-Nginx的配置" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;7.2.2  Nginx的配置"></a>&emsp;&emsp;&emsp;&emsp;7.2.2  Nginx的配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">#user  nobody;</span><br><span class="line">worker_processes  1;</span><br><span class="line"></span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line"></span><br><span class="line">#pid        logs/nginx.pid;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">events &#123;</span><br><span class="line">    worker_connections  1024;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    include       mime.types;</span><br><span class="line">    default_type  application/octet-stream;</span><br><span class="line"></span><br><span class="line">    #log_format  main  &apos;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &apos;</span><br><span class="line">    #                  &apos;$status $body_bytes_sent &quot;$http_referer&quot; &apos;</span><br><span class="line">    #                  &apos;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&apos;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line"></span><br><span class="line">    sendfile        on;</span><br><span class="line">    #tcp_nopush     on;</span><br><span class="line"></span><br><span class="line">    #keepalive_timeout  0;</span><br><span class="line">    keepalive_timeout  65;</span><br><span class="line"></span><br><span class="line">    #gzip  on;</span><br><span class="line"></span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       81;</span><br><span class="line">        server_name  localhost;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html-81;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.taobao.com;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html-taobao;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    server &#123;</span><br><span class="line">        listen       80;</span><br><span class="line">        server_name  www.baidu.com;</span><br><span class="line"></span><br><span class="line">        #charset koi8-r;</span><br><span class="line"></span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line"></span><br><span class="line">        location / &#123;</span><br><span class="line">            root   html-baidu;</span><br><span class="line">            index  index.html index.htm;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="八-反向代理"><a href="#八-反向代理" class="headerlink" title="八.反向代理"></a>八.反向代理</h2><h3 id="emsp-emsp-8-1-什么是反向代理"><a href="#emsp-emsp-8-1-什么是反向代理" class="headerlink" title="&emsp;&emsp;8.1 什么是反向代理"></a>&emsp;&emsp;8.1 什么是反向代理</h3><font size="3">
+
+<p><strong>正向代理：</strong></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830946299096250.png" alt="image"></p>
+<p>就好比说，我们现在在一个机房当中，但是我们上不了网，但是有一台主机可以上网，于是我们可以用这台主机来做了一个代理服务，就是说，我们比如请求访问百度(<a href="http://www.baidu.com)，将这个请求发送到这台代理机上，它帮我们去请求资源，明白？" target="_blank" rel="noopener">www.baidu.com)，将这个请求发送到这台代理机上，它帮我们去请求资源，明白？</a></p>
+<p><strong>反向代理：</strong><br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830946305268125.png" alt="image"></p>
+<p>我们可以这样理解，就是我们现在有很多网站，比如淘宝，天猫，京东(记住，是很多不同的网站)，那么当网络上的请求来了之后，经过nginx，它会根据请求，具体的去访问某个资源。</p>
+<blockquote>
+<p>反向代理服务器决定哪台服务器提供服务。</p>
+</blockquote>
+<blockquote>
+<p>反向代理服务器不提供服务器(也就是说，它不干活，就是一个转发)。也是请求的转发。</p>
+</blockquote>
+<h3 id="emsp-emsp-8-2-Nginx实现反向代理"><a href="#emsp-emsp-8-2-Nginx实现反向代理" class="headerlink" title="&emsp;&emsp;8.2 Nginx实现反向代理"></a>&emsp;&emsp;8.2 Nginx实现反向代理</h3><font size="3">
+
+<p>两个域名指向同一台nginx服务器，用户访问不同的域名显示不同的网页内容。</p>
+<p>两个域名是<a href="http://www.sian.com.cn和www.sohu.com" target="_blank" rel="noopener">www.sian.com.cn和www.sohu.com</a></p>
+<p>nginx服务器使用虚拟机92.168.157.128 </p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131831798552143125.png" alt="image"></p>
+<p><strong>第一步</strong>：安装两个tomcat，分别运行在8080和8081端口。<br><br><strong>第二步</strong>：启动两个tomcat。<br><br><strong>第三步</strong>：反向代理服务器的配置<br><br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131831795320111875.png" alt="image"></p>
+<p><strong>第四步</strong>：nginx重新加载配置文件<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131831795324565000.png" alt="image"></p>
+<p><strong>第五步</strong>：配置域名<br><br>在hosts文件中添加域名和ip的映射关系</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131831795315502500.png" alt="image"></p>
+<h2 id="九-负载均衡"><a href="#九-负载均衡" class="headerlink" title="九.负载均衡"></a>九.负载均衡</h2><p>如果一个服务由多条服务器提供，需要把负载分配到不同的服务器处理，需要负载均衡。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream tomcat2 &#123;</span><br><span class="line">server 192.168.157.128:8081;</span><br><span class="line">server 192.168.157.128:8082;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在配置一台tomcat，这就是tomcat集群，再加nginx负载均衡</p>
+</blockquote>
+<p>可以根据服务器的实际情况调整服务器权重。权重越高分配的请求越多，权重越低，请求越少。默认是都是1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">upstream tomcat2 &#123;</span><br><span class="line">server 192.168.157.128:8081;</span><br><span class="line">server 192.168.157.128:8082 weight=2;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></font></font></font></font></font></font>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/02/13.宜立方商城——订单系统/" rel="next" title="十三.宜立方商城——订单系统">
+                <i class="fa fa-chevron-left"></i> 十三.宜立方商城——订单系统
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">52</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-课程计划："><span class="nav-number">1.</span> <span class="nav-text">一.课程计划：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-商品类目选择："><span class="nav-number">2.</span> <span class="nav-text">二.商品类目选择：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-1-原型页面分析："><span class="nav-number">2.1.</span> <span class="nav-text">  2.1 原型页面分析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-2-前端代码分析："><span class="nav-number">2.2.</span> <span class="nav-text">  2.2 前端代码分析：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-2-4-1-Service接口："><span class="nav-number">2.2.1.</span> <span class="nav-text">    2.4.1 Service接口：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-2-4-2-Service实现类："><span class="nav-number">2.2.2.</span> <span class="nav-text">    2.4.2 Service实现类：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-2-4-3-Controller层："><span class="nav-number">2.2.3.</span> <span class="nav-text">    2.4.3 Controller层：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-5-发布服务："><span class="nav-number">2.3.</span> <span class="nav-text">  2.5 发布服务：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-6-引用服务："><span class="nav-number">2.4.</span> <span class="nav-text">  2.6 引用服务：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-7-效果分析："><span class="nav-number">2.5.</span> <span class="nav-text">  2.7 效果分析：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-图片上传分析："><span class="nav-number">3.</span> <span class="nav-text">三.图片上传分析：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-什么事nginx"><span class="nav-number">4.</span> <span class="nav-text">四.什么事nginx:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-应用场景"><span class="nav-number">5.</span> <span class="nav-text">五.应用场景:</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-nginx安装"><span class="nav-number">6.</span> <span class="nav-text">六.nginx安装:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-1-要求的安装环境"><span class="nav-number">6.1.</span> <span class="nav-text">  6.1 要求的安装环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-2-安装步骤："><span class="nav-number">6.2.</span> <span class="nav-text">  6.2 安装步骤：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-3-启动nginx："><span class="nav-number">6.3.</span> <span class="nav-text">  6.3 启动nginx：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-4-访问nginx："><span class="nav-number">6.4.</span> <span class="nav-text">  6.4 访问nginx：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七-配置虚拟主机"><span class="nav-number">7.</span> <span class="nav-text">七.配置虚拟主机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-1-通过端口区分不同虚拟机"><span class="nav-number">7.1.</span> <span class="nav-text">  7.1 通过端口区分不同虚拟机:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-2-通过域名区分虚拟主机"><span class="nav-number">7.2.</span> <span class="nav-text">  7.2 通过域名区分虚拟主机:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-7-2-1-什么是域名"><span class="nav-number">7.2.1.</span> <span class="nav-text">    7.2.1  什么是域名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-7-2-2-Nginx的配置"><span class="nav-number">7.2.2.</span> <span class="nav-text">    7.2.2  Nginx的配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八-反向代理"><span class="nav-number">8.</span> <span class="nav-text">八.反向代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-8-1-什么是反向代理"><span class="nav-number">8.1.</span> <span class="nav-text">  8.1 什么是反向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-8-2-Nginx实现反向代理"><span class="nav-number">8.2.</span> <span class="nav-text">  8.2 Nginx实现反向代理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九-负载均衡"><span class="nav-number">9.</span> <span class="nav-text">九.负载均衡</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
