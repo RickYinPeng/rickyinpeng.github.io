@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.课程计划1234第二天：商品列表功能实现1、服务中间件dubbo2、工程改造为基于soa架构3、商品列表查询功能实现。 二.拆分工程之前我们说过要将这个项目拆分成soa架构，什么事soa架构，soa架构就是面向服务，就是将我们的项目拆分成服务层和表现层。所以我目前需要将web层与dao和Service层拆开。  首先在idea中我们在web层的父工程也就是e3_manager中的pom文件中的">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二.宜立方商城——dubbo搭建和商城列表显示">
+<meta property="og:url" content="http://yoursite.com/2019/01/06/2.宜立方商城dubbo的搭建和商品列表显示/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.课程计划1234第二天：商品列表功能实现1、服务中间件dubbo2、工程改造为基于soa架构3、商品列表查询功能实现。 二.拆分工程之前我们说过要将这个项目拆分成soa架构，什么事soa架构，soa架构就是面向服务，就是将我们的项目拆分成服务层和表现层。所以我目前需要将web层与dao和Service层拆开。  首先在idea中我们在web层的父工程也就是e3_manager中的pom文件中的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131828426409955625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131828427862455625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131828434953940000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131828437117690000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131828449549565000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131828449553002500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131828691299877500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131828726311283750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131828726308471250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131828726314955625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131829359842924375.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131829376053002500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131829376049799375.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131829379290268125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131829381365111875.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830082704955625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830083942846250.png">
+<meta property="og:updated_time" content="2019-01-06T12:09:52.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二.宜立方商城——dubbo搭建和商城列表显示">
+<meta name="twitter:description" content="一.课程计划1234第二天：商品列表功能实现1、服务中间件dubbo2、工程改造为基于soa架构3、商品列表查询功能实现。 二.拆分工程之前我们说过要将这个项目拆分成soa架构，什么事soa架构，soa架构就是面向服务，就是将我们的项目拆分成服务层和表现层。所以我目前需要将web层与dao和Service层拆开。  首先在idea中我们在web层的父工程也就是e3_manager中的pom文件中的">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131828426409955625.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/06/2.宜立方商城dubbo的搭建和商品列表显示/"/>
+
+
+
+
+
+  <title>二.宜立方商城——dubbo搭建和商城列表显示 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/06/2.宜立方商城dubbo的搭建和商品列表显示/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">二.宜立方商城——dubbo搭建和商城列表显示</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-06T20:08:45+08:00">
+                2019-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/项目/" itemprop="url" rel="index">
+                    <span itemprop="name">项目</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-课程计划"><a href="#一-课程计划" class="headerlink" title="一.课程计划"></a>一.课程计划</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第二天：商品列表功能实现</span><br><span class="line">1、服务中间件dubbo</span><br><span class="line">2、工程改造为基于soa架构</span><br><span class="line">3、商品列表查询功能实现。</span><br></pre></td></tr></table></figure>
+<h2 id="二-拆分工程"><a href="#二-拆分工程" class="headerlink" title="二.拆分工程"></a>二.拆分工程</h2><p><font size="3/">之前我们说过要将这个项目拆分成soa架构，什么事soa架构，soa架构就是面向服务，就是将我们的项目拆分成服务层和表现层。所以我目前需要将web层与dao和Service层拆开。</font></p>
+<ol>
+<li><font size="3/">首先在idea中我们在web层的父工程也就是e3_manager中的pom文件中的<modules>中删掉其子模块也就是web层（e3_manager_web）</modules></font></li>
+</ol>
+<ol start="2">
+<li><font size="3/">这个时候web层就消失了，然后主要剩下了dao层和Service层，那么现在我们是将服务层(dao+service)和表现层(web)拆分成两个系统，那么服务层最终也需要部署到服务器上，所以需要一个打包成war包的项目，而现在的dao和Service都是jar包，所以我们将Service的打包方式改为war</font></li>
+</ol>
+<ol start="3">
+<li><font size="3/">因为是两个系统，所以web层应该和manager和common属于同一个层次，所以我们引进web层</font></li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131828426409955625.png" alt="image"></p>
+<ol start="4">
+<li><font size="3/">修改web层中父模块,<parent>，原来是manager模块，现在直接改为parent，修改完后，效果如下</parent></font></li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131828427862455625.png" alt="image"></p>
+<ol start="5">
+<li><font size="3/">上述完成之后呢，我们来看看web层(e3_manager_web)的pom文件</font></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line"></span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;e3_parent&lt;/artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;yp.e3mall&lt;/groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">        &lt;relativePath&gt;../e3_parent/pom.xml&lt;/relativePath&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;e3_manager_web&lt;/artifactId&gt;</span><br><span class="line">    &lt;packaging&gt;war&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">    &lt;name&gt;e3_manager_web Maven Webapp&lt;/name&gt;</span><br><span class="line">    &lt;!-- FIXME change it to the project&apos;s website --&gt;</span><br><span class="line">    &lt;url&gt;http://www.example.com&lt;/url&gt;</span><br><span class="line"></span><br><span class="line">    &lt;properties&gt;</span><br><span class="line">        &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">        &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;</span><br><span class="line">        &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;</span><br><span class="line">    &lt;/properties&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;4.11&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;yp.e3mall&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;e3_manager_service&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- JSP相关 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;jstl&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;jstl&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;$&#123;jstl.version&#125;&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;servlet-api&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;$&#123;servlet-api.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;javax.servlet&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;jsp-api&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;$&#123;jsp-api.version&#125;&lt;/version&gt;</span><br><span class="line">            &lt;scope&gt;provided&lt;/scope&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">    &lt;build&gt;</span><br><span class="line">        &lt;finalName&gt;e3_manager_web&lt;/finalName&gt;</span><br><span class="line">        &lt;pluginManagement&gt;&lt;!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) --&gt;</span><br><span class="line">            &lt;plugins&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;3.0.0&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging --&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;3.0.2&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;3.7.0&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;2.20.1&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;3.2.0&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;2.5.2&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">                &lt;plugin&gt;</span><br><span class="line">                    &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;</span><br><span class="line">                    &lt;version&gt;2.8.2&lt;/version&gt;</span><br><span class="line">                &lt;/plugin&gt;</span><br><span class="line">            &lt;/plugins&gt;</span><br><span class="line">        &lt;/pluginManagement&gt;</span><br><span class="line">    &lt;/build&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p><font size="3/"><strong>看，是不是其中有依赖Service的，那么我想一想，我们现在如果这么依赖Service，相当于就是将Service打包成jar包依赖过来，那么我们现在是要将系统分开的吖，所以不能这么依赖，我们只需要依赖接口就行了，Service相当于是我们这个项目的接口的实现类，所以如果我们依赖实现类，那么跟之前就没什么区别了</strong></font></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131828434953940000.png" alt="image"></p>
+<ol start="6">
+<li>当我们这样做之后，打开我们之前写的类，发现报错了，这是为什么呢？（看下图）</li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131828437117690000.png" alt="image"></p>
+<p><font size="3/"><strong>所以我们需要将spring的依赖复制过来，就是将Service中spring的依赖复制过来就行，简单的一匹</strong></font></p>
+<ol start="7">
+<li><font size="3/">接下来呢，我们继续拆分，之前我们是将配置文件全部放在了web层的，那我们来想想，既然我们都把工程拆开了，是不是不能将配置文件全放在web层了</font></li>
+</ol>
+<ol start="8">
+<li><font size="3/">Service需要conf和mybatis和spring，不需要springmvc，web.xml文件也只需部分（看图片）</font></li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131828449549565000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131828449553002500.png" alt="image"></p>
+<ol start="9">
+<li><font size="3/">Web层需要的东西看下图；</font></li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8.png" alt="image"></p>
+<h2 id="三-将工程改造为SOA架构"><a href="#三-将工程改造为SOA架构" class="headerlink" title="三.将工程改造为SOA架构"></a>三.将工程改造为SOA架构</h2><h3 id="emsp-emsp-3-1-分析："><a href="#emsp-emsp-3-1-分析：" class="headerlink" title="&emsp;&emsp;3.1 分析："></a>&emsp;&emsp;3.1 分析：</h3><p>由于宜立方商城是基于soa的架构，表现层和服务层是不同的工程。所以要实现商品列表查询需要两个系统之间进行通信。</p>
+<p><font size="3/"><strong>如何实现远程通信</strong>？<br><br>1、Webservice：效率不高基于soap协议。项目中不推荐使用。<br></font></p>
+<p><font size="3/">2、使用restful形式的服务：http+json。很多项目中应用。如果服务太多，服务之间调用关系混乱，需要治疗服务。(<font color="red/">说白了就是在url地址栏中加参数，如京东)<br></font></font></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9.png" alt="image"></p>
+<p><font size="3/">3、使用dubbo。使用rpc协议进行远程调用，直接使用socket通信。传输效率高，并且可以统计出系统之间的调用关系、调用次数。<br><br>==rpc协议:远程过程调用==</font></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6.png" alt="image"></p>
+<blockquote>
+<p>中间有个Dubbo中间件，用于控制服务调用，而不是向上面图中一样，直接去连线，而是先连中间件，这样就好管理了许多</p>
+</blockquote>
+<h3 id="emsp-emsp-3-2-dubbo："><a href="#emsp-emsp-3-2-dubbo：" class="headerlink" title="&emsp;&emsp;3.2 dubbo："></a>&emsp;&emsp;3.2 dubbo：</h3><h4 id="emsp-emsp-emsp-emsp-3-2-1-什么是dubbo？"><a href="#emsp-emsp-emsp-emsp-3-2-1-什么是dubbo？" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.2.1  什么是dubbo？"></a>&emsp;&emsp;&emsp;&emsp;3.2.1  什么是dubbo？</h4><p>随着互联网的发展，网站应用的规模不断扩大，常规的垂直应用架构已无法应对，分布式服务架构以及流动计算架构势在必行，亟需一个治理系统确保架构有条不紊的演进。</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10.png" alt="image"></p>
+<ul>
+<li><p><strong>单一应用架构</strong></p>
+<ul>
+<li>当网站流量很小时，只需一个应用，将所有功能都部署在一起，以减少部署节点和成本。</li>
+<li>此时，用于简化增删改查工作量的 数据访问框架(ORM) 是关键。</li>
+</ul>
+</li>
+<li><strong>垂直应用架构</strong><ul>
+<li>当访问量逐渐增大，单一应用增加机器带来的加速度越来越小，将应用拆成互不相干的几个应用，以提升效率。</li>
+<li>此时，用于加速前端页面开发的 Web框架(MVC) 是关键。</li>
+</ul>
+</li>
+<li><strong>分布式服务架构</strong><ul>
+<li>当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。</li>
+<li>此时，用于提高业务复用及整合的 分布式服务框架(RPC) 是关键。</li>
+</ul>
+</li>
+<li><strong>流动计算架构</strong><ul>
+<li>当服务越来越多，容量的评估，小服务资源的浪费等问题逐渐显现，此时==需增加一个调度中心基于访问压力实时管理集群容量，提高集群利用率==。</li>
+<li>此时，用于提高机器利用率的 资源调度和治理中心(SOA) 是关键。</li>
+</ul>
+</li>
+</ul>
+<p><font size="4" color="red/">Dubbo就是资源调度和治理中心的管理工具。</font></p>
+<h4 id="emsp-emsp-emsp-emsp-3-2-2-Dubbo的架构"><a href="#emsp-emsp-emsp-emsp-3-2-2-Dubbo的架构" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.2.2  Dubbo的架构"></a>&emsp;&emsp;&emsp;&emsp;3.2.2  Dubbo的架构</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11.png" alt="image"></p>
+<p><font size="3/"><strong>节点角色说明：</strong><br></font></p>
+<ul>
+<li><font size="3/"><strong>Provider</strong>: 暴露服务的服务提供方。</font></li>
+<li><font size="3/"><strong>Consumer</strong>: 调用远程服务的服务消费方。</font></li>
+<li><font size="3/"><strong>Registry</strong>: 服务注册与发现的注册中心。</font></li>
+<li><font size="3/"><strong>Monitor</strong>: 统计服务的调用次调和调用时间的监控中心。</font></li>
+<li><font size="3/"><strong>Container</strong>: 服务运行容器。</font></li>
+</ul>
+<p><font size="3/"><strong>调用关系说明：</strong><br></font></p>
+<ul>
+<li><font size="3/">0: 服务容器负责启动，加载，运行服务提供者.</font></li>
+<li><font size="3/">1: 服务提供者在启动时，向注册中心注册自己提供的服务。</font></li>
+<li><font size="3/">2: 服务消费者在启动时，向注册中心订阅自己所需的服务。</font></li>
+<li><font size="3/">3:  注册中心返回服务提供者地址列表给消费者，如果有变更，注册中心将基于长连接推送变更数据给消费者</font></li>
+<li><font size="3/">4: 服务消费者，从提供者地址列表中，基于软负载均衡算法，选一台提供者进行调用，如果调用失败，再选另一台调用。</font></li>
+<li><font size="3/">5: 服务消费者和提供者，在内存中累计调用次数和调用时间，定时每分钟发送一次统计数据到监控中心。</font></li>
+</ul>
+<h4 id="emsp-emsp-emsp-emsp-3-2-3-使用方法"><a href="#emsp-emsp-emsp-emsp-3-2-3-使用方法" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.2.3  使用方法"></a>&emsp;&emsp;&emsp;&emsp;3.2.3  使用方法</h4><p>Dubbo采用全Spring配置方式，透明化接入应用，对应用没有任何API侵入，只需用Spring加载Dubbo的配置即可，Dubbo基于Spring的Schema扩展进行加载。</p>
+<p><font size="3/"><strong>单一工程中spring的配置:</strong></font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;bean id=&quot;xxxService&quot; class=&quot;com.xxx.XxxServiceImpl&quot; /&gt;</span><br><span class="line">&lt;bean id=&quot;xxxAction&quot; class=&quot;com.xxx.XxxAction&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;xxxService&quot; ref=&quot;xxxService&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<p><font size="3/"><strong>远程服务:</strong></font></p>
+<p>在本地服务的基础上，只需做简单配置，即可完成远程化：<br></p>
+<p>将上面的local.xml配置拆分成两份，将服务定义部分放在服务提供方remote-provider.xml，将服务引用部分放在服务消费方remote-consumer.xml。</p>
+<p>并在提供方增加暴露服务配置<a href="dubbo:service" target="_blank" rel="noopener">dubbo:service</a>，在消费方增加引用服务配置<a href="dubbo:reference" target="_blank" rel="noopener">dubbo:reference</a>。</p>
+<p>&emsp;&emsp;<strong>发布服务</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 和本地服务一样实现远程服务 --&gt;</span><br><span class="line">&lt;bean id=&quot;xxxService&quot; class=&quot;com.xxx.XxxServiceImpl&quot; /&gt;</span><br><span class="line">&lt;!-- 增加暴露远程服务配置 --&gt;</span><br><span class="line">&lt;dubbo:service interface=&quot;com.xxx.XxxService&quot; ref=&quot;xxxService&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;<strong>调用服务：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 增加引用远程服务配置 --&gt;</span><br><span class="line">&lt;dubbo:reference id=&quot;xxxService&quot; interface=&quot;com.xxx.XxxService&quot; /&gt;</span><br><span class="line">&lt;!-- 和本地服务一样使用远程服务 --&gt;</span><br><span class="line">&lt;bean id=&quot;xxxAction&quot; class=&quot;com.xxx.XxxAction&quot;&gt;</span><br><span class="line">	&lt;property name=&quot;xxxService&quot; ref=&quot;xxxService&quot; /&gt;</span><br><span class="line">&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-3-3-注册中心："><a href="#emsp-emsp-3-3-注册中心：" class="headerlink" title="&emsp;&emsp;3.3 注册中心："></a>&emsp;&emsp;3.3 注册中心：</h3><h4 id="emsp-emsp-emsp-emsp-3-3-1-Zookeeper-Apacher旗下的，Java开发-介绍"><a href="#emsp-emsp-emsp-emsp-3-3-1-Zookeeper-Apacher旗下的，Java开发-介绍" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.3.1  Zookeeper(Apacher旗下的，Java开发)介绍"></a>&emsp;&emsp;&emsp;&emsp;3.3.1  Zookeeper(Apacher旗下的，Java开发)介绍</h4><p>官方推荐使用zookeeper注册中心。<br><br>注册中心负责服务地址的注册与查找，相当于目录服务，服务提供者和消费者只在启动时与注册中心交互，注册中心不转发请求，压力较小。使用dubbo-2.3.3以上版本，建议使用zookeeper注册中心。<br><br>Zookeeper是Apacahe Hadoop的子项目，是一个树型的目录服务，支持变更推送，适合作为Dubbo服务的注册中心，工业强度较高，可用于生产环境，并推荐使用</p>
+<p>Zookeeper：<br><br>1、可以作为集群的管理工具使用。<br><br>2、可以集中管理配置文件。<br></p>
+<h4 id="emsp-emsp-emsp-emsp-3-3-2-Zookeeper的安装"><a href="#emsp-emsp-emsp-emsp-3-3-2-Zookeeper的安装" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.3.2  Zookeeper的安装"></a>&emsp;&emsp;&emsp;&emsp;3.3.2  Zookeeper的安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">安装环境：</span><br><span class="line">Linux：centos6.4</span><br><span class="line">Jdk:1.7以上版本</span><br><span class="line"></span><br><span class="line">Zookeeper是java开发的可以运行在windows、linux环境。需要先安装jdk。</span><br><span class="line">安装步骤：</span><br><span class="line">第一步：安装jdk</span><br><span class="line">第二步：把zookeeper的压缩包上传到linux系统。</span><br><span class="line">第三步：解压缩压缩包</span><br><span class="line">tar -zxvf zookeeper-3.4.6.tar.gz</span><br><span class="line">第四步：进入zookeeper-3.4.6目录，创建data文件夹。</span><br><span class="line">第五步：把zoo_sample.cfg改名为zoo.cfg</span><br><span class="line">[root@localhost conf]# mv zoo_sample.cfg zoo.cfg</span><br><span class="line">第六步：修改data属性：dataDir=/root/zookeeper-3.4.6/data</span><br><span class="line">第七步：启动zookeeper</span><br><span class="line">[root@localhost bin]# ./zkServer.sh start</span><br><span class="line">关闭：[root@localhost bin]# ./zkServer.sh stop</span><br><span class="line">查看状态：[root@localhost bin]# ./zkServer.sh status</span><br><span class="line"></span><br><span class="line">注意：需要关闭防火墙。</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24.png" alt="image"></p>
+<h3 id="emsp-emsp-3-4-工程改造："><a href="#emsp-emsp-3-4-工程改造：" class="headerlink" title="&emsp;&emsp;3.4 工程改造："></a>&emsp;&emsp;3.4 工程改造：</h3><h4 id="emsp-emsp-emsp-emsp-3-4-1-拆分工程（之前我们做过了，来回顾下）"><a href="#emsp-emsp-emsp-emsp-3-4-1-拆分工程（之前我们做过了，来回顾下）" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.4.1  拆分工程（之前我们做过了，来回顾下）"></a>&emsp;&emsp;&emsp;&emsp;3.4.1  拆分工程（之前我们做过了，来回顾下）</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1）将表现层工程独立出来：</span><br><span class="line">e3-manager-web</span><br><span class="line">2）将原来的e3-manager改为如下结构</span><br><span class="line">e3-manager</span><br><span class="line">   |--e3-manager-dao</span><br><span class="line">   |--e3-manager-interface</span><br><span class="line">   |--e3-manager-pojo</span><br><span class="line">   |--e3-manager-service（打包方式改为war）</span><br></pre></td></tr></table></figure>
+<h4 id="emsp-emsp-emsp-emsp-3-4-2-服务层工程"><a href="#emsp-emsp-emsp-emsp-3-4-2-服务层工程" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.4.2  服务层工程"></a>&emsp;&emsp;&emsp;&emsp;3.4.2  服务层工程</h4><p><font size="3/">第一步：把e3-manager的pom文件中删除e3-manager-web模块。</font></p>
+<p><font size="3/">第二步：把e3-manager-web文件夹移动到e3-manager同一级目录。</font></p>
+<p><font size="3/">第三步：e3-manager-service的pom文件修改打包方式</font></p>
+<packaging>war</packaging>
+
+<p><font size="3/">第四步：在e3-manager-service工程中添加web.xml文件</font></p>
+<p><font size="3/">第五步：把e3-manager-web的配置文件复制到e3-manager-service中。<br>删除springmvc.xml</font></p>
+<p><font size="3/">第六步：web.xml 中只配置spring容器。删除前端控制器</font></p>
+<p><font size="3/">第七步：发布服务</font></p>
+<ol>
+<li><font size="3/">在e3-manager-Service工程中添加dubbo依赖的jar包<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131828691299877500.png" alt="image"></font></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">    &lt;parent&gt;</span><br><span class="line">        &lt;artifactId&gt;e3_manager&lt;/artifactId&gt;</span><br><span class="line">        &lt;groupId&gt;yp.e3mall&lt;/groupId&gt;</span><br><span class="line">        &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">        &lt;relativePath&gt;../e3_manager/pom.xml&lt;/relativePath&gt;</span><br><span class="line">    &lt;/parent&gt;</span><br><span class="line">    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">    &lt;packaging&gt;war&lt;/packaging&gt;</span><br><span class="line"></span><br><span class="line">    &lt;artifactId&gt;e3_manager_service&lt;/artifactId&gt;</span><br><span class="line">    &lt;dependencies&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;yp.e3mall&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;e3_manager_dao&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;yp.e3mall&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;e3_manager_interface&lt;/artifactId&gt;</span><br><span class="line">            &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;!-- Spring --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-context&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-beans&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-webmvc&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-jms&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- dubbo相关 --&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;dubbo&lt;/artifactId&gt;</span><br><span class="line">            &lt;exclusions&gt;</span><br><span class="line">                &lt;exclusion&gt;</span><br><span class="line">                    &lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">                    &lt;artifactId&gt;spring&lt;/artifactId&gt;</span><br><span class="line">                &lt;/exclusion&gt;</span><br><span class="line">                &lt;exclusion&gt;</span><br><span class="line">                    &lt;groupId&gt;org.jboss.netty&lt;/groupId&gt;</span><br><span class="line">                    &lt;artifactId&gt;netty&lt;/artifactId&gt;</span><br><span class="line">                &lt;/exclusion&gt;</span><br><span class="line">            &lt;/exclusions&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;org.apache.zookeeper&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;zookeeper&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">        &lt;dependency&gt;</span><br><span class="line">            &lt;groupId&gt;com.github.sgroschupf&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;zkclient&lt;/artifactId&gt;</span><br><span class="line">        &lt;/dependency&gt;</span><br><span class="line">    &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131828726311283750.png" alt="image"></p>
+<blockquote>
+<p>注意spring排除</p>
+</blockquote>
+<ol start="2">
+<li><font size="3/">在spring的配置文件中添加dubbo的约束，然后使用dubbo:service发布服务。</font></li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131828726308471250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131828726314955625.png" alt="image"></p>
+<h4 id="emsp-emsp-emsp-emsp-3-4-3-表现层工程"><a href="#emsp-emsp-emsp-emsp-3-4-3-表现层工程" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;3.4.3  表现层工程"></a>&emsp;&emsp;&emsp;&emsp;3.4.3  表现层工程</h4><p><font size="3/">改造e3-manager-web工程。</font></p>
+<p><font size="3/">第一步：删除mybatis、和spring的配置文件。只保留springmvc.xml</font></p>
+<p><font size="3/">第二步：修改e3-manager-web的pom文件，</font></p>
+<p>&emsp;&emsp;<font size="3/">1、修改parent为e3-parent</font></p>
+<p>&emsp;&emsp;<font size="3/">2、添加spring和springmvc的jar包的依赖</font></p>
+<p>&emsp;&emsp;<font size="3/">3、删除e3-mangager-service的依赖</font></p>
+<p>&emsp;&emsp;<font size="3/">4、添加dubbo的依赖</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- dubbo相关 --&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;com.alibaba&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;dubbo&lt;/artifactId&gt;</span><br><span class="line">			&lt;exclusions&gt;</span><br><span class="line">				&lt;exclusion&gt;</span><br><span class="line">					&lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">					&lt;artifactId&gt;spring&lt;/artifactId&gt;</span><br><span class="line">				&lt;/exclusion&gt;</span><br><span class="line">				&lt;exclusion&gt;</span><br><span class="line">					&lt;groupId&gt;org.jboss.netty&lt;/groupId&gt;</span><br><span class="line">					&lt;artifactId&gt;netty&lt;/artifactId&gt;</span><br><span class="line">				&lt;/exclusion&gt;</span><br><span class="line">			&lt;/exclusions&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.zookeeper&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;zookeeper&lt;/artifactId&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;com.github.sgroschupf&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;zkclient&lt;/artifactId&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;<font size="3/">5、e3-mangager-web添加对e3-manager-Interface的依赖。</font></p>
+<p><font size="3/">第三步：修改springmvc.xml，在springmvc的配置文件中添加服务的引用。</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 引用dubbo服务 --&gt;</span><br><span class="line">    &lt;dubbo:application name=&quot;e3-manager-web&quot;/&gt;</span><br><span class="line">    &lt;dubbo:registry protocol=&quot;zookeeper&quot; address=&quot;192.168.157.128:2181&quot;/&gt;</span><br><span class="line">    &lt;dubbo:reference interface=&quot;yp.e3mall.service.ItemService&quot; id=&quot;itemService&quot; /&gt;</span><br></pre></td></tr></table></figure>
+<p><font size="3/">第四步：在e3-manager-web工程中添加tomcat插件配置。</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;build&gt;</span><br><span class="line">		&lt;plugins&gt;</span><br><span class="line">			&lt;!-- 配置Tomcat插件 --&gt;</span><br><span class="line">			&lt;plugin&gt;</span><br><span class="line">				&lt;groupId&gt;org.apache.tomcat.maven&lt;/groupId&gt;</span><br><span class="line">				&lt;artifactId&gt;tomcat7-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">				&lt;configuration&gt;</span><br><span class="line">					&lt;path&gt;/&lt;/path&gt;</span><br><span class="line">					&lt;port&gt;8081&lt;/port&gt;</span><br><span class="line">				&lt;/configuration&gt;</span><br><span class="line">			&lt;/plugin&gt;</span><br><span class="line">		&lt;/plugins&gt;</span><br><span class="line">	&lt;/build&gt;</span><br></pre></td></tr></table></figure>
+<p><font size="4">注意：<font color="red/">我们在测试这个服务的时候，需要将对象实现序列化接口，你想啊，咱们是在网络中传输的（我之前说过），并且需要在虚拟机上开启zookeeper服务，不然你查不到的，就像后面我在搭建监控中心的时候，没有开启zookeeper就在那查，结果卡了一个多小时</font></font></p>
+<h3 id="emsp-emsp-3-5-Dubbo监控中心："><a href="#emsp-emsp-3-5-Dubbo监控中心：" class="headerlink" title="&emsp;&emsp;3.5 Dubbo监控中心："></a>&emsp;&emsp;3.5 Dubbo监控中心：</h3><p>先将dubbo-admin-2.5.4.war上传到Linux服务器上去，并部署到tomcat得而webapps中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1、部署监控中心：</span><br><span class="line">[root@localhost ~]# cp dubbo-admin-2.5.4.war apache-tomcat-7.0.47/webapps/dubbo-admin.war </span><br><span class="line"></span><br><span class="line">2、启动tomcat</span><br><span class="line"></span><br><span class="line">3、访问http://192.168.25.167:8080/dubbo-admin/</span><br><span class="line">用户名：root</span><br><span class="line">密码：root</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131829359842924375.png" alt="image"></p>
+<blockquote>
+<p>以上是成功后的场景，不容易啊，卡了一个多小时呢，你在开启tomcat之前，必须先得把zookeeper服务打开，不然跑不起来</p>
+</blockquote>
+<h2 id="四-商品列表查询"><a href="#四-商品列表查询" class="headerlink" title="四.商品列表查询"></a>四.商品列表查询</h2><h3 id="emsp-emsp-4-1-导入后台页面："><a href="#emsp-emsp-4-1-导入后台页面：" class="headerlink" title="&emsp;&emsp;4.1 导入后台页面："></a>&emsp;&emsp;4.1 导入后台页面：</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131829376053002500.png" alt="image"></p>
+<h3 id="emsp-emsp-4-2-书写Controller："><a href="#emsp-emsp-4-2-书写Controller：" class="headerlink" title="&emsp;&emsp;4.2 书写Controller："></a>&emsp;&emsp;4.2 书写Controller：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 页面跳转</span><br><span class="line"> */</span><br><span class="line">@Controller</span><br><span class="line">public class PageController &#123;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/&quot;)</span><br><span class="line">    public String showInddex() &#123;</span><br><span class="line">    </span><br><span class="line">        return &quot;index&quot;;</span><br><span class="line">    </span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：@RequestMapping(“/“)，因为我们现在是先显示商城的首页，所以使用”/“,注意还需要删除掉原来自带的index.jsp</p>
+</blockquote>
+<p>访问：<a href="http://localhost:8082/" target="_blank" rel="noopener">http://localhost:8082/</a><br><br>效果如下：<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131829376049799375.png" alt="image"></p>
+<blockquote>
+<p>我们的样式呢？</p>
+</blockquote>
+<p><font size="3" color="red">傻子，我们现在用的是springmvc，在web.xml里面的前端控制器中我们配置的url-pattern是&emsp;/&emsp;所以它拦截了jsp，js，css（你可以看看之前的笔记），那怎么办呢？<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131829379290268125.png" alt="image"></font></p>
+<p><font size="3">这个时候我们需要在springmvc中配置一个资源映射，专门来映射静态资源的</font></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131829381365111875.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--配置资源映射--&gt;</span><br><span class="line">&lt;mvc:resources mapping=&quot;/css/**&quot; location=&quot;/css/&quot;/&gt;</span><br><span class="line">&lt;mvc:resources mapping=&quot;/js/**&quot; location=&quot;/js/&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-4-3-分页插件PageHelper："><a href="#emsp-emsp-4-3-分页插件PageHelper：" class="headerlink" title="&emsp;&emsp;4.3 分页插件PageHelper："></a>&emsp;&emsp;4.3 分页插件PageHelper：</h3><h4 id="emsp-emsp-emsp-emsp-4-3-1-Mybatis分页插件-PageHelper说明"><a href="#emsp-emsp-emsp-emsp-4-3-1-Mybatis分页插件-PageHelper说明" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.3.1  Mybatis分页插件 - PageHelper说明"></a>&emsp;&emsp;&emsp;&emsp;4.3.1  Mybatis分页插件 - PageHelper说明</h4><p>如果你也在用Mybatis，建议尝试该分页插件，这个一定是最方便使用的分页插件。</p>
+<p>该插件目前支持Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库分页。</p>
+<h4 id="emsp-emsp-emsp-emsp-4-3-2-使用方法"><a href="#emsp-emsp-emsp-emsp-4-3-2-使用方法" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.3.2  使用方法"></a>&emsp;&emsp;&emsp;&emsp;4.3.2  使用方法</h4><p><font size="3">第一步：把PageHelper依赖的jar包添加到工程中。官方提供的代码对逆向工程支持的不好，使用参考资料中的pagehelper-fix。</font></p>
+<p><font size="3">第二步：在Mybatis配置xml中配置拦截器插件:</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugins&gt;</span><br><span class="line">    &lt;!-- com.github.pagehelper为PageHelper类所在包名 --&gt;</span><br><span class="line">    &lt;plugin interceptor=&quot;com.github.pagehelper.PageHelper&quot;&gt;</span><br><span class="line">        &lt;!-- 设置数据库类型 Oracle,Mysql,MariaDB,SQLite,Hsqldb,PostgreSQL六种数据库--&gt;        </span><br><span class="line">        &lt;property name=&quot;dialect&quot; value=&quot;mysql&quot;/&gt;</span><br><span class="line">    &lt;/plugin&gt;</span><br><span class="line">&lt;/plugins&gt;</span><br></pre></td></tr></table></figure>
+<p><font size="3">第三步：在代码中使用</font></p>
+<p>1、设置分页信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">    //获取第1页，10条内容，默认查询总数count</span><br><span class="line">    PageHelper.startPage(1, 10);</span><br><span class="line"></span><br><span class="line">    //紧跟着的第一个select方法会被分页</span><br><span class="line">List&lt;Country&gt; list = countryMapper.selectIf(1);</span><br></pre></td></tr></table></figure>
+<p>2、取分页信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//分页后，实际返回的结果list类型是Page&lt;E&gt;，如果想取出分页信息，需要强制转换为Page&lt;E&gt;，</span><br><span class="line">Page&lt;Country&gt; listCountry = (Page&lt;Country&gt;)list;</span><br><span class="line">listCountry.getTotal();</span><br></pre></td></tr></table></figure>
+<p>3、取分页信息的第二种方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">//获取第1页，10条内容，默认查询总数count</span><br><span class="line">PageHelper.startPage(1, 10);</span><br><span class="line">List&lt;Country&gt; list = countryMapper.selectAll();</span><br><span class="line">//用PageInfo对结果进行包装</span><br><span class="line">PageInfo page = new PageInfo(list);</span><br><span class="line">//测试PageInfo全部属性</span><br><span class="line">//PageInfo包含了非常全面的分页属性</span><br><span class="line">assertEquals(1, page.getPageNum());</span><br><span class="line">assertEquals(10, page.getPageSize());</span><br><span class="line">assertEquals(1, page.getStartRow());</span><br><span class="line">assertEquals(10, page.getEndRow());</span><br><span class="line">assertEquals(183, page.getTotal());</span><br><span class="line">assertEquals(19, page.getPages());</span><br><span class="line">assertEquals(1, page.getFirstPage());</span><br><span class="line">assertEquals(8, page.getLastPage());</span><br><span class="line">assertEquals(true, page.isFirstPage());</span><br><span class="line">assertEquals(false, page.isLastPage());</span><br><span class="line">assertEquals(false, page.isHasPreviousPage());</span><br><span class="line">assertEquals(true, page.isHasNextPage());</span><br></pre></td></tr></table></figure>
+<h4 id="emsp-emsp-emsp-emsp-4-3-3-分页测试："><a href="#emsp-emsp-emsp-emsp-4-3-3-分页测试：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.3.3  分页测试："></a>&emsp;&emsp;&emsp;&emsp;4.3.3  分页测试：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class PageHelperTest &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testPageHelp() throws Exception&#123;</span><br><span class="line">        //初始化spring容器</span><br><span class="line">        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;classpath:spring/applicationContext-dao.xml&quot;);</span><br><span class="line">        //从容器中获得Mapper代理对象</span><br><span class="line">        TbItemMapper itemMapper = applicationContext.getBean(TbItemMapper.class);</span><br><span class="line">        //执行sql语句之前设置分页信息使用PageHelper的startPage方法</span><br><span class="line">        PageHelper.startPage(1,10);</span><br><span class="line">        //执行查询</span><br><span class="line">        TbItemExample tbItemExample = new TbItemExample();</span><br><span class="line">        List&lt;TbItem&gt; tbItems = itemMapper.selectByExample(tbItemExample);</span><br><span class="line">        //取分页信息，PageInfo。</span><br><span class="line">        PageInfo&lt;TbItem&gt; pageInfo = new PageInfo&lt;TbItem&gt;(tbItems);</span><br><span class="line">        // 1.可以拿到总记录数</span><br><span class="line">        System.out.println(pageInfo.getTotal());</span><br><span class="line">        // 2.总页数</span><br><span class="line">        System.out.println(pageInfo.getPages());</span><br><span class="line">        // 3.当前页数</span><br><span class="line">        System.out.println(tbItems.size());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-4-4-EasyUI功能分析："><a href="#emsp-emsp-4-4-EasyUI功能分析：" class="headerlink" title="&emsp;&emsp;4.4 EasyUI功能分析："></a>&emsp;&emsp;4.4 EasyUI功能分析：</h3><h4 id="emsp-emsp-emsp-emsp-4-4-1-商品列表页面："><a href="#emsp-emsp-emsp-emsp-4-4-1-商品列表页面：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.4.1  商品列表页面："></a>&emsp;&emsp;&emsp;&emsp;4.4.1  商品列表页面：</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131830082704955625.png" alt="image"></p>
+<p><strong>对应的jsp为：</strong><br>item-list.jsp</p>
+<p><strong>请求的url：</strong><br>/item/list</p>
+<p><strong>请求的参数：</strong><br>page=1&amp;rows=30</p>
+<p><strong>响应的json数据格式：</strong><br></p>
+<p>==Easyui中datagrid控件要求的数据格式为：==</p>
+<p>=={total:”2”,rows:[{“id”:”1”,”name”:”张三”},{“id”:”2”,”name”:”李四”}]}==</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131830083942846250.png" alt="image"></p>
+<h4 id="emsp-emsp-emsp-emsp-4-4-2-响应的json数据格式EasyUIResult："><a href="#emsp-emsp-emsp-emsp-4-4-2-响应的json数据格式EasyUIResult：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.4.2  响应的json数据格式EasyUIResult："></a>&emsp;&emsp;&emsp;&emsp;4.4.2  响应的json数据格式EasyUIResult：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class EasyUIDataGridResult &#123;</span><br><span class="line"></span><br><span class="line">    private Integer total;</span><br><span class="line"></span><br><span class="line">    private List&lt;?&gt; rows;</span><br><span class="line"></span><br><span class="line">    public EasyUIResult(Integer total, List&lt;?&gt; rows) &#123;</span><br><span class="line">        this.total = total;</span><br><span class="line">        this.rows = rows;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public EasyUIResult(Long total, List&lt;?&gt; rows) &#123;</span><br><span class="line">        this.total = total.intValue();</span><br><span class="line">        this.rows = rows;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getTotal() &#123;</span><br><span class="line">        return total;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-4-5-代码编写："><a href="#emsp-emsp-4-5-代码编写：" class="headerlink" title="&emsp;&emsp;4.5 代码编写："></a>&emsp;&emsp;4.5 代码编写：</h3><h4 id="emsp-emsp-emsp-emsp-4-5-1-Controller："><a href="#emsp-emsp-emsp-emsp-4-5-1-Controller：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.5.1  Controller："></a>&emsp;&emsp;&emsp;&emsp;4.5.1  Controller：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">@Controller</span><br><span class="line">public class ItemController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ItemService itemService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/item/&#123;itemId&#125;&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public TbItem getItemById(@PathVariable Long itemId)&#123;</span><br><span class="line">        System.out.println(&quot;*************************************&quot;);</span><br><span class="line">        System.out.println(&quot;itemId:&quot;+itemId);</span><br><span class="line">        TbItem itemById = itemService.getItemById(itemId);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;结束！！！&quot;);</span><br><span class="line">        System.out.println(&quot;itemById&quot;+itemById);</span><br><span class="line">        return itemById;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/item/list&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public EasyUIDataGridResult getItemList(Integer page,Integer rows)&#123;</span><br><span class="line">        //调用服务</span><br><span class="line">        EasyUIDataGridResult itemList = itemService.getItemList(page, rows);</span><br><span class="line">        return itemList;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看第二个方法EasyUIDataGridResult</p>
+</blockquote>
+<h4 id="emsp-emsp-emsp-emsp-4-5-2-Interface："><a href="#emsp-emsp-emsp-emsp-4-5-2-Interface：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.5.2  Interface："></a>&emsp;&emsp;&emsp;&emsp;4.5.2  Interface：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public interface ItemService &#123;</span><br><span class="line"></span><br><span class="line">	TbItem getItemById(long itemId);</span><br><span class="line">	EasyUIDataGridResult getItemList(int page,int rows);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看第二个方法EasyUIDataGridResult</p>
+</blockquote>
+<h4 id="emsp-emsp-emsp-emsp-4-5-3-Service："><a href="#emsp-emsp-emsp-emsp-4-5-3-Service：" class="headerlink" title="&emsp;&emsp;&emsp;&emsp;4.5.3  Service："></a>&emsp;&emsp;&emsp;&emsp;4.5.3  Service：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">@Service</span><br><span class="line">public class ItemServiceImpl implements ItemService &#123;</span><br><span class="line"></span><br><span class="line">	@Autowired</span><br><span class="line">	private TbItemMapper tbItemMapper;</span><br><span class="line">	</span><br><span class="line">	@Override</span><br><span class="line">	public TbItem getItemById(long itemId) &#123;</span><br><span class="line">		System.out.println(&quot;进入ItemServiceImpl，说明通信已经成功！！！&quot;);</span><br><span class="line"></span><br><span class="line">		//根据主键查询</span><br><span class="line">		//TbItem tbItem = itemMapper.selectByPrimaryKey(itemId);</span><br><span class="line">		TbItemExample example = new TbItemExample();</span><br><span class="line">		TbItemExample.Criteria criteria = example.createCriteria();</span><br><span class="line">		//设置查询条件</span><br><span class="line">		criteria.andIdEqualTo(itemId);</span><br><span class="line">		//执行查询</span><br><span class="line">		List&lt;TbItem&gt; list = tbItemMapper.selectByExample(example);</span><br><span class="line">        System.out.println(list.get(0));</span><br><span class="line">        System.out.println(&quot;ItemServiceImpl末尾&quot;);</span><br><span class="line">		if (list != null &amp;&amp; list.size() &gt; 0) &#123;</span><br><span class="line">            System.out.println(&quot;进入循环！！！&quot;);</span><br><span class="line">            return list.get(0);</span><br><span class="line">		&#125;</span><br><span class="line">        return null;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public EasyUIDataGridResult getItemList(int page, int rows) &#123;</span><br><span class="line">        //设置分页信息</span><br><span class="line">        //page:页码</span><br><span class="line">        //rows:每页显示数量</span><br><span class="line">        PageHelper.startPage(page,rows);</span><br><span class="line">        //执行查询</span><br><span class="line">        TbItemExample tbItemExample = new TbItemExample();</span><br><span class="line">        List&lt;TbItem&gt; itemList = tbItemMapper.selectByExample(tbItemExample);</span><br><span class="line">        //创建一个返回值对象</span><br><span class="line">        EasyUIDataGridResult result = new EasyUIDataGridResult();</span><br><span class="line">        result.setRows(itemList);</span><br><span class="line">        //取分页结果</span><br><span class="line">        PageInfo pageInfo = new PageInfo(itemList);</span><br><span class="line">        result.setTotal(pageInfo.getTotal());</span><br><span class="line">	    return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>看第二个方法getItemList</p>
+</blockquote>
+<blockquote>
+<p>Dao不需要，我们用的是Mybatis的分页插件</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/05/3.宜立方商城——nginx搭建/" rel="next" title="三.宜立方商城——nginx搭建">
+                <i class="fa fa-chevron-left"></i> 三.宜立方商城——nginx搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-课程计划"><span class="nav-number">1.</span> <span class="nav-text">一.课程计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-拆分工程"><span class="nav-number">2.</span> <span class="nav-text">二.拆分工程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-将工程改造为SOA架构"><span class="nav-number">3.</span> <span class="nav-text">三.将工程改造为SOA架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-3-1-分析："><span class="nav-number">3.1.</span> <span class="nav-text">  3.1 分析：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-3-2-dubbo："><span class="nav-number">3.2.</span> <span class="nav-text">  3.2 dubbo：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-2-1-什么是dubbo？"><span class="nav-number">3.2.1.</span> <span class="nav-text">    3.2.1  什么是dubbo？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-2-2-Dubbo的架构"><span class="nav-number">3.2.2.</span> <span class="nav-text">    3.2.2  Dubbo的架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-2-3-使用方法"><span class="nav-number">3.2.3.</span> <span class="nav-text">    3.2.3  使用方法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-3-3-注册中心："><span class="nav-number">3.3.</span> <span class="nav-text">  3.3 注册中心：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-3-1-Zookeeper-Apacher旗下的，Java开发-介绍"><span class="nav-number">3.3.1.</span> <span class="nav-text">    3.3.1  Zookeeper(Apacher旗下的，Java开发)介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-3-2-Zookeeper的安装"><span class="nav-number">3.3.2.</span> <span class="nav-text">    3.3.2  Zookeeper的安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-3-4-工程改造："><span class="nav-number">3.4.</span> <span class="nav-text">  3.4 工程改造：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-4-1-拆分工程（之前我们做过了，来回顾下）"><span class="nav-number">3.4.1.</span> <span class="nav-text">    3.4.1  拆分工程（之前我们做过了，来回顾下）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-4-2-服务层工程"><span class="nav-number">3.4.2.</span> <span class="nav-text">    3.4.2  服务层工程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-3-4-3-表现层工程"><span class="nav-number">3.4.3.</span> <span class="nav-text">    3.4.3  表现层工程</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-3-5-Dubbo监控中心："><span class="nav-number">3.5.</span> <span class="nav-text">  3.5 Dubbo监控中心：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-商品列表查询"><span class="nav-number">4.</span> <span class="nav-text">四.商品列表查询</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-1-导入后台页面："><span class="nav-number">4.1.</span> <span class="nav-text">  4.1 导入后台页面：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-2-书写Controller："><span class="nav-number">4.2.</span> <span class="nav-text">  4.2 书写Controller：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-3-分页插件PageHelper："><span class="nav-number">4.3.</span> <span class="nav-text">  4.3 分页插件PageHelper：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-3-1-Mybatis分页插件-PageHelper说明"><span class="nav-number">4.3.1.</span> <span class="nav-text">    4.3.1  Mybatis分页插件 - PageHelper说明</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-3-2-使用方法"><span class="nav-number">4.3.2.</span> <span class="nav-text">    4.3.2  使用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-3-3-分页测试："><span class="nav-number">4.3.3.</span> <span class="nav-text">    4.3.3  分页测试：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-4-EasyUI功能分析："><span class="nav-number">4.4.</span> <span class="nav-text">  4.4 EasyUI功能分析：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-4-1-商品列表页面："><span class="nav-number">4.4.1.</span> <span class="nav-text">    4.4.1  商品列表页面：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-4-2-响应的json数据格式EasyUIResult："><span class="nav-number">4.4.2.</span> <span class="nav-text">    4.4.2  响应的json数据格式EasyUIResult：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-5-代码编写："><span class="nav-number">4.5.</span> <span class="nav-text">  4.5 代码编写：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-5-1-Controller："><span class="nav-number">4.5.1.</span> <span class="nav-text">    4.5.1  Controller：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-5-2-Interface："><span class="nav-number">4.5.2.</span> <span class="nav-text">    4.5.2  Interface：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-5-3-Service："><span class="nav-number">4.5.3.</span> <span class="nav-text">    4.5.3  Service：</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
