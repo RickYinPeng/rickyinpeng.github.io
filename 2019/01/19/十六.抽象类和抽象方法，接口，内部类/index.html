@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaSE," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.抽象类和抽象方法1.抽象方法使用abstract修饰的方法，没有方法体，只有声明。定义的是一种“规范”，就是告诉子类必须要给抽象方法提供具体的实现。 2.抽象类包含抽象方法的类就是抽象类。通过abstract方法定义规范，然后要求子类必须定义具体实现。通过抽象类，我们就可以做到严格限制子类的设计，使子类之间更加通用。 3.看看具体实现123456789101112131415161718192">
+<meta name="keywords" content="JavaSE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十六.抽象类和抽象方法、接口、内部类">
+<meta property="og:url" content="http://yoursite.com/2019/01/19/十六.抽象类和抽象方法，接口，内部类/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.抽象类和抽象方法1.抽象方法使用abstract修饰的方法，没有方法体，只有声明。定义的是一种“规范”，就是告诉子类必须要给抽象方法提供具体的实现。 2.抽象类包含抽象方法的类就是抽象类。通过abstract方法定义规范，然后要求子类必须定义具体实现。通过抽象类，我们就可以做到严格限制子类的设计，使子类之间更加通用。 3.看看具体实现123456789101112131415161718192">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-19T14:01:34.071Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十六.抽象类和抽象方法、接口、内部类">
+<meta name="twitter:description" content="一.抽象类和抽象方法1.抽象方法使用abstract修饰的方法，没有方法体，只有声明。定义的是一种“规范”，就是告诉子类必须要给抽象方法提供具体的实现。 2.抽象类包含抽象方法的类就是抽象类。通过abstract方法定义规范，然后要求子类必须定义具体实现。通过抽象类，我们就可以做到严格限制子类的设计，使子类之间更加通用。 3.看看具体实现123456789101112131415161718192">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/19/十六.抽象类和抽象方法，接口，内部类/"/>
+
+
+
+
+
+  <title>十六.抽象类和抽象方法、接口、内部类 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/19/十六.抽象类和抽象方法，接口，内部类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">十六.抽象类和抽象方法、接口、内部类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-19T21:57:37+08:00">
+                2019-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-抽象类和抽象方法"><a href="#一-抽象类和抽象方法" class="headerlink" title="一.抽象类和抽象方法"></a>一.抽象类和抽象方法</h2><h3 id="1-抽象方法"><a href="#1-抽象方法" class="headerlink" title="1.抽象方法"></a>1.抽象方法</h3><p>使用abstract修饰的方法，没有方法体，只有声明。定义的是一种“规范”，<font size="3" color="red">就是告诉子类必须要给抽象方法提供具体的实现。</font></p>
+<h3 id="2-抽象类"><a href="#2-抽象类" class="headerlink" title="2.抽象类"></a>2.抽象类</h3><p>包含抽象方法的类就是抽象类。通过abstract方法定义规范，然后要求子类必须定义具体实现。通过抽象类，我们就可以做到严格限制子类的设计，使子类之间更加通用。</p>
+<h3 id="3-看看具体实现"><a href="#3-看看具体实现" class="headerlink" title="3.看看具体实现"></a>3.看看具体实现</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Animal</span><br><span class="line"> * @Description 抽象类和抽象方法</span><br><span class="line"> * @date 2019/1/19/11:18</span><br><span class="line"> */</span><br><span class="line">public abstract class Animal &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 抽象类也可以定义普通的字段属性</span><br><span class="line">     */</span><br><span class="line">    private String name;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 抽象类可以包含构造方法，但是我们不能调用这个构造方法，会报错</span><br><span class="line">     */</span><br><span class="line">    public Animal() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 如果一个类中有抽象方法，那么这个类一定是抽象类</span><br><span class="line">     * 抽象方法的意义在于：将方法的设计和方法的实现分离了</span><br><span class="line">     */</span><br><span class="line">    public abstract void run();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 抽象类中可以有普通方法，就跟我们平常的类一样</span><br><span class="line">     */</span><br><span class="line">    public void breath()&#123;</span><br><span class="line">        System.out.println(&quot;普通方法&quot;);</span><br><span class="line">        /**</span><br><span class="line">         * 我们在这个抽象类的普通方法中调用了它的一个抽象方法，有人就疑惑了，其实这里会调用子类的run方法</span><br><span class="line">         * 这个我们之前说过，在多态提高篇中说过</span><br><span class="line">         */</span><br><span class="line">        run();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 子类继承一个抽象类：</span><br><span class="line"> * 1：要么实现抽象类的所有抽象方法</span><br><span class="line"> * 2：要么将其本身定义为抽象类，就像这样：class abstract Cat extends Animal&#123;&#125; 这样就可以不用重写抽象方法了</span><br><span class="line"> */</span><br><span class="line">class Cat extends Animal&#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 子类继承抽象类，那么必须实现抽象类中的抽象方法</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-抽象类的注意事项："><a href="#4-抽象类的注意事项：" class="headerlink" title="4. 抽象类的注意事项："></a>4. 抽象类的注意事项：</h3><font size="3" color="red"><br>1. 抽象类也可以定义普通的字段属性<br><br>2. 抽象类可以包含构造方法，但是我们不能调用这个构造方法，会报错<br><br>3. 如果一个类中有抽象方法，那么这个类一定是抽象类<br><br>4. 抽象类中可以有普通方法，就跟我们平常的类一样<br><br></font>
+
+<h2 id="二-接口"><a href="#二-接口" class="headerlink" title="二.接口"></a>二.接口</h2><h3 id="1-为什么需要接口-接口和抽象类的区别"><a href="#1-为什么需要接口-接口和抽象类的区别" class="headerlink" title="1.为什么需要接口?接口和抽象类的区别?"></a>1.为什么需要接口?接口和抽象类的区别?</h3><font color="red">接口就是比“抽象类”还“抽象”的“抽象类”，</font>可以更加规范的对子类进行约束。全面地专业地实现了：规范和具体实现的分离。<br><br>抽象类还提供某些具体实现，<font color="red">接口不提供任何实现，接口中所有方法都是抽象方法。</font>接口是完全面向规范的，规定了一批类具有的公共方法规范。<br><br><font size="4" color="red">接口和实现类不是父子关系，</font>是实现规则的关系。比如：我定义一个接口Runnable，Car实现它就能在地上跑，Train实现它也能在地上跑，飞机实现它也能在地上跑。就是说，如果它是交通工具，就一定能跑，但是一定要实现Runnable接口。<br><br>接口的本质是<font size="3" color="red">契约</font>，就像我们人间的法律一样。制定好后大家都遵守。<br><br>### 2.如何定义和使用接口?<br><br>#### 2.1 声明格式<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[访问修饰符]  interface 接口名   [extends  父接口1，父接口2…]  &#123;</span><br><span class="line">    常量定义；  </span><br><span class="line">    方法定义；</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>#### 2.2 <font color="red">定义接口的详细说明</font><br>1. 访问修饰符：只能是public或默认。<br>2. 接口名：和类名采用相同命名机制。<br>3. extends：接口可以多继承。<br>4. 常量：接口中的属性只能是常量，总是：public static final 修饰。不写也是。<br>5. 方法：接口中的方法只能是：public abstract。 省略的话，也是public abstract。<br><br>#### 2.3 <font color="red">注意</font><br>1. 子类通过implements来实现接口中的规范。<br>2. 接口不能创建实例，但是可用于声明引用变量类型。<br>3. 一个类实现了接口，必须实现接口中所有的方法，并且这些方法只能是public的。<br>4. JDK1.7之前，接口中只能包含静态常量、抽象方法，不能有普通属性、构造方法、普通方法。<br>5. JDK1.8后，接口中包含普通的静态方法。<br><br>#### 2.4 具体使用<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_05</span><br><span class="line"> * @Description 接口</span><br><span class="line"> * @date 2019/1/19/11:36</span><br><span class="line"> */</span><br><span class="line">public class Test_05 &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface MyInterface&#123;</span><br><span class="line">    /**</span><br><span class="line">     * 接口中只有：常量和抽象方法</span><br><span class="line">     * 注意：</span><br><span class="line">     *      接口中的常量前面的修饰是 public static final 你写都不写他都有</span><br><span class="line">      */</span><br><span class="line">    /*public static final */String MAX_GREAD=&quot;BOSS&quot;;</span><br><span class="line">    int MAX_SPEED=120;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 注意：</span><br><span class="line">     *      接口中的方法不能是私有的，也即不能是private修饰的</span><br><span class="line">     */</span><br><span class="line">    /*private void test03();*/</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 注意：</span><br><span class="line">     *      接口中的方法默认修饰就是 public abstract 修饰的，你写与不写都是一样的</span><br><span class="line">     */</span><br><span class="line">    /*public abstract */void test01();</span><br><span class="line">    public int test02(int a,int b);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * JDK1.8中接口中可以有方法了，但是必须是default修饰的</span><br><span class="line">     */</span><br><span class="line">    default void test()&#123;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 实现接口，必须实现接口中的方法，默认方法可以不用实现</span><br><span class="line"> */</span><br><span class="line">class MyClass implements MyInterface&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void test01() &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 所以接口中这个常量是 public static final 修饰的(加于不加都是这样)</span><br><span class="line">         */</span><br><span class="line">        String a = MyInterface.MAX_GREAD;</span><br><span class="line">        System.out.println(&quot;test01&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int test02(int a, int b) &#123;</span><br><span class="line">        System.out.println(a+b);</span><br><span class="line">        return a+b;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>#### 2.5 接口的多继承<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_06</span><br><span class="line"> * @Description 接口支持多继承</span><br><span class="line"> * @date 2019/1/19/11:59</span><br><span class="line"> */</span><br><span class="line">interface InterfaceA&#123;</span><br><span class="line">    void aaa();</span><br><span class="line">&#125;</span><br><span class="line">interface InterfaceB&#123;</span><br><span class="line">    void bbb();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 接口支持多继承，那么现在接口InterfaceC就拥有接口InterfaceA和InterfaceB的方法了,即拥有aaa()和bbb();</span><br><span class="line"> */</span><br><span class="line">interface InterfaceC extends InterfaceA,InterfaceB&#123;</span><br><span class="line">    void ccc();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 所以当一个类实现InterfaceC的时候需要去重写这三个方法</span><br><span class="line"> */</span><br><span class="line">class TestClass implements InterfaceC&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void aaa() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void bbb() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void ccc() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>## 三.内部类<br><br>一般情况，我们把类定义成独立的单元。有些情况下，我们把一个类放在另一个类的内部定义，称为内部类(innerclasses)。<br><br>内部类可以使用public、default、protected 、private以及static修饰。<font size="3" color="red">而外部顶级类(我们以前接触的类)只能使用public和default修饰。</font>
+
+<p>内部类只是一个编译时概念，一旦我们编译成功，就会成为完全不同的两个类。对于一个名为Outer的外部类和其内部定义的名为Inner的内部类。编译完成后会出现Outer.class和Outer$Inner.class两个类的字节码文件。所以内部类是相对独立的一种存在，其成员变量/方法名可以和外部类的相同。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/**外部类Outer*/</span><br><span class="line">class Outer &#123;</span><br><span class="line">    private int age = 10;</span><br><span class="line">    public void show()&#123;</span><br><span class="line">        System.out.println(age);//10</span><br><span class="line">    &#125;</span><br><span class="line">    /**内部类Inner*/</span><br><span class="line">    public class Inner &#123;</span><br><span class="line">        //内部类中可以声明与外部类同名的属性与方法</span><br><span class="line">        private int age = 20;</span><br><span class="line">        public void show()&#123;</span><br><span class="line">            System.out.println(age);//20</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-内部类分类"><a href="#1-内部类分类" class="headerlink" title="1.内部类分类"></a>1.内部类分类</h3><p>在Java中内部类主要分为<font size="3" color="red">成员内部类(非静态内部类、静态内部类)、匿名内部类、局部内部类。</font></p>
+<h3 id="2-成员内部类"><a href="#2-成员内部类" class="headerlink" title="2.成员内部类"></a>2.成员内部类</h3><p>成员内部类(可以使用private、default、protected、public任意进行修饰。 类文件：外部类$内部类.class)</p>
+<h4 id="2-1-非静态内部类-外部类里使用非静态内部类和平时使用其他类没什么不同"><a href="#2-1-非静态内部类-外部类里使用非静态内部类和平时使用其他类没什么不同" class="headerlink" title="2.1 非静态内部类(外部类里使用非静态内部类和平时使用其他类没什么不同)"></a>2.1 非静态内部类(外部类里使用非静态内部类和平时使用其他类没什么不同)</h4><ol>
+<li><font size="3" color="red">非静态内部类必须寄存在一个外部类对象里。因此，如果有一个非静态内部类对象那么一定存在对应的外部类对象。</font>非静态内部类对象单独属于外部类的某个对象。</li>
+<li>非静态内部类可以直接访问外部类的成员，但是外部类不能直接访问非静态内部类成员。</li>
+<li>非静态内部类不能有静态方法、静态属性和静态初始化块。</li>
+<li>外部类的静态方法、静态代码块不能访问非静态内部类，包括不能使用非静态内部类定义变量、创建实例。</li>
+</ol>
+<h5 id="成员变量访问要点："><a href="#成员变量访问要点：" class="headerlink" title="成员变量访问要点："></a>成员变量访问要点：</h5><ol>
+<li>在内部类中访问内部类里方法的局部变量：直接写变量名即可。</li>
+<li>在内部类中访问内部类属性：要写this.变量名。</li>
+<li>在内部类中访问外部类属性：要写外部类名.this.变量名。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_InnerClass_06</span><br><span class="line"> * @Description 测试非静态内部类</span><br><span class="line"> * @date 2019/1/19/15:04</span><br><span class="line"> */</span><br><span class="line">public class Test_06_InnerClass &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        //创建内部类对象</span><br><span class="line">        Outer.Inner inner = new Outer().new Inner();</span><br><span class="line"></span><br><span class="line">        inner.show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Outer&#123;</span><br><span class="line">    private int age = 10;</span><br><span class="line"></span><br><span class="line">    public void testOuter()&#123;</span><br><span class="line">        System.out.println(&quot;Outer.testOuter()&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 虽然Inner是Outer的内部类，但是在编译生成的时候还是会生成两个class文件</span><br><span class="line">     */</span><br><span class="line">    /**</span><br><span class="line">     * 非静态内部类：class Inner&#123;&#125;</span><br><span class="line">     *        1：非静态内部类可以直接访问外部类的成员，但是外部类不能直接访问非静态内部类成员</span><br><span class="line">     *        2：静态内部类不能有静态方法、静态属性和静态初始化块</span><br><span class="line">     * 静态内部类： static class Inner&#123;&#125;</span><br><span class="line">     *        1：当一个静态内部类存在时，并不一定存在对应的外部类对象。所以静态内部类的实例方法不能直接访问外部类的实例方法</span><br><span class="line">     *        2：静态内部类看作外部类的一个静态成员，因此，外部类的方法中可以通过:&quot;静态内部类.名字&quot;的方式访问静态内部类的静态成员</span><br><span class="line">     *        3：通过 new 静态内部类()访问静态内部类的实例</span><br><span class="line">     */</span><br><span class="line">    class Inner&#123;</span><br><span class="line"></span><br><span class="line">        /*static &#123;</span><br><span class="line">           会报错</span><br><span class="line">        &#125;*/</span><br><span class="line"></span><br><span class="line">        int age = 20;</span><br><span class="line"></span><br><span class="line">        public void show()&#123;</span><br><span class="line">            int age = 30;</span><br><span class="line">            System.out.println(&quot;外部类的成员变量age：&quot;+Outer.this.age);</span><br><span class="line">            System.out.println(&quot;内部类的成员变量age：&quot;+this.age);</span><br><span class="line">            System.out.println(&quot;局部变量age：&quot;+age);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-静态内部类"><a href="#2-2-静态内部类" class="headerlink" title="2.2 静态内部类"></a>2.2 静态内部类</h4><p>定义方式：<br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">static  class   ClassName &#123;</span><br><span class="line">//类体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font size="3" color="red">注意：</font></p>
+<ol>
+<li><font size="3" color="red">当一个静态内部类对象存在，并不一定存在对应的外部类对象。</font> 因此，静态内部类的实例方法不能直接访问外部类的实例方法。</li>
+<li>静态内部类看做外部类的一个静态成员。 因此，外部类的方法中可以通过：“静态内部类.名字”的方式访问静态内部类的静态成员，通过 new 静态内部类()访问静态内部类的实例。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package yp.JavaSE.Review_05;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_07_staticClass</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2019/1/19/15:22</span><br><span class="line"> */</span><br><span class="line">public class Test_07_staticClass &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 创建静态内部类</span><br><span class="line">         */</span><br><span class="line">        Outer2.Inner2 inner2 = new Outer2.Inner2();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Outer2&#123;</span><br><span class="line"></span><br><span class="line">    private int age = 10;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 外部类可以访问静态内部类的静态成员变量，但是不能访问非静态成员变量</span><br><span class="line">     */</span><br><span class="line">    public void testOuter()&#123;</span><br><span class="line"></span><br><span class="line">        System.out.println(Inner2.age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 静态内部类</span><br><span class="line">     */</span><br><span class="line">    static class Inner2&#123;</span><br><span class="line">        /**</span><br><span class="line">         * 静态内部类可以创建静态成员</span><br><span class="line">         */</span><br><span class="line">        static int age;</span><br><span class="line"></span><br><span class="line">        public String name;</span><br><span class="line"></span><br><span class="line">        public void show()&#123;</span><br><span class="line">            /**</span><br><span class="line">             * 静态内部类不能直接访问外部类的成员变量</span><br><span class="line">             */</span><br><span class="line">            /*System.out.println(Outer2.this.age);*/</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-匿名内部类"><a href="#3-匿名内部类" class="headerlink" title="3.匿名内部类"></a>3.匿名内部类</h3><p>适合那种只需要使用一次的类。比如：键盘监听操作等等。</p>
+<p>语法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">new  父类构造器(实参类表) \实现接口 () &#123;</span><br><span class="line">           //匿名内部类类体！</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>匿名内部类的使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_08_anonymousInnerClass</span><br><span class="line"> * @Description 测试匿名内部类</span><br><span class="line"> * @date 2019/1/19/15:51</span><br><span class="line"> */</span><br><span class="line">public class Test_08_anonymousInnerClass &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test_08_anonymousInnerClass.test01(new A() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void aa() &#123;</span><br><span class="line">                System.out.println(&quot;匿名内部类&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void test01(A a)&#123;</span><br><span class="line">        a.aa();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface A&#123;</span><br><span class="line">    void aa();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注意：</p>
+<ol>
+<li>匿名内部类没有访问修饰符。</li>
+<li>匿名内部类没有构造方法。因为它连名字都没有那又何来构造方法呢。</li>
+</ol>
+<h3 id="4-局部内部类"><a href="#4-局部内部类" class="headerlink" title="4.局部内部类"></a>4.局部内部类</h3><p>还有一种内部类，它是定义在方法内部的，作用域只限于本方法，称为局部内部类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Test2 &#123;</span><br><span class="line">    public void show() &#123;</span><br><span class="line">        //作用域仅限于该方法</span><br><span class="line">        class Inner &#123;</span><br><span class="line">            public void fun() &#123;</span><br><span class="line">                System.out.println(&quot;helloworld&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        new Inner().fun();</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new Test2().show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/18/二.多态提高/" rel="next" title="二.多态提高">
+                <i class="fa fa-chevron-left"></i> 二.多态提高
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/19/十五.final关键字，数组/" rel="prev" title="十五.final关键字、数组">
+                十五.final关键字、数组 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-抽象类和抽象方法"><span class="nav-number">1.</span> <span class="nav-text">一.抽象类和抽象方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-抽象方法"><span class="nav-number">1.1.</span> <span class="nav-text">1.抽象方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-抽象类"><span class="nav-number">1.2.</span> <span class="nav-text">2.抽象类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-看看具体实现"><span class="nav-number">1.3.</span> <span class="nav-text">3.看看具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-抽象类的注意事项："><span class="nav-number">1.4.</span> <span class="nav-text">4. 抽象类的注意事项：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-接口"><span class="nav-number">2.</span> <span class="nav-text">二.接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-为什么需要接口-接口和抽象类的区别"><span class="nav-number">2.1.</span> <span class="nav-text">1.为什么需要接口?接口和抽象类的区别?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-内部类分类"><span class="nav-number">2.2.</span> <span class="nav-text">1.内部类分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-成员内部类"><span class="nav-number">2.3.</span> <span class="nav-text">2.成员内部类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-非静态内部类-外部类里使用非静态内部类和平时使用其他类没什么不同"><span class="nav-number">2.3.1.</span> <span class="nav-text">2.1 非静态内部类(外部类里使用非静态内部类和平时使用其他类没什么不同)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#成员变量访问要点："><span class="nav-number">2.3.1.1.</span> <span class="nav-text">成员变量访问要点：</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-静态内部类"><span class="nav-number">2.3.2.</span> <span class="nav-text">2.2 静态内部类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-匿名内部类"><span class="nav-number">2.4.</span> <span class="nav-text">3.匿名内部类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-局部内部类"><span class="nav-number">2.5.</span> <span class="nav-text">4.局部内部类</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
