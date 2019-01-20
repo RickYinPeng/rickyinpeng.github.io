@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础之小知识点拆分," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。 分析方法测试代码 1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&amp;quot;hello&amp;quot;);stringBuffer.append(&amp;quot;hello11&amp;quot;); 构造函数分">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三.StringBuffer和StringBuilder可变的源码分析">
+<meta property="og:url" content="http://yoursite.com/2019/01/20/三.StringBuffer和StringBuilder可变的源码分析/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。 分析方法测试代码 1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&amp;quot;hello&amp;quot;);stringBuffer.append(&amp;quot;hello11&amp;quot;); 构造函数分">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8_131924567416892031.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/10_131924570042360781.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/10_131924570042360781.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/11_131924574276423281.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/12.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/13.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/14.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/15.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/16.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/17.png">
+<meta property="og:updated_time" content="2019-01-20T11:55:55.499Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="三.StringBuffer和StringBuilder可变的源码分析">
+<meta name="twitter:description" content="目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。 分析方法测试代码 1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&amp;quot;hello&amp;quot;);stringBuffer.append(&amp;quot;hello11&amp;quot;); 构造函数分">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8_131924567416892031.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/20/三.StringBuffer和StringBuilder可变的源码分析/"/>
+
+
+
+
+
+  <title>三.StringBuffer和StringBuilder可变的源码分析 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/20/三.StringBuffer和StringBuilder可变的源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">三.StringBuffer和StringBuilder可变的源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-20T19:53:57+08:00">
+                2019-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h3><p>本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。</p>
+<h3 id="分析方法"><a href="#分析方法" class="headerlink" title="分析方法"></a>分析方法</h3><p>测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">StringBuffer stringBuffer = new StringBuffer(); //断点</span><br><span class="line"> </span><br><span class="line">stringBuffer.append(&quot;hello&quot;);</span><br><span class="line">stringBuffer.append(&quot;hello11&quot;);</span><br></pre></td></tr></table></figure>
+<h3 id="构造函数分析"><a href="#构造函数分析" class="headerlink" title="构造函数分析"></a>构造函数分析</h3><font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Constructs a string buffer with no characters in it and an</span><br><span class="line"> * initial capacity of 16 characters.</span><br><span class="line"> */</span><br><span class="line">public StringBuffer() &#123;</span><br><span class="line">    super(16);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8_131924567416892031.png" alt="image"></p>
+<blockquote>
+<p>以上代码调用父类的有参构造，并传入16作为参数</p>
+</blockquote>
+<p>我们再次跟进 super(16) 进入父类的有参构造</p>
+<font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Creates an AbstractStringBuilder of the specified capacity.</span><br><span class="line"> */</span><br><span class="line">AbstractStringBuilder(int capacity) &#123;</span><br><span class="line">    value = new char[capacity];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/10_131924570042360781.png" alt="image"></p>
+<blockquote>
+<p>我们发现这里给value初始化了一个大小为16（就是我们刚刚传进来的）的一个char数组，这个value是什么呢？我们再次跟进value</p>
+</blockquote>
+<font color="blue" size="3">value</font>
+
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/10_131924570042360781.png" alt="image"></p>
+<font size="3"><br>我们发现这个value是StringBuffer和StringBuilder的父类AbstractStringBuilder的一个值，其实我们的StringBuffer和StringBuilder就是将字符串保存在这个char数组中的（类比你可以去看看String的源码，也是讲字符串保存在char数组中的，而且是final修饰的，这也就是String为什么不可变的原因）,而这一步就是给这个数组初始化容量为16，我们接着往下走<br></font><br><br><br><font size="3" color="red"><br>通过上述代码我们知道，StringBuffer 的父类是 AbstractStringBuilder，这是一个抽象类。其构造函数初始化了一个默认大小的字符数组，而这个字符数组的大小正是传进来的参数。<br><br>通过字符数组来保存字符串信息，为什么默认大小为16，如果字符串超过16，超过了字符数组的大小了怎么办？<br></font>
+
+<h3 id="append方法分析"><a href="#append方法分析" class="headerlink" title="append方法分析"></a>append方法分析</h3><font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public synchronized StringBuffer append(String str) &#123;</span><br><span class="line">    toStringCache = null;</span><br><span class="line">    super.append(str);</span><br><span class="line">    return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/11_131924574276423281.png" alt="image"></p>
+<blockquote>
+<p>从上述代码可以看到，直接调用了父类 AbstractStringBuilder 类的 append 方法。</p>
+</blockquote>
+<p>我们来看看父类的append(String s)方法</p>
+<font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public AbstractStringBuilder append(String str) &#123;</span><br><span class="line">    if (str == null)</span><br><span class="line">        return appendNull();</span><br><span class="line">    int len = str.length();</span><br><span class="line">    ensureCapacityInternal(count + len);</span><br><span class="line">    str.getChars(0, len, value, count);</span><br><span class="line">    count += len;</span><br><span class="line">    return this;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/12.png" alt="image"></p>
+<ol>
+<li>首先判断追加的字符串是否为 null，如果为 null 则执行 appendNull()方法。首先不看这个方法</li>
+<li>根据上面测试代码编写的：stringBuffer.append(“hello”);</li>
+<li>我们追加的是一个字符串”hello”，并非 null 值。</li>
+<li>获取追加字符串的长度 len值为5。</li>
+<li>下面将进入 <font color="blue">ensureCapacityInternal ()</font>方法，该方法的参数为 count+len = 0 + 5 = 5.</li>
+</ol>
+<p>这个 count属性是什么意思呢？我们来看看</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/13.png" alt="image"></p>
+<font size="3"><br>从代码的注释我们可以看到，count 表示的是已经使用的字符数量。<br><br><br>从前面分析构造函数我们知道这些字符串都是存储在一个字符数组中，而 count 指的就是这个字符数组已经使用了多少个<br><br>由于我们是第一次执行 append 方法，此前没有追加任何的字符，因此此时 count 为0，当我们追加完成后，此时 count 的值就要更新为5，表示此时的字符数组中已经有5个字符了。<br><br>所以 <font color="blue">ensureCapacityInternal()</font>方法的参数指的是已经使用的字符数量+将要使用的字符数量，即字符数组的最小容量大小。<br><br>该方法确定了新字符数组的容量，并初始化新字符数组，将原有字符数组内容复制到新字符数组中。<br><br></font>
+
+<h3 id="ensureCapacityInternal-方法"><a href="#ensureCapacityInternal-方法" class="headerlink" title="ensureCapacityInternal()方法"></a>ensureCapacityInternal()方法</h3><font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * For positive values of &#123;@code minimumCapacity&#125;, this method</span><br><span class="line"> * behaves like &#123;@code ensureCapacity&#125;, however it is never</span><br><span class="line"> * synchronized.</span><br><span class="line"> * If &#123;@code minimumCapacity&#125; is non positive due to numeric</span><br><span class="line"> * overflow, this method throws &#123;@code OutOfMemoryError&#125;.</span><br><span class="line"> */</span><br><span class="line">private void ensureCapacityInternal(int minimumCapacity) &#123;</span><br><span class="line">    // overflow-conscious code</span><br><span class="line">    if (minimumCapacity - value.length &gt; 0) &#123;</span><br><span class="line">        value = Arrays.copyOf(value,</span><br><span class="line">                newCapacity(minimumCapacity));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/14.png" alt="image"></p>
+<font size="3"><br><br>通过前面构造函数的分析，我们了解到 StringBuffer 的底层是使用字符数组来存储这些字符串的，而且默认的大小是16，一旦这个字符数组用完了，就得重新分配新的字符数组，并将以前的字符数组内容复制到新的字符数组中。<br><br><font color="blue">minimumCapacity</font>指的就是当前字符串的最小容量，如果这个容量比当前字符数组的容量要大，则需要重新申请新的字符数组，并将以前字符数组的内容复制到新的字符数组中。<br><br>那么新的字符数组容量是多少呢？<br><br>答案就在 <font color="blue">newCapacity(minimumCapacity)</font>方法中<br><br>### newCapacity()方法<br><br><font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private int newCapacity(int minCapacity) &#123;</span><br><span class="line">    // overflow-conscious code</span><br><span class="line">    int newCapacity = (value.length &lt;&lt; 1) + 2;</span><br><span class="line">    if (newCapacity - minCapacity &lt; 0) &#123;</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    &#125;</span><br><span class="line">    return (newCapacity &lt;= 0 || MAX_ARRAY_SIZE - newCapacity &lt; 0)</span><br><span class="line">        ? hugeCapacity(minCapacity)</span><br><span class="line">        : newCapacity;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/15.png" alt="image"></p>
+<font size="3"><br>默认的 <font color="blue">newCapacity</font> 大小是原有的字符数组大小左移一位加上2，即2*oldCapacity+2，将原有的字符数组扩大一倍再加上2。为什么是这样的一种算法呢？直接左移一位不就可以了吗？为什么还要加2？<br><br>这里面的<font color="blue">newCapacity </font>和 <font color="blue">minCapacity </font>两个变量容易产生混淆，其中 <font color="blue">newCapacity</font> 指的是字符数组新的容量大小，而 <font color="blue">minCapacity </font>指的是当前要存储字符串而需要的最小容量。因此要想能够存储当前字符串，就必须保证<font color="blue"> newCapacity &gt;= minCapacity。</font>
+
+<p>所以上述源码中加了一个判断<font color="blue">newCapacity</font> 是否大于 <font color="blue">minCapacity</font>，如果不是则 <font color="blue">newCapacity </font>的大小直接设置为 <font color="blue">minCapacity。</font></p>
+<p>最后返回的时候，还加上了相关判断信息，当 <font color="blue">newCapacity</font> 超过了当前数组的最大值的时候，执行 hugeCapacity()方法。 </p>
+<h3 id="Arrays-copyOf方法"><a href="#Arrays-copyOf方法" class="headerlink" title="Arrays.copyOf方法"></a>Arrays.copyOf方法</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/16.png" alt="image"></p>
+<h3 id="str-getChars-方法"><a href="#str-getChars-方法" class="headerlink" title="str.getChars()方法"></a>str.getChars()方法</h3><font color="blue" size="3">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public void getChars(int srcBegin, int srcEnd, char dst[], int dstBegin) &#123;</span><br><span class="line">    if (srcBegin &lt; 0) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(srcBegin);</span><br><span class="line">    &#125;</span><br><span class="line">    if (srcEnd &gt; value.length) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(srcEnd);</span><br><span class="line">    &#125;</span><br><span class="line">    if (srcBegin &gt; srcEnd) &#123;</span><br><span class="line">        throw new StringIndexOutOfBoundsException(srcEnd - srcBegin);</span><br><span class="line">    &#125;</span><br><span class="line">    System.arraycopy(value, srcBegin, dst, dstBegin, srcEnd - srcBegin);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/17.png" alt="image"></p>
+<font size="3"><br>getChars()为 String 类的方法，通过调用 System.arraycopy()系统方法完成将当前字符串的 scrBegin ~ srcEnd 复制到字符数组的 dstBegin 位置。<br></font>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>本文分析了 StringBuffer 类的 append 方法，通过分析我们知道append方法的所有工作都是由父类 AbstractStringBuilder 完成的。基本的思路是检查当前字符数组的容量是否足够，如果不够，则申请新的字符数组，然后将原有字符数组的内容复制到新的字符数组。最后将追加的字符串复制到新的字符数组后面，从而完成追加操作。</p>
+<font size="3" color="red"><br>如果让你来设计一个类来完成字符串的不断追加操作，你会怎么设计呢？<br></font>
+
+<p><br>可能大部分同学想到的都是每次申请一个新的字符数组，将原有数组的内容复制到新数组，最后将追加的字符串复制到新数组后面。</p>
+<p>这种实现方式最大的问题就是效率。不停的进行数组的复制操作导致效率非常低下，因此StringBuffer 提出的思路是每次我多申请一些字符数组，当容量不够的时候，申请原有容量2倍+2的容量，而不仅仅是满足 minCapacity 最小容量的大小。这就是提升效率的一种方式，这种设计方式在很多场景都有应用。</p>
+</font></font>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/19/十五.final关键字，数组/" rel="next" title="十五.final关键字、数组">
+                <i class="fa fa-chevron-left"></i> 十五.final关键字、数组
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/20/十七.String类，Arrays工具类，折半查找，包装类/" rel="prev" title="十七.String类，Arrays工具类，折半查找，包装类">
+                十七.String类，Arrays工具类，折半查找，包装类 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">59</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#目标"><span class="nav-number">1.</span> <span class="nav-text">目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析方法"><span class="nav-number">2.</span> <span class="nav-text">分析方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数分析"><span class="nav-number">3.</span> <span class="nav-text">构造函数分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#append方法分析"><span class="nav-number">4.</span> <span class="nav-text">append方法分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ensureCapacityInternal-方法"><span class="nav-number">5.</span> <span class="nav-text">ensureCapacityInternal()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Arrays-copyOf方法"><span class="nav-number">6.</span> <span class="nav-text">Arrays.copyOf方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#str-getChars-方法"><span class="nav-number">7.</span> <span class="nav-text">str.getChars()方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">8.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
