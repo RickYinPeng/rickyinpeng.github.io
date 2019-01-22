@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础之小知识点拆分," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言ArrayList我们总是常用，但是其底层具体怎么实现呢？我们今天就来看看 一.例子我们以一段代码来展开分析 123456789101112131415161718192021222324252627282930313233/** * @author RickYinPeng * @ClassName Test_03_ArrayList * @Description * @date 2019/1">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四.ArrayList底层源码实现">
+<meta property="og:url" content="http://yoursite.com/2019/01/22/四.ArrayList底层源码实现/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="前言ArrayList我们总是常用，但是其底层具体怎么实现呢？我们今天就来看看 一.例子我们以一段代码来展开分析 123456789101112131415161718192021222324252627282930313233/** * @author RickYinPeng * @ClassName Test_03_ArrayList * @Description * @date 2019/1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926088982046250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131926089384233750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131926090314077500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131926095373296250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131926105122046250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131926105874702500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8_131926108473296250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9_131926123294077500.png">
+<meta property="og:updated_time" content="2019-01-22T06:35:52.690Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="四.ArrayList底层源码实现">
+<meta name="twitter:description" content="前言ArrayList我们总是常用，但是其底层具体怎么实现呢？我们今天就来看看 一.例子我们以一段代码来展开分析 123456789101112131415161718192021222324252627282930313233/** * @author RickYinPeng * @ClassName Test_03_ArrayList * @Description * @date 2019/1">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926088982046250.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/22/四.ArrayList底层源码实现/"/>
+
+
+
+
+
+  <title>四.ArrayList底层源码实现 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/22/四.ArrayList底层源码实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">四.ArrayList底层源码实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-22T14:34:59+08:00">
+                2019-01-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>ArrayList我们总是常用，但是其底层具体怎么实现呢？我们今天就来看看</p>
+<h2 id="一-例子"><a href="#一-例子" class="headerlink" title="一.例子"></a>一.例子</h2><p>我们以一段代码来展开分析</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_03_ArrayList</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2019/1/22/11:42</span><br><span class="line"> */</span><br><span class="line">public class Test_03_ArrayList &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ArrayList&lt;String&gt; list01 = new ArrayList&lt;&gt;();</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;01_aa&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;02_bb&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;03_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;04_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;05_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;06_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;07_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;08_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;09_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;10_cc&quot;);</span><br><span class="line">        </span><br><span class="line">        list01.add(&quot;11_cc&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在分析之前我们先来看看ArrayList的构造方法</p>
+<h2 id="二-构造方法分析"><a href="#二-构造方法分析" class="headerlink" title="二.构造方法分析"></a>二.构造方法分析</h2><font size="3" color="blue">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * Constructs an empty list with the specified initial capacity.</span><br><span class="line">     *</span><br><span class="line">     * @param  initialCapacity  the initial capacity of the list</span><br><span class="line">     * @throws IllegalArgumentException if the specified initial capacity</span><br><span class="line">     *         is negative</span><br><span class="line">     */</span><br><span class="line">    public ArrayList(int initialCapacity) &#123;</span><br><span class="line">        if (initialCapacity &gt; 0) &#123;</span><br><span class="line">            this.elementData = new Object[initialCapacity];</span><br><span class="line">        &#125; else if (initialCapacity == 0) &#123;</span><br><span class="line">            this.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;Illegal Capacity: &quot;+</span><br><span class="line">                                               initialCapacity);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Constructs an empty list with an initial capacity of ten.</span><br><span class="line">     */</span><br><span class="line">    public ArrayList() &#123;</span><br><span class="line">        this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这里有两个构造，一个是有参构造一个是无参构造</p>
+<h3 id="2-1我们先来看看有参构造"><a href="#2-1我们先来看看有参构造" class="headerlink" title="2.1我们先来看看有参构造"></a>2.1我们先来看看有参构造</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList(int initialCapacity) &#123;</span><br><span class="line">        if (initialCapacity &gt; 0) &#123;</span><br><span class="line">            this.elementData = new Object[initialCapacity];</span><br><span class="line">        &#125; else if (initialCapacity == 0) &#123;</span><br><span class="line">            this.elementData = EMPTY_ELEMENTDATA;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;Illegal Capacity: &quot;+</span><br><span class="line">                                               initialCapacity);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<font size="3"><strong>分析有参构造</strong>：</font>
+
+<p>当我们通过有参构造来new一个ArrayList时，传入参数<font size="3" color="red">initialCapacity</font>，这就是一个初始化的参数，解毒代码我们发现，当我们传入的参数&gt;0时，就执行这么一段代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.elementData = new Object[initialCapacity];</span><br></pre></td></tr></table></figure>
+<p>那这个<font size="3" color="red">elementData</font>是个什么呢?我们来看看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">transient Object[] elementData;</span><br></pre></td></tr></table></figure>
+<p>这就是那个<font size="3" color="red">elementData</font>，它是一个<font size="3" color="red">Object类型的数组</font>,也就是说，我们的 ArrayList 是将数据保存在了这个 Object数组 中的，<font size="3" color="red">底层是使用这个Object数组来实现</font></p>
+<p>也就是说我们传入的数值<font size="3" color="red">initialCapacity</font>如果 &gt;0 那么ArrayList底层就会帮我们初始化一个<font size="3" color="red">initialCapacity</font>大小的Object数组。如果传入的数值为0，那么就会走下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.elementData = EMPTY_ELEMENTDATA;</span><br></pre></td></tr></table></figure>
+<p>我们来看看这个 <font size="3" color="red">EMPTY_ELEMENTDATA</font> 是啥？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private static final Object[] EMPTY_ELEMENTDATA = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>这就是一个空的Object数组，也就说如果我们传入的参数值为0，那么ArrayList底层就会帮我们实现一个空的Object数组。</p>
+<h3 id="2-2无参构造"><a href="#2-2无参构造" class="headerlink" title="2.2无参构造"></a>2.2无参构造</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public ArrayList() &#123;</span><br><span class="line">    this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个比较简单，我们来看看 <font size="3" color="red">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</font> 这个就ok了.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private static final Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = &#123;&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个<font size="3" color="red">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</font>跟我们前面分析的<font size="3" color="red">EMPTY_ELEMENTDATA</font>这个是一样的，都是一个空的数组，至于为什么人家用两个我就不知道了，我们继续下面的分析。</p>
+<h2 id="三-add方法分析"><a href="#三-add方法分析" class="headerlink" title="三.add方法分析"></a>三.add方法分析</h2><p>我们在第一个add方法处加上断点，然后一步一步分析</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926088982046250.png" alt="image"></p>
+<p>开始debug</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131926089384233750.png" alt="image"></p>
+<h3 id="跟进add方法内部"><a href="#跟进add方法内部" class="headerlink" title="跟进add方法内部"></a>跟进<font color="red">add</font>方法内部</h3><p>跟进add方法</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131926090314077500.png" alt="image"></p>
+<font size="3" color="blue">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e) &#123;</span><br><span class="line">    ensureCapacityInternal(size + 1);  // Increments modCount!!</span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们发现其中还有一个 <font size="3" color="red">ensureCapacityInternal(size + 1); </font>方法，此时它有一个参数<font size="3" color="red">size+1</font>,这个size是什么呢？我们来看看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private int size;</span><br></pre></td></tr></table></figure>
+<p>就是这样一个变量，这里告诉你，这个<font size="3" color="red">size</font>就是当前 ArrayList 的size大小(<font size="3" color="red">注意</font>：<font size="3" color="blue">这个size跟我们之前看到的那个elementData数组的长度可不一样，这个size就是我们能在程序外部看到的ArrayList集合的大小)，</font>，因为此时是我们第一次添加元素，所以size为0。</p>
+<p>所以这时 <font size="3" color="blue">ensureCapacityInternal(size + 1) 的参数 size+1 = 1</font></p>
+<p>这里解释一下为什么是size+1，因为咱们添加一个元素，是不是ArrayList的大小要加1，所以是size+1</p>
+<h3 id="跟进ensureCapacityInternal-size-1-方法内部"><a href="#跟进ensureCapacityInternal-size-1-方法内部" class="headerlink" title="跟进ensureCapacityInternal(size + 1)方法内部"></a>跟进<font color="red">ensureCapacityInternal(size + 1)</font>方法内部</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131926095373296250.png" alt="image"></p>
+<font size="3" color="blue">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void ensureCapacityInternal(int minCapacity) &#123;</span><br><span class="line">    if (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ensureExplicitCapacity(minCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>分析：</p>
+<p>此时，在这个函数中，它先判断 <font size="3" color="red">elementData</font>跟<font size="3" color="red">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</font>是不是同一个引用(==是判断地址的在对象中和)，而之前在分析无参构造时有这么一句代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;</span><br></pre></td></tr></table></figure>
+<p>所以显然，这个<font size="3" color="red">判断成立</font>，执行如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br></pre></td></tr></table></figure>
+<p>此时这个代码就是选出 <font size="3" color="red">DEFAULT_CAPACITY</font> 和 <font size="3" color="red">minCapacity</font>的最大值，而这个 <font size="3" color="red">minCapacity</font> 就是我们之前传的 <font size="3" color="red">size+1 = 1</font>，所以这个<font size="3" color="red">minCapacity是1</font></p>
+<p>这个minCapacity从英文角度去理解，就是当前容器(ArrayList)的最小容量，就是我这个容器不能比这个容量再小，再小就装不下了，所以在这里选最大值</p>
+<p>我们来看看 <font size="3" color="red">DEFAULT_CAPACITY</font> 这个是个啥？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private static final int DEFAULT_CAPACITY = 10;</span><br></pre></td></tr></table></figure>
+<font size="3" color="red">DEFAULT_CAPACITY</font>的默认值是10,这里告诉大家，这个<font size="3" color="red">DEFAULT_CAPACITY</font>是我们的ArrayList底层给我们初始化的大小，这个大小是初始化的谁呢，就是我们之前分析的那个Object的数组大小。<br><br>在这里说一下，我们的ArrayList底层是使用那个Object数组来存放数据的，所以ArrayList给这个数组得初始化一个大小，之前在构造中只是给它引用地址并未初始化大小。<br><br><font size="3" color="red">注意：</font>这里这个Object数组的长度，并不是我们ArrayList的长度，我们的ArrayList的长度，是那个size字段并不是它，这一点千万别搞混<br><br>所以这里执行完后，minCapacity就会变为10，因为是找最大值啊，10比1（size+1）大,接下来执行下面这段代码<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131926105122046250.png" alt="image"><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ensureExplicitCapacity(minCapacity);</span><br></pre></td></tr></table></figure><br><br>### 跟进<font color="red">ensureExplicitCapacity(minCapacity)</font>方法内部<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131926105874702500.png" alt="image"><br><br><font size="3" color="blue">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">private void ensureExplicitCapacity(int minCapacity) &#123;</span><br><span class="line">    modCount++;</span><br><span class="line"></span><br><span class="line">    // overflow-conscious code</span><br><span class="line">    if (minCapacity - elementData.length &gt; 0)</span><br><span class="line">        grow(minCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里这个modCount++;就不用管了，这个就是用来计数的，当你每次add的时候，我们来看下面的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// overflow-conscious code</span><br><span class="line">if (minCapacity - elementData.length &gt; 0)</span><br><span class="line">    grow(minCapacity);</span><br></pre></td></tr></table></figure>
+<p>如果 <font size="3" color="red">minCapacity</font> 减去<font size="3" color="red">elementData.length</font>（<font size="3" color="blue">就是那个Object数组的长度</font>）&gt;0，那么执行<font size="3" color="red">grow(minCapacity);</font>函数。此时<font size="3" color="red">minCapacity</font>为10（经过前面的选最大值后变为了10）</p>
+<p>所以此时会进入grow方法</p>
+<h3 id="跟进grow-minCapacity-方法内部"><a href="#跟进grow-minCapacity-方法内部" class="headerlink" title="跟进grow(minCapacity);方法内部"></a>跟进<font color="red">grow(minCapacity);</font>方法内部</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/8_131926108473296250.png" alt="image"></p>
+<font size="3" color="blue">源码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private void grow(int minCapacity) &#123;</span><br><span class="line">    // overflow-conscious code</span><br><span class="line">    int oldCapacity = elementData.length;</span><br><span class="line">    int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1);</span><br><span class="line">    if (newCapacity - minCapacity &lt; 0)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    if (newCapacity - MAX_ARRAY_SIZE &gt; 0)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    // minCapacity is usually close to size, so this is a win:</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此时代码中有 <font size="3" color="red">oldCapacity</font> ，这个代表的是<font size="3" color="red">原有的Object数组的长度</font>，现在这个长度为0</p>
+<font size="3" color="red">newCapacity</font> 代表的是<font size="3" color="red">新的Object数组的长度</font>，就是<font size="3" color="red">扩容后的长度</font>，通过 <font size="3" color="red">oldCapacity + (oldCapacity &gt;&gt; 1); </font>这句代码给它扩容，<font size="3" color="red">其实就是旧的长度加上旧的长度除以2之后的长度作为新的长度</font>
+
+<p>此时 <font size="3" color="red">elementData.length; 为0</font>，所以 <font size="3" color="red">oldCapacity为0</font>，所以算出的<font size="3" color="red">newCapacity也为0</font></p>
+<p>所以会走下面这句代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">if (newCapacity - minCapacity &lt; 0)</span><br><span class="line">            newCapacity = minCapacity;</span><br></pre></td></tr></table></figure>
+<p>就是说扩容后的长度还没有我默认的长度10大呢，所以就将默认长度10赋值给新的长度newCapacity。</p>
+<p>接下来走了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">elementData = Arrays.copyOf(elementData, newCapacity);</span><br></pre></td></tr></table></figure>
+<p>这段代码，这段代码我就不进去看了，就是构造一个<font size="3" color="red">newCapacity</font>大小的数组，然后将<font size="3" color="red">Object数组中</font>原有的内容<font size="3" color="red">复制到</font>新的数组中然后返回给<font size="3" color="red">elementData</font>，此时<font size="3" color="red">elementData</font>已经跟那个<font size="3" color="red">DEFAULTCAPACITY_EMPTY_ELEMENTDATA</font>已经不一样了，已经不是指向同一个地址了，因为这个<font size="3" color="red">elementData</font>指向了新的地址，因为<font size="3" color="red">Arrays.copyOf(elementData, newCapacity);</font>给它返回了一个新的数组</p>
+<h3 id="最后分析"><a href="#最后分析" class="headerlink" title="最后分析"></a>最后分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public boolean add(E e) &#123;</span><br><span class="line">    ensureCapacityInternal(size + 1);  // Increments modCount!!</span><br><span class="line">    elementData[size++] = e;</span><br><span class="line">    return true;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终跳回了这里，不过<font size="3" color="red">ensureCapacityInternal(size + 1);</font>这个方法我们已经分析完毕，就是去<font size="3" color="red">判断我们添加的元素有没有超过内置Object的数组长度</font>，如果超过，我们就去给它<font size="3" color="red">扩容</font>，然后<font size="3" color="red">将原有的Object数组复制到新的扩容后的数组中。</font></p>
+<p>所以此时<font size="3" color="red">elementData</font>已经<font size="3" color="red">指向</font>了那个<font size="3" color="red">扩容后的数组</font>的地址了，然后执行<font size="3" color="red">elementData[size++] = e;</font>将传入的参数添加到数组中</p>
+<h2 id="四-之后分析"><a href="#四-之后分析" class="headerlink" title="四.之后分析"></a>四.之后分析</h2><p>在我们之后的九次add中，既不会再去扩容了，也就是说不会再走grow(minCapacity);方法了</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/9_131926123294077500.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/21/十八.File类、枚举、异常/" rel="next" title="十八.File类、枚举、异常">
+                <i class="fa fa-chevron-left"></i> 十八.File类、枚举、异常
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">61</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-例子"><span class="nav-number">2.</span> <span class="nav-text">一.例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-构造方法分析"><span class="nav-number">3.</span> <span class="nav-text">二.构造方法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1我们先来看看有参构造"><span class="nav-number">3.1.</span> <span class="nav-text">2.1我们先来看看有参构造</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2无参构造"><span class="nav-number">3.2.</span> <span class="nav-text">2.2无参构造</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-add方法分析"><span class="nav-number">4.</span> <span class="nav-text">三.add方法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#跟进add方法内部"><span class="nav-number">4.1.</span> <span class="nav-text">跟进add方法内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跟进ensureCapacityInternal-size-1-方法内部"><span class="nav-number">4.2.</span> <span class="nav-text">跟进ensureCapacityInternal(size + 1)方法内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跟进grow-minCapacity-方法内部"><span class="nav-number">4.3.</span> <span class="nav-text">跟进grow(minCapacity);方法内部</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最后分析"><span class="nav-number">4.4.</span> <span class="nav-text">最后分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-之后分析"><span class="nav-number">5.</span> <span class="nav-text">四.之后分析</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
