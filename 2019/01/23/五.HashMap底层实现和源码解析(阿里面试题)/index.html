@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础之小知识点拆分," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么事HashMapHashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1) HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8之后含1.8:数组+链表+红黑树 进一步细腻的认知：数组是什么东西？ JVM当中连续开辟一组有序的地址存储空间(产生出这样的数据结构) 特点：不可变长度（">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="五.HashMap底层实现和源码解析(阿里面试题)">
+<meta property="og:url" content="http://yoursite.com/2019/01/23/五.HashMap底层实现和源码解析(阿里面试题)/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="什么事HashMapHashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1) HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8之后含1.8:数组+链表+红黑树 进一步细腻的认知：数组是什么东西？ JVM当中连续开辟一组有序的地址存储空间(产生出这样的数据结构) 特点：不可变长度（">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926908330171250.png">
+<meta property="og:updated_time" content="2019-01-23T08:05:22.585Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="五.HashMap底层实现和源码解析(阿里面试题)">
+<meta name="twitter:description" content="什么事HashMapHashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1) HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8之后含1.8:数组+链表+红黑树 进一步细腻的认知：数组是什么东西？ JVM当中连续开辟一组有序的地址存储空间(产生出这样的数据结构) 特点：不可变长度（">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926908330171250.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/23/五.HashMap底层实现和源码解析(阿里面试题)/"/>
+
+
+
+
+
+  <title>五.HashMap底层实现和源码解析(阿里面试题) | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/23/五.HashMap底层实现和源码解析(阿里面试题)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">五.HashMap底层实现和源码解析(阿里面试题)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-23T16:02:26+08:00">
+                2019-01-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么事HashMap"><a href="#什么事HashMap" class="headerlink" title="什么事HashMap"></a>什么事HashMap</h2><p>HashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1)</p>
+<h2 id="HashMap是什么数据结构组成"><a href="#HashMap是什么数据结构组成" class="headerlink" title="HashMap是什么数据结构组成"></a>HashMap是什么数据结构组成</h2><p>JDK1.7版本之前含1.7：<font size="3" color="red">数组+链表</font><br><br>JDK1.8之后含1.8:<font size="3" color="red">数组+链表+红黑树</font></p>
+<p>进一步细腻的认知：数组是什么东西？<br></p>
+<p>JVM当中连续开辟一组<font size="3" color="red">有序</font>的地址存储空间(产生出这样的数据结构)</p>
+<p>特点：不可变长度（操作的时候）、类型定义好之后不可变比如 int[] arrays、查找块、增删慢</p>
+<p>自动扩容：重新开辟一块更大的数组空间，将原来数组的内容复制到新数组中</p>
+<h2 id="HashMap底层是如何实现快速存储的-精髓算法-？"><a href="#HashMap底层是如何实现快速存储的-精髓算法-？" class="headerlink" title="HashMap底层是如何实现快速存储的(精髓算法)？"></a>HashMap底层是如何实现快速存储的(精髓算法)？</h2><p>数组结构+链表的形式对提供快速存储和快速取得基本可能。</p>
+<p>还有数据的玩法、算法、Hash散列方法+定位算法</p>
+<p>Hash算法的应用场景：</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131926908330171250.png" alt="image"></p>
+<h2 id="进一步解释Hash算法内部的设计"><a href="#进一步解释Hash算法内部的设计" class="headerlink" title="进一步解释Hash算法内部的设计"></a>进一步解释Hash算法内部的设计</h2><font size="3" color="blue">源码</font>
+
+<p>我们在map的put方法处打上断点，然后跟进<br><br>Integer.valueOf—&gt;put—&gt;<font size="3" color="red">hash(key)</font>—&gt;putVal</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static final int hash(Object key) &#123;</span><br><span class="line">    int h;</span><br><span class="line">    return (key == null) ? 0 : (h = key.hashCode()) ^ (h &gt;&gt;&gt; 16);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<font size="3"><br>Key拿到HashCode再去异或(^,相同为假，相异为假)，然后将所取得HashCode三位右移16位(&gt;&gt;&gt;16)<br><br>JDK当中确定位置的算法：<br><br><br>index = Hash()(<font size="3" color="red">Key的HashCode值的最大散列</font>)——–&gt;返回一个int类型——-&gt;转换成二进制 &amp; (数组长度-1)<br><br><font size="3" color="blue">阿里面试题</font>：<font size="3" color="red">为什么JDK底层设计的数组长度为2^n次方？我们的JDK底层源码进行数组扩容也是*2?为什么不是乘以3?</font>
+
+<ol>
+<li>数组长度是2^n次方就可以推出——-&gt;数组位置的最大编号 index = 2^n-1</li>
+<li>数组长度是2^n次方—–&gt;这个数可以非常高效的变化：1&lt;&lt;4</li>
+<li>我们需要将我们Hash()函数返回的hash值与(数组长度-1)进行”与“运算</li>
+<li>而这个<font size="3" color="red">2^n次方-1</font>这个值它的<font size="3" color="red">高位都是0</font>,进行<font size="3" color="red">“与”</font>运算的时候，它能<font size="3" color="red">保证数组下标永远不会越界</font><blockquote>
+<p><font size="3" color="red">注意<font>：这里是”与”运算，就是只有全部为1时才得1，只要有一个为0，则全为0</font></font></p>
+</blockquote>
+</li>
+<li><font size="3" color="red">2^n次方-1</font>这个值它的<font size="3" color="red">低位都是1</font>,这样当与<font size="3" color="red">Hash()函数返回的hash值</font>进行”与”运算时就会尽量散列，减少冲突</li>
+<li>数组这个位置的利用率提高，保证快速存取</li>
+</ol>
+<h2 id="自定义HashMap"><a href="#自定义HashMap" class="headerlink" title="自定义HashMap"></a>自定义HashMap</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br></pre></td><td class="code"><pre><span class="line">package yp.JavaSE.Review_09_容器.myCollection;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName MyHashMap</span><br><span class="line"> * @Description 自定义HashMap</span><br><span class="line"> * @date 2019/1/23/13:23</span><br><span class="line"> */</span><br><span class="line">public class MyHashMap&lt;K,V&gt; implements MyMap&lt;K,V&gt;&#123;</span><br><span class="line">    //数组的默认长度</span><br><span class="line">    private static int defaultLenth = 1 &lt;&lt; 4; //16</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 扩容标准所使用的 userSize / defaultLenth &gt; 0.75  数组就会扩容</span><br><span class="line">     *</span><br><span class="line">     * 过大：</span><br><span class="line">     * defaultAddSizeFactor过大会造成扩容概率变低，存储小，但是就是存和取得效率降低</span><br><span class="line">     * 比如说扩容因子是 0.9 ：你想啊，如果是 0.9 就会在这个有限的数组中形成大量的链表，</span><br><span class="line">     * 在我们存和取得时候都会进行大量的遍历和判断(逻辑)</span><br><span class="line">     *</span><br><span class="line">     * 过小：</span><br><span class="line">     * 如果过小的话，我们存了一点东西就去扩容了，反而浪费了空间</span><br><span class="line">     */</span><br><span class="line">    private static double defaultAddSizeFactor = 0.75;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 使用volatile关键字，即保证每个线程使用的useSize是最新的</span><br><span class="line">     */</span><br><span class="line">    private volatile int useSize;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 定义HashMap骨架数据结构之一 数组</span><br><span class="line">     */</span><br><span class="line">    private Entry&lt;K,V&gt;[] table = null;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新的数组，扩容后的数组</span><br><span class="line">     */</span><br><span class="line">    private Entry&lt;K,V&gt;[] newTbale = null;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * SPRING 门面模式思想的运用</span><br><span class="line">     */</span><br><span class="line">    public MyHashMap()&#123;</span><br><span class="line">        this(defaultLenth,defaultAddSizeFactor);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public MyHashMap(int length, double defaultAddSizeFactor) &#123;</span><br><span class="line">        if(length&lt;0)&#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;参数不能为负数：&quot;+length);</span><br><span class="line">        &#125;</span><br><span class="line">        if(defaultAddSizeFactor &lt;=0 || Double.isNaN(defaultAddSizeFactor))&#123;</span><br><span class="line">            throw new IllegalArgumentException(&quot;扩容标准必须是大于0的数字&quot;+defaultAddSizeFactor);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        this.defaultLenth = length;</span><br><span class="line">        this.defaultAddSizeFactor =defaultAddSizeFactor;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 内存当划分连续内存空间 数组初始化完成 16</span><br><span class="line">         * 懒加载思想：</span><br><span class="line">         *      在定义的时候不去给他分配内存空间，只有调用构造创建实例的时候才会分配内存</span><br><span class="line">         */</span><br><span class="line">        table = new Entry[defaultLenth];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public V put(K k,V v) &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 判断是否需要扩容</span><br><span class="line">         */</span><br><span class="line">        if(useSize &gt; defaultLenth*defaultAddSizeFactor)&#123;</span><br><span class="line">            /**</span><br><span class="line">             * 扩容方法</span><br><span class="line">             */</span><br><span class="line">            up2Size();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 获取数组位置的方法 找到数组长度范围内的下标</span><br><span class="line">         */</span><br><span class="line">        int index = getIndex(k,table.length);</span><br><span class="line">        Entry&lt;K,V&gt; entry = table[index];</span><br><span class="line">        if(entry ==null) &#123;</span><br><span class="line">            /**</span><br><span class="line">             * Entry：存储在数组和链表当中的数据结果对象</span><br><span class="line">             */</span><br><span class="line">            table[index] = new Entry&lt;K, V&gt;(k, v, null);</span><br><span class="line">            /**</span><br><span class="line">             * 实际使用位置++</span><br><span class="line">             */</span><br><span class="line">            useSize++;</span><br><span class="line">        &#125;</span><br><span class="line">        /**</span><br><span class="line">         * 有冲突</span><br><span class="line">         */</span><br><span class="line">        else if(entry!=null)&#123;</span><br><span class="line">            /**</span><br><span class="line">             * 将当前放进来的Entry占用这个位置table[index]</span><br><span class="line">             * 原来在这个next=entry 已经形成了链表</span><br><span class="line">             */</span><br><span class="line">            table[index] = new Entry&lt;&gt;(k,v,entry);</span><br><span class="line">        &#125;</span><br><span class="line">        return table[index].getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private int getIndex(K k, int length) &#123;</span><br><span class="line">        int m = length-1;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 源码设计一模一样</span><br><span class="line">         */</span><br><span class="line">        int index = hash(k.hashCode()) &amp; m;</span><br><span class="line">        return index;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 自己设计hash算法 强化散列</span><br><span class="line">     * @param hashCode</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private int hash(int hashCode)&#123;</span><br><span class="line">        hashCode = hashCode ^ ((hashCode &gt;&gt;&gt; 20)^(hashCode &gt;&gt;&gt; 12));</span><br><span class="line">        return hashCode ^ ((hashCode &gt;&gt;&gt; 7)^(hashCode &gt;&gt;&gt; 4));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 扩容方法：乘以2的智能扩容</span><br><span class="line">     */</span><br><span class="line">    private void up2Size() &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 旧数组内容 重新放到心数组里面，新数组长度是原来的旧数组长度的2倍</span><br><span class="line">         * 不浪费服务器资源 0.75</span><br><span class="line">         * 创建一个数组，是原来数组的2倍长度</span><br><span class="line">         */</span><br><span class="line">        newTbale = new Entry[2*defaultLenth];</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 将老数组的对象再次散列到新数组</span><br><span class="line">         */</span><br><span class="line">        againHash(newTbale);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 将老数组的对象再次散列到新数组</span><br><span class="line">     * put方法的重写散列</span><br><span class="line">     * @param newTbale 新数组</span><br><span class="line">     */</span><br><span class="line">    private void againHash(Entry&lt;K, V&gt;[] newTbale) &#123;</span><br><span class="line">        List&lt;Entry&lt;K,V&gt;&gt; entryList = new ArrayList&lt;&gt;();</span><br><span class="line">        /**</span><br><span class="line">         * for出来就代表内容全部由遍历到entryList当中</span><br><span class="line">         */</span><br><span class="line">        for(int i = 0;i&lt;table.length;i++)&#123;</span><br><span class="line">            if(table[i]==null)&#123;</span><br><span class="line">                continue;</span><br><span class="line">            &#125;</span><br><span class="line">            /**</span><br><span class="line">             * 阿里内部  晒代码活动？</span><br><span class="line">             * 将老数组上的对象全部存储到entryList</span><br><span class="line">             * table[i] != null</span><br><span class="line">             */</span><br><span class="line">            foundEntryByNext(table[i],entryList);</span><br><span class="line">        &#125;</span><br><span class="line">        /**</span><br><span class="line">         * entryList里面是否有内容</span><br><span class="line">         */</span><br><span class="line">        if(entryList.size()&gt;0)&#123;</span><br><span class="line">            defaultLenth = 2*defaultLenth;</span><br><span class="line">            for(Entry&lt;K,V&gt; entry :entryList)&#123;</span><br><span class="line">                /**</span><br><span class="line">                 * 将entry下面挂了链表的引用打断</span><br><span class="line">                 */</span><br><span class="line">                if(entry.next !=null)&#123;</span><br><span class="line">                    entry.next = null;</span><br><span class="line">                &#125;</span><br><span class="line">                useSize = 0;</span><br><span class="line">                table = null;</span><br><span class="line">                table = newTbale;</span><br><span class="line">                /**</span><br><span class="line">                 * 方法重用 借力写代码</span><br><span class="line">                 */</span><br><span class="line">                put(entry.getKey(),entry.getValue());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void foundEntryByNext(Entry&lt;K, V&gt; kvEntry, List&lt;Entry&lt;K, V&gt;&gt; entryList) &#123;</span><br><span class="line">        entryList.add(kvEntry);</span><br><span class="line">        /**</span><br><span class="line">         * entry下面还挂了entry对象     链表</span><br><span class="line">         */</span><br><span class="line">        if(kvEntry.next!=null)&#123;</span><br><span class="line">            /**</span><br><span class="line">             * 精妙递归：将链表所有挂的Node节点都可以遍历尽</span><br><span class="line">             */</span><br><span class="line">            foundEntryByNext(kvEntry.next,entryList);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public V get(K k) &#123;</span><br><span class="line">        /**</span><br><span class="line">         * hashCode(new Person(1234,&quot;Samy&quot;)) ----&gt;hash()----&gt;getIndex----&gt;最终索引位置</span><br><span class="line">         */</span><br><span class="line">        int index = getIndex(k,table.length);</span><br><span class="line">        if(table[index]==null)&#123;</span><br><span class="line">            throw new NullPointerException();</span><br><span class="line">        &#125;</span><br><span class="line">        /**</span><br><span class="line">         * key存在的情况</span><br><span class="line">         */</span><br><span class="line">        return findValueByEqualKey(k,table[index]);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private V findValueByEqualKey(K k, Entry&lt;K, V&gt; kvEntry) &#123;</span><br><span class="line">        if(k==kvEntry.getKey() || k.equals(kvEntry.getKey()))&#123;</span><br><span class="line">            return kvEntry.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">        /**</span><br><span class="line">         * 是否在下面链表的位置</span><br><span class="line">         */</span><br><span class="line">        return findValueByEqualKey(k,kvEntry.next);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    class Entry&lt;K,V&gt; implements MyMap.Entry&lt;K,V&gt;&#123;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 外界传进封装双列数据key value</span><br><span class="line">         */</span><br><span class="line">        K k;</span><br><span class="line"></span><br><span class="line">        V v;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * next:压下去的Entry对象</span><br><span class="line">         */</span><br><span class="line">        Entry&lt;K,V&gt; next;</span><br><span class="line"></span><br><span class="line">        public Entry(K k, V v, Entry&lt;K, V&gt; next) &#123;</span><br><span class="line">            this.k = k;</span><br><span class="line">            this.v = v;</span><br><span class="line">            this.next = next;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public K getKey() &#123;</span><br><span class="line">            return this.k;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        @Override</span><br><span class="line">        public V getValue() &#123;</span><br><span class="line">            return this.getValue();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">interface MyMap&lt;K,V&gt;&#123;</span><br><span class="line">    public V put(K k,V v);</span><br><span class="line"></span><br><span class="line">    public V get(K k);</span><br><span class="line"></span><br><span class="line">    public interface Entry&lt;K,V&gt;&#123;</span><br><span class="line">        public K getKey();</span><br><span class="line"></span><br><span class="line">        public V getValue();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="HashMap的put过程"><a href="#HashMap的put过程" class="headerlink" title="HashMap的put过程"></a>HashMap的put过程</h2><ol>
+<li>首先判断当前HashMap已经使用的大小是否大于(数组长度/扩容因子)</li>
+<li>如果大于则进行扩容，否则下一步</li>
+<li>首先根据Key的HashCode方法拿到key的哈希值</li>
+<li>拿到hash值后通过HashMap中自定义的hash()函数将key的哈希值进行散列如 key &gt;&gt;&gt; 16等</li>
+<li>将散列后的哈希值和数组(Entry[])长度减1的值进行”与”运算，得到其在数组中的下标</li>
+<li>判断数组下标处是否有内容，如果没有内容将当前的Entry节点放入即可</li>
+<li>如果数组下标处有内容，代表这里可能挂了链表，于是将当前Entry节点作为数组此处的首节点，Entry的next指向原来的链表</li>
+</ol>
+</font>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/23/二十.Map集合/" rel="next" title="二十.Map集合">
+                <i class="fa fa-chevron-left"></i> 二十.Map集合
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么事HashMap"><span class="nav-number">1.</span> <span class="nav-text">什么事HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap是什么数据结构组成"><span class="nav-number">2.</span> <span class="nav-text">HashMap是什么数据结构组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap底层是如何实现快速存储的-精髓算法-？"><span class="nav-number">3.</span> <span class="nav-text">HashMap底层是如何实现快速存储的(精髓算法)？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进一步解释Hash算法内部的设计"><span class="nav-number">4.</span> <span class="nav-text">进一步解释Hash算法内部的设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义HashMap"><span class="nav-number">5.</span> <span class="nav-text">自定义HashMap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HashMap的put过程"><span class="nav-number">6.</span> <span class="nav-text">HashMap的put过程</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
