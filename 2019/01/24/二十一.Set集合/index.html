@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="JavaSE," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
-<meta name="keywords" content="算法">
+<meta name="description" content="一.Set接口Set接口继承自Collection，Set接口中没有新增方法，方法和Collection保持完全一致。我们在前面通过List学习的方法，在Set中仍然适用。因此，学习Set的使用将没有任何难度。 Set容器特点：无序、不可重复。无序指Set中的元素没有索引，我们只能遍历查找;不可重复指不允许加入重复的元素。更确切地讲，新元素如果和Set中某个元素通过equals()方法对比为tru">
+<meta name="keywords" content="JavaSE">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta property="og:url" content="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/index.html">
+<meta property="og:title" content="二十一.Set集合">
+<meta property="og:url" content="http://yoursite.com/2019/01/24/二十一.Set集合/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta property="og:description" content="一.Set接口Set接口继承自Collection，Set接口中没有新增方法，方法和Collection保持完全一致。我们在前面通过List学习的方法，在Set中仍然适用。因此，学习Set的使用将没有任何难度。 Set容器特点：无序、不可重复。无序指Set中的元素没有索引，我们只能遍历查找;不可重复指不允许加入重复的元素。更确切地讲，新元素如果和Set中某个元素通过equals()方法对比为tru">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-27T10:05:58.667Z">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170525/1495697834473119.png">
+<meta property="og:updated_time" content="2019-01-24T09:26:54.453Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta name="twitter:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta name="twitter:title" content="二十一.Set集合">
+<meta name="twitter:description" content="一.Set接口Set接口继承自Collection，Set接口中没有新增方法，方法和Collection保持完全一致。我们在前面通过List学习的方法，在Set中仍然适用。因此，学习Set的使用将没有任何难度。 Set容器特点：无序、不可重复。无序指Set中的元素没有索引，我们只能遍历查找;不可重复指不允许加入重复的元素。更确切地讲，新元素如果和Set中某个元素通过equals()方法对比为tru">
+<meta name="twitter:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170525/1495697834473119.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/24/二十一.Set集合/"/>
 
 
 
 
 
-  <title>LeetCode-387：字符串中第一个唯一字符 | RickYinPeng's blog</title>
+  <title>二十一.Set集合 | RickYinPeng's blog</title>
   
 
 
@@ -274,7 +276,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/24/二十一.Set集合/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -291,7 +293,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode-387：字符串中第一个唯一字符</h1>
+          <h1 class="post-title" itemprop="name headline">二十一.Set集合</h1>
         
 
         <div class="post-meta">
@@ -303,8 +305,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T18:02:30+08:00">
-                2018-10-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-24T17:25:31+08:00">
+                2019-01-24
               </time>
             
 
@@ -326,8 +328,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/LeetCode/" itemprop="url" rel="index">
-                    <span itemprop="name">LeetCode</span>
+                  <a href="/categories/Java基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础</span>
                   </a>
                 </span>
 
@@ -363,15 +365,18 @@
       
 
       
-        <blockquote>
-<p>本题为LeetCode中第387道题，较为简单</p>
-</blockquote>
-<p>给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。<br></p>
-<p><strong>案例:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;leetcode&quot;</span><br><span class="line">返回 0.</span><br><span class="line"></span><br><span class="line">s = &quot;loveleetcode&quot;,</span><br><span class="line">返回 2.</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意事项：</strong> 您可以假定该字符串只包含小写字母。<br></p>
-<p>先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为有序，我们最先进去的字母就是最前面的字母),换成HashMap就不行，因为我们最终需要输出只出现一次的最早的字母，记住是最早出现且只出现了一次的字母，所以我们需要用LinkedHashMap来保证有序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName First_Unique_Character_in_a_String</span><br><span class="line"> * @Description LeetCode中第387道题</span><br><span class="line"> * @date 2018/10/27/17:36</span><br><span class="line"> *</span><br><span class="line"> * 题目名称：字符串中的第一个唯一字符</span><br><span class="line"> */</span><br><span class="line">public class First_Unique_Character_in_a_String &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;loveleetcode&quot;;</span><br><span class="line">        int i = firstUniqChar(s);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 博主的笨办法</span><br><span class="line">     * @param s</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static int firstUniqChar(String s) &#123;</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map = new LinkedHashMap&lt;&gt;();</span><br><span class="line">        for(int i = 0;i&lt;s.length();i++)&#123;</span><br><span class="line">            char index = s.charAt(i);</span><br><span class="line">            if(!map.containsKey(index))&#123;</span><br><span class="line">                map.put(index,1);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                map.put(index,map.get(index)+1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(Map.Entry&lt;Character,Integer&gt; entry: map.entrySet())&#123;</span><br><span class="line">            if(entry.getValue()==1)&#123;</span><br><span class="line">                Character key = entry.getKey();</span><br><span class="line">                int indexOf = s.indexOf(key);</span><br><span class="line">                return indexOf;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再来看看排行榜第一的大佬：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 这可能就是大佬吧，记下就行了</span><br><span class="line"> * @param s</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public static int firstUniqChar_2(String s)&#123;</span><br><span class="line">    int res = -1;</span><br><span class="line"></span><br><span class="line">    for(char ch=&apos;a&apos;; ch&lt;=&apos;z&apos;; ch++) &#123;</span><br><span class="line">        int index = s.indexOf(ch);</span><br><span class="line">        if(index != -1 &amp;&amp; index == s.lastIndexOf(ch)) &#123;</span><br><span class="line">            res = res == -1?index:Math.min(res, index);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <h2 id="一-Set接口"><a href="#一-Set接口" class="headerlink" title="一.Set接口"></a>一.Set接口</h2><p>Set接口继承自Collection，Set接口中没有新增方法，方法和Collection保持完全一致。我们在前面通过List学习的方法，在Set中仍然适用。因此，学习Set的使用将没有任何难度。</p>
+<font size="3" color="red">Set容器特点：无序、不可重复。</font>无序指Set中的<font size="3" color="red">元素没有索引</font>，我们只能遍历查找;不可重复指不允许加入重复的元素。更确切地讲，新元素如果和Set中某个元素通过equals()方法对比为true，则不能加入;甚至，Set中也只能放入一个null元素，不能多个。<br><br>Set常用的实现类有：HashSet、TreeSet等，我们一般使用HashSet。<br><br>## 二.HashSet基本使用<br><br>Set是无序、不可重复<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Set&lt;String&gt; s = new HashSet&lt;String&gt;();</span><br><span class="line">        s.add(&quot;hello&quot;);</span><br><span class="line">        s.add(&quot;world&quot;);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">        s.add(&quot;hello&quot;); //相同的元素不会被加入</span><br><span class="line">        System.out.println(s);</span><br><span class="line">        s.add(null);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">        s.add(null);</span><br><span class="line">        System.out.println(s);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>### 三.HashSet底层实现<br><br>HashSet是采用哈希算法实现，底层实际是用HashMap实现的(HashSet本质就是一个简化版的HashMap)，因此，查询效率和增删效率都比较高。<br><br><font size="3" color="blue">源码</font>
+
+<p><img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170525/1495697834473119.png" alt="image"></p>
+<font size="3" color="red">我们发现里面有个map属性，这就是HashSet的核心秘密。我们再看add()方法，发现增加一个元素说白了就是在map中增加一个键值对，键对象就是这个元素，值对象是名为PRESENT的Object对象。说白了，就是“往set中加入元素，本质就是把这个元素作为key加入到了内部的map中”。</font>
+
+<font size="3" color="red">由于map中key都是不可重复的，因此，Set天然具有“不可重复”的特性。</font>
+
+<h3 id="四-TreeSet的使用和底层实现"><a href="#四-TreeSet的使用和底层实现" class="headerlink" title="四.TreeSet的使用和底层实现"></a>四.TreeSet的使用和底层实现</h3><font size="3" color="red">TreeSet底层实际是用TreeMap实现的</font>，内部维持了一个简化版的TreeMap，通过key来存储Set的元素。<br> <font size="3" color="red">TreeSet内部需要对存储的元素进行排序</font>，因此，我们对应的类需要<font size="3" color="red">实现Comparable接口</font>。这样，才能根据compareTo()方法比较对象之间的大小，才能进行内部排序。<br><br>#### TreeSet和Comparable接口的使用<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        User u1 = new User(1001, &quot;高淇&quot;, 18);</span><br><span class="line">        User u2 = new User(2001, &quot;高希希&quot;, 5);</span><br><span class="line">        Set&lt;User&gt; set = new TreeSet&lt;User&gt;();</span><br><span class="line">        set.add(u1);</span><br><span class="line">        set.add(u2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">class User implements Comparable&lt;User&gt; &#123;</span><br><span class="line">    int id;</span><br><span class="line">    String uname;</span><br><span class="line">    int age;</span><br><span class="line"> </span><br><span class="line">    public User(int id, String uname, int age) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.uname = uname;</span><br><span class="line">        this.age = age;</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 返回0 表示 this == obj 返回正数表示 this &gt; obj 返回负数表示 this &lt; obj</span><br><span class="line">     */</span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(User o) &#123;</span><br><span class="line">        if (this.id &gt; o.id) &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125; else if (this.id &lt; o.id) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            return 0;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>#### 使用TreeSet要点：<br><br>1. 由于是二叉树，需要对元素做内部排序。 <font size="3" color="red">如果要放入TreeSet中的类没有实现Comparable接口</font>，则会抛出异常：<font size="3" color="red">java.lang.ClassCastException。</font><br>2. <font size="3" color="red">TreeSet中不能放入null元素。</font>
+
+
+
 
       
     </div>
@@ -389,7 +394,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
           
         </div>
       
@@ -402,8 +407,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/27/2.2.3Java内存区域——堆，栈，方法区等/" rel="next" title="2.2.3——Java内存区域--堆、栈、方法区等">
-                <i class="fa fa-chevron-left"></i> 2.2.3——Java内存区域--堆、栈、方法区等
+              <a href="/2019/01/23/五.HashMap底层实现和源码解析(阿里面试题)/" rel="next" title="五.HashMap底层实现和源码解析(阿里面试题)">
+                <i class="fa fa-chevron-left"></i> 五.HashMap底层实现和源码解析(阿里面试题)
               </a>
             
           </div>
@@ -411,10 +416,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/28/NoSql/" rel="prev" title="NoSQL概述">
-                NoSQL概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -466,8 +467,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -547,6 +557,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-Set接口"><span class="nav-number">1.</span> <span class="nav-text">一.Set接口</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#四-TreeSet的使用和底层实现"><span class="nav-number">1.1.</span> <span class="nav-text">四.TreeSet的使用和底层实现</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
