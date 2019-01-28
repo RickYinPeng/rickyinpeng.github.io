@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="JavaSE," />
+  <meta name="keywords" content="Java基础之小知识点拆分," />
 
 
 
@@ -79,24 +79,18 @@
 
 
 
-<meta name="description" content="super是直接父类对象的引用。可以通过super来访问父类中被子类覆盖的方法或属性。  使用super调用普通方法，语句没有位置限制，可以在子类中随便调用。 若是构造方法的第一行代码没有显式的调用super(…)或者this(…);那么Java默认都会调用super(),含义是调用父类的无参数构造方法。这里的super()可以省略。  也就是说不管怎么都会调用super();这是编译器帮我们加上">
-<meta name="keywords" content="JavaSE">
+<meta name="description" content="我们第一次写的单例模式是下面这样的：1234567891011public class Singleton &amp;#123;    private static Singleton instance = null;    public static Singleton getInstance() &amp;#123;        if(null == instance) &amp;#123;">
+<meta name="keywords" content="Java基础之小知识点拆分">
 <meta property="og:type" content="article">
-<meta property="og:title" content="十四.继承的实现">
-<meta property="og:url" content="http://yoursite.com/2018/11/20/5.3super关键字/index.html">
+<meta property="og:title" content="七.DCL单例模式">
+<meta property="og:url" content="http://yoursite.com/2019/01/28/七.DCL单例模式/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="super是直接父类对象的引用。可以通过super来访问父类中被子类覆盖的方法或属性。  使用super调用普通方法，语句没有位置限制，可以在子类中随便调用。 若是构造方法的第一行代码没有显式的调用super(…)或者this(…);那么Java默认都会调用super(),含义是调用父类的无参数构造方法。这里的super()可以省略。  也就是说不管怎么都会调用super();这是编译器帮我们加上">
+<meta property="og:description" content="我们第一次写的单例模式是下面这样的：1234567891011public class Singleton &amp;#123;    private static Singleton instance = null;    public static Singleton getInstance() &amp;#123;        if(null == instance) &amp;#123;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131871826566259765.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131871826569697265.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131871866302822265.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131871866312353515.png">
-<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131871866315947265.png">
-<meta property="og:updated_time" content="2018-11-20T11:42:09.357Z">
+<meta property="og:updated_time" content="2019-01-28T01:54:13.912Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="十四.继承的实现">
-<meta name="twitter:description" content="super是直接父类对象的引用。可以通过super来访问父类中被子类覆盖的方法或属性。  使用super调用普通方法，语句没有位置限制，可以在子类中随便调用。 若是构造方法的第一行代码没有显式的调用super(…)或者this(…);那么Java默认都会调用super(),含义是调用父类的无参数构造方法。这里的super()可以省略。  也就是说不管怎么都会调用super();这是编译器帮我们加上">
-<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131871826566259765.png">
+<meta name="twitter:title" content="七.DCL单例模式">
+<meta name="twitter:description" content="我们第一次写的单例模式是下面这样的：1234567891011public class Singleton &amp;#123;    private static Singleton instance = null;    public static Singleton getInstance() &amp;#123;        if(null == instance) &amp;#123;">
 
 
 
@@ -126,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/11/20/5.3super关键字/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/28/七.DCL单例模式/"/>
 
 
 
 
 
-  <title>十四.继承的实现 | RickYinPeng's blog</title>
+  <title>七.DCL单例模式 | RickYinPeng's blog</title>
   
 
 
@@ -280,7 +274,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/20/5.3super关键字/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/28/七.DCL单例模式/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -297,7 +291,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">十四.继承的实现</h1>
+          <h1 class="post-title" itemprop="name headline">七.DCL单例模式</h1>
         
 
         <div class="post-meta">
@@ -309,8 +303,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-20T19:28:53+08:00">
-                2018-11-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-28T09:52:16+08:00">
+                2019-01-28
               </time>
             
 
@@ -332,8 +326,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java基础/" itemprop="url" rel="index">
-                    <span itemprop="name">Java基础</span>
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
                   </a>
                 </span>
 
@@ -369,42 +363,26 @@
       
 
       
-        <p>super是直接父类对象的引用。可以通过super来访问父类中被子类覆盖的方法或属性。</p>
-<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131871826566259765.png" alt="image"></p>
-<p>使用super调用普通方法，语句没有位置限制，可以在子类中随便调用。</p>
-<p>若是构造方法的第一行代码没有显式的调用super(…)或者this(…);那么Java默认都会调用super(),含义是调用父类的无参数构造方法。这里的super()可以省略。</p>
-<blockquote>
-<p>也就是说不管怎么都会调用super();这是编译器帮我们加上去的</p>
-</blockquote>
-<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131871826569697265.png" alt="image"></p>
-<h3 id="5-3-1-继承树追溯"><a href="#5-3-1-继承树追溯" class="headerlink" title="5.3.1 继承树追溯"></a>5.3.1 继承树追溯</h3><ul>
-<li>属性/方法查找顺序：(比如：查找变量h)</li>
-</ul>
+        <h4 id="我们第一次写的单例模式是下面这样的："><a href="#我们第一次写的单例模式是下面这样的：" class="headerlink" title="我们第一次写的单例模式是下面这样的："></a>我们第一次写的单例模式是下面这样的：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private static Singleton instance = null;</span><br><span class="line">    public static Singleton getInstance() &#123;</span><br><span class="line">        if(null == instance) &#123;                    // line A</span><br><span class="line">            instance = new Singleton();        // line B</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return instance;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设这样的场景：两个线程并发调用<font size="3" color="red">Singleton.getInstance()</font>，假设线程一先判断<font size="3" color="red">instance</font>是否为null，即代码中<font size="3" color="red">line A</font>进入到<font size="3" color="red">line B</font>的位置。刚刚判断完毕后，JVM将CPU资源切换给线程二，由于线程一还没执行<font size="3" color="red">line B</font>，所以<font size="3" color="red">instance</font>仍然为空，因此线程二执行了<font size="3" color="red">new Singleton()</font>操作。片刻之后，线程一被重新唤醒，它执行的仍然是<font size="3" color="red">new Singleton()</font>操作，这样问题就来了，new出了两个<font size="3" color="red">instance</font>，这还能叫单例吗？</p>
+<h4 id="紧接着，我们再做单例模式的第二次尝试："><a href="#紧接着，我们再做单例模式的第二次尝试：" class="headerlink" title="紧接着，我们再做单例模式的第二次尝试："></a>紧接着，我们再做单例模式的第二次尝试：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private static Singleton instance = null;</span><br><span class="line">    public synchronized static Singleton getInstance() &#123;</span><br><span class="line">        if(null == instance) &#123;                    </span><br><span class="line">            instance = new Singleton();            </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return instance;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>比起第一段代码仅仅在方法中多了一个<font size="3" color="red">synchronized</font>修饰符，现在可以保证不会出线程问题了。但是这里有个很大（至少耗时比例上很大）的性能问题。除了第一次调用时是执行了<font size="3" color="red">Singleton</font>的构造函数之外，以后的每一次调用都是直接返回<font size="3" color="red">instance</font>对象。返回对象这个操作耗时是很小的，绝大部分的耗时都用在<font size="3" color="red">synchronized</font>修饰符的同步准备上，因此从性能上来说很不划算。</p>
+<p>继续把代码改成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private static Singleton instance = null;</span><br><span class="line">    public  static Singleton getInstance() &#123;</span><br><span class="line">        synchronized (Singleton.class) &#123;</span><br><span class="line">            if(null == instance) &#123;                    </span><br><span class="line">                instance = new Singleton();            </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>基本上，把<font size="3" color="red">synchronized</font>移动到代码内部是没有什么意义的，每次调用<font size="3" color="red">getInstance()</font>还是要进行同步。同步本身没有问题，但是我们只希望在第一次创建<font size="3" color="red">instance</font>实例的时候进行同步，因此有了下面的写法——<strong>双重锁定检查</strong>（<font size="3" color="red">DCL,Double Check Lock</font>）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private static Singleton instance = null;</span><br><span class="line">    public  static Singleton getInstance() &#123;</span><br><span class="line">        if(null == instance) &#123;    // 线程二检测到instance不为空</span><br><span class="line">            synchronized (Singleton.class) &#123;</span><br><span class="line">                if(null == instance) &#123;                    </span><br><span class="line">                    instance = new Singleton();    // 线程一被指令重排，先执行了赋值，但还没执行完构造函数（即未完成初始化）    </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        return instance;    // 后面线程二执行时将引发：对象尚未初始化错误</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看样子已经达到了要求，除了第一次创建对象之外，其它的访问在第一个if中就返回了，因此不会走到同步块中，已经完美了吗？</p>
+<p>如上代码段中的注释：假设线程一执行到instance = new Singleton()这句，这里看起来是一句话，但实际上其被编译后在JVM执行的对应会变代码就发现，这句话被编译成8条汇编指令，大致做了三件事情：</p>
 <ol>
-<li>查找当前类中有没有属性h</li>
-<li>依次上溯每个父类，查看每个父类中是否有h，直到Object</li>
-<li>如果没找到，则出现编译错误。</li>
-<li>上面步骤，只要找到h变量，则这个过程终止。</li>
+<li>给instance实例分配内存；</li>
+<li>初始化instance的构造器；</li>
+<li>将instance对象指向分配的内存空间（注意到这步时instance就非null了）</li>
 </ol>
-<ul>
-<li>构造方法调用顺序：<br><font size="3" color="red">构造方法第一句总是：super(…)来调用父类对应的构造方法。所以，流程就是：先向上追溯到Object，然后再依次向下执行类的初始化块和构造方法，直到当前子类为止。</font><br> <font size="3" color="green">注：静态初始化块调用顺序，与构造方法调用顺序一样，不再重复。</font>
+<font size="3" color="red">如果指令按照顺序执行倒也无妨，但JVM为了优化指令，提高程序运行效率，允许指令重排序。</font>如此，在程序真正运行时以上指令执行顺序可能是这样的：<br>1. 给instance实例分配内存；<br>2. 将instance对象指向分配的内存空间；<br>3. 初始化instance的构造器；<br><br>这时候，当线程一执行2）完毕，在执行3）之前，被切换到线程二上，这时候<font size="3" color="red">instance</font>判断为非空，此时线程二直接来到<font size="3" color="red">return instance</font>语句，拿走<font size="3" color="red">instance</font>然后使用，接着就顺理成章地报错（对象尚未初始化）。<br><br>根据以上分析可知，<font size="3" color="red">解决这个问题的方法是：禁止指令重排序优化，即使用volatile变量。</font>
 
-
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class TestSuper02 &#123; </span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(&quot;开始创建一个ChildClass对象......&quot;);</span><br><span class="line">        new ChildClass();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class FatherClass &#123;</span><br><span class="line">    public FatherClass() &#123;</span><br><span class="line">        System.out.println(&quot;创建FatherClass&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class ChildClass extends FatherClass &#123;</span><br><span class="line">    public ChildClass() &#123;</span><br><span class="line">        System.out.println(&quot;创建ChildClass&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">开始创建一个ChildClass对象......</span><br><span class="line">创建FatherClass</span><br><span class="line">创建ChildClass</span><br></pre></td></tr></table></figure>
-<h3 id="5-6-多态"><a href="#5-6-多态" class="headerlink" title="5.6 多态"></a>5.6 多态</h3><p>多态指的是同一个方法调用，由于对象不同可能会有不同的行为。现实生活中，同一个方法，具体实现会完全不同。 比如：同样是调用人的“休息”方法，张三是睡觉，李四是旅游，高淇老师是敲代码，数学教授是做数学题; 同样是调用人“吃饭”的方法，中国人用筷子吃饭，英国人用刀叉吃饭，印度人用手吃饭。</p>
-<font size="3" color="green"><br>多态的要点：<br><br>1. 多态是方法的多态，不是属性的多态(多态与属性无关)<br><br>2. 多态的存在要有3个必要条件：继承，方法重写，父类引用指向子类对象<br><br>3. 父类引用指向子类对象后，用该父类引用调用子类重写的方法，此时多态就出现了<br></font>
-
-<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131871866302822265.png" alt="image"></p>
-<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131871866312353515.png" alt="image"></p>
-<p>再来看一段代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_04_多态</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/11/20/18:57</span><br><span class="line"> */</span><br><span class="line">public class Test_04_多态 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Animal a = new Animal();</span><br><span class="line">        animalCry(a);</span><br><span class="line"></span><br><span class="line">        Dog d = new Dog();</span><br><span class="line">        animalCry(d);</span><br><span class="line"></span><br><span class="line">        animalCry(new Cat());</span><br><span class="line"></span><br><span class="line">        Animal b = new Cat();</span><br><span class="line">        b.shout();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    static void animalCry(Animal a)&#123;</span><br><span class="line">        a.shout();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Animal &#123;</span><br><span class="line">    public void shout() &#123;</span><br><span class="line">        System.out.println(&quot;叫了一声！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Dog extends Animal &#123;</span><br><span class="line">    public void shout() &#123;</span><br><span class="line">        System.out.println(&quot;旺旺旺！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public void seeDoor() &#123;</span><br><span class="line">        System.out.println(&quot;看门中....&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class Cat extends Animal &#123;</span><br><span class="line">    public void shout() &#123;</span><br><span class="line">        System.out.println(&quot;喵喵喵喵！&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131871866315947265.png" alt="image"></p>
-<blockquote>
-<p>之前一直死记的编译看左边，运行看右边，现在看来很好理解了，因为当前编译器是将你的对象当作你定义的对象(父类)来看的,但是其实你是子类。</p>
-</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class Singleton &#123;</span><br><span class="line">    private volatile static Singleton instance = null;</span><br><span class="line">    public  static Singleton getInstance() &#123;</span><br><span class="line">        if(null == instance) &#123;    </span><br><span class="line">            synchronized (Singleton.class) &#123;</span><br><span class="line">                if(null == instance) &#123;                    </span><br><span class="line">                    instance = new Singleton();        </span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return instance;    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>将变量<font size="3" color="red">instance</font>使用<font size="3" color="red">volatile</font>修饰即可实现单例模式的线程安全。</p>
+<p>关于<font size="3" color="red">volatile</font>的用法在此不展开，之后会另行介绍。</p>
 
       
     </div>
@@ -422,7 +400,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
           
         </div>
       
@@ -435,8 +413,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/11/20/1.删除链表的倒数第N个节点/" rel="next" title="LeetCode-18：删除链表的倒数第N个节点">
-                <i class="fa fa-chevron-left"></i> LeetCode-18：删除链表的倒数第N个节点
+              <a href="/2019/01/28/六.BufferedInputSream/" rel="next" title="六.BufferedInputStream源码解析">
+                <i class="fa fa-chevron-left"></i> 六.BufferedInputStream源码解析
               </a>
             
           </div>
@@ -445,8 +423,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/21/2.反转链表/" rel="prev" title="LeetCode-206：反转链表">
-                LeetCode-206：反转链表 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/01/28/八.浅redis分布式锁/" rel="prev" title="八.浅谈redis分布式锁">
+                八.浅谈redis分布式锁 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -599,7 +577,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-1-继承树追溯"><span class="nav-number">1.</span> <span class="nav-text">5.3.1 继承树追溯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-多态"><span class="nav-number">2.</span> <span class="nav-text">5.6 多态</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#我们第一次写的单例模式是下面这样的："><span class="nav-number">1.</span> <span class="nav-text">我们第一次写的单例模式是下面这样的：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#紧接着，我们再做单例模式的第二次尝试："><span class="nav-number">2.</span> <span class="nav-text">紧接着，我们再做单例模式的第二次尝试：</span></a></li></ol></div>
             
 
           </div>

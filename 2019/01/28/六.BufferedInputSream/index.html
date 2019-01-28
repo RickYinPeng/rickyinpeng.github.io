@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Java基础之小知识点拆分," />
 
 
 
@@ -79,16 +79,18 @@
 
 
 
-<meta name="description" content="毕生追求无他，爱与自由而已。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="RickYinPeng&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/categories/Struts2/index.html">
+<meta name="description" content="BufferedInputStream源码解析">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六.BufferedInputStream源码解析">
+<meta property="og:url" content="http://yoursite.com/2019/01/28/六.BufferedInputSream/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="毕生追求无他，爱与自由而已。">
+<meta property="og:description" content="BufferedInputStream源码解析">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-28T01:53:46.652Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RickYinPeng&#39;s blog">
-<meta name="twitter:description" content="毕生追求无他，爱与自由而已。">
+<meta name="twitter:title" content="六.BufferedInputStream源码解析">
+<meta name="twitter:description" content="BufferedInputStream源码解析">
 
 
 
@@ -118,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/categories/Struts2/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/01/28/六.BufferedInputSream/"/>
 
 
 
 
 
-  <title>分类: Struts2 | RickYinPeng's blog</title>
+  <title>六.BufferedInputStream源码解析 | RickYinPeng's blog</title>
   
 
 
@@ -143,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left ">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
@@ -258,83 +260,173 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block category">
+  <div id="posts" class="posts-expand">
+    
 
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        <h1>Struts2<small>分类</small>
-        </h1>
-      </div>
+  
 
-      
-        
+  
+  
+  
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/28/六.BufferedInputSream/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2018/10/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/" itemprop="url">
-              
-                <span itemprop="name">二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">六.BufferedInputStream源码解析</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-05T10:41:02+08:00"
-              content="2018-10-05" >
-          10-05
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-28T09:52:09+08:00">
+                2019-01-28
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-        
+      
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2018/10/03/1.Struts2——初始&&配置&&Action的创建方式/" itemprop="url">
-              
-                <span itemprop="name">一.Struts2——初始&&配置&&Action的创建方式</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2018-10-03T11:30:47+08:00"
-              content="2018-10-03" >
-          10-03
-        </time>
-      </div>
-
-    </header>
-  </article>
-
+      
+        <p><a href="https://blog.csdn.net/lqhed/article/details/51900984" target="_blank" rel="noopener">BufferedInputStream源码解析</a></p>
 
       
     </div>
+    
+    
+    
 
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/27/二十二.IO流/" rel="next" title="二十二.IO流">
+                <i class="fa fa-chevron-left"></i> 二十二.IO流
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/28/七.DCL单例模式/" rel="prev" title="七.DCL单例模式">
+                七.DCL单例模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -342,6 +434,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -596,6 +692,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
