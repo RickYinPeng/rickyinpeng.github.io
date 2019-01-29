@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础之小知识点拆分," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导 一.面试题在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法 二.常规思路（仅仅是思路）我们需要通过一个中间变量（temp）保存其中一个值，然后再进行交换，我们来看一下 1234567891011121314">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="九.浅析Java中的参数传值机制（面试题）">
+<meta property="og:url" content="http://yoursite.com/2019/01/29/九.浅析Java中的参数传值机制/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="前言关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导 一.面试题在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法 二.常规思路（仅仅是思路）我们需要通过一个中间变量（temp）保存其中一个值，然后再进行交换，我们来看一下 1234567891011121314">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131932050471256250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131932050484381250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131861485138312500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131861485142218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131861494478000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131861494481906250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131932080718912500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131932091211412500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131932106350943750.png">
+<meta property="og:updated_time" content="2019-01-29T05:08:44.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="九.浅析Java中的参数传值机制（面试题）">
+<meta name="twitter:description" content="前言关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导 一.面试题在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法 二.常规思路（仅仅是思路）我们需要通过一个中间变量（temp）保存其中一个值，然后再进行交换，我们来看一下 1234567891011121314">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131932050471256250.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/01/29/九.浅析Java中的参数传值机制/"/>
+
+
+
+
+
+  <title>九.浅析Java中的参数传值机制（面试题） | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/29/九.浅析Java中的参数传值机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">九.浅析Java中的参数传值机制（面试题）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-29T13:07:35+08:00">
+                2019-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java基础提高/" itemprop="url" rel="index">
+                    <span itemprop="name">Java基础提高</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导</p>
+<h2 id="一-面试题"><a href="#一-面试题" class="headerlink" title="一.面试题"></a>一.面试题</h2><p>在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法</p>
+<h2 id="二-常规思路（仅仅是思路）"><a href="#二-常规思路（仅仅是思路）" class="headerlink" title="二.常规思路（仅仅是思路）"></a>二.常规思路（仅仅是思路）</h2><p>我们需要通过一个中间变量（temp）保存其中一个值，然后再进行交换，我们来看一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int a = 1;</span><br><span class="line">        int b = 2;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void swap(int num1, int num2) &#123;</span><br><span class="line">        int temp = num1;</span><br><span class="line">        num1 = num2;</span><br><span class="line">        num2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before swap a:1,b:2</span><br><span class="line">after swap a:1,b:2</span><br></pre></td></tr></table></figure>
+<p>这个我们大家都知道，在 Java 中基本类型之间在参数中是指传递，也就是说，这里我们的 num1 和 num2 只是 main 函数中 a 和 b 的值，而并非 a 和 b 本身，我们在函数中改变的仅仅是 num1 和 num2 这个两个临时变量的值，对于 main 函数中 a 和 b 的值并没有什么影响</p>
+<h2 id="三-引用传递呢？"><a href="#三-引用传递呢？" class="headerlink" title="三.引用传递呢？"></a>三.引用传递呢？</h2><p>在Java中引用传递其实也是值传递，只是这个引用它本身保存的是此引用指向的内存地址，所以会将这个内存地址的值传过去，而我们在函数中操作此临时变量就相当于操作原来的引用，因为此时你是通过地址来操作啊，就是c语言中的指针</p>
+<p>那我们来看看将 int 变为Integer呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test_02 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer a = 1;//自动装箱 = Integer.valueof(1)</span><br><span class="line">        Integer b = 2;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void swap(Integer num1, Integer num2) &#123;</span><br><span class="line">        Integer temp = num1;</span><br><span class="line">        num1 = num2;</span><br><span class="line">        num2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里会有一个自动装箱，后面解释。</p>
+<p>打印结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before swap a:1,b:2</span><br><span class="line">after swap a:1,b:2</span><br></pre></td></tr></table></figure>
+<p>打印结果并没有改变，那这是为什么呢？？？？</p>
+<h3 id="我们再来看一下String类型-这个之前尧哥面试还问过我，我都说错了"><a href="#我们再来看一下String类型-这个之前尧哥面试还问过我，我都说错了" class="headerlink" title="我们再来看一下String类型(这个之前尧哥面试还问过我，我都说错了)"></a>我们再来看一下String类型(这个之前尧哥面试还问过我，我都说错了)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test_03 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String a = &quot;1&quot;;</span><br><span class="line">        String b = &quot;2&quot;;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void swap(String num1, String num2) &#123;</span><br><span class="line">        String temp = num1;</span><br><span class="line">        num1 = num2;</span><br><span class="line">        num2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>打印结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before swap a:1,b:2</span><br><span class="line">after swap a:1,b:2</span><br></pre></td></tr></table></figure>
+<p>还是之前的值，String和Integer不都是引用类型吗，为什么没有改变呢？？？</p>
+<h3 id="内存图解"><a href="#内存图解" class="headerlink" title="内存图解"></a>内存图解</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131932050471256250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131932050484381250.png" alt="image"></p>
+<font size="3" color="red"><br>也就是说，如果我们在函数中将传进来的引用类型给它赋一个新的值，那么其改变并不会影响外部引用的值，就像上面那样，那什么时候会在函数内部的改变会影响外面的值呢？我们在Java中不经常传自己定义的JavaBean对象进去吗？？？我们来看看<br></font>
+
+<h3 id="函数内的改变影响函数外的值的例子"><a href="#函数内的改变影响函数外的值的例子" class="headerlink" title="函数内的改变影响函数外的值的例子"></a>函数内的改变影响函数外的值的例子</h3><p>自定义一个User对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">class User&#123;</span><br><span class="line">    int id;</span><br><span class="line">    String name;</span><br><span class="line">    String pwd;</span><br><span class="line"></span><br><span class="line">    //无参构造</span><br><span class="line">    public User() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //带两个参数的构造</span><br><span class="line">    public User(int id, String name) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void testParameterTransfer01(User u)&#123;</span><br><span class="line">        u.name=&quot;风清扬&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void testparametertransfer02(User u)&#123;</span><br><span class="line">        u = new User(200,&quot;东方不败&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Y_01_测试值传递 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        User user = new User(100,&quot;张三丰&quot;);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line"></span><br><span class="line">        user.testParameterTransfer01(user);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line"></span><br><span class="line">        user.testparametertransfer02(user);</span><br><span class="line">        System.out.println(user.name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们来分析一下：<br><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131861485138312500.png" alt="image"><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131861485142218750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131861494478000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131861494481906250.png" alt="image"></p>
+<font size="4" color="red"><br>总结出什么呢？<br><br><br>1. 就是说当我们在函数内部直接给传进来的引用赋一个新的值的时候，这种影响并不会影响外面的引用的值，它仅仅是将函数中复制的那个临时变量给改了，并未改变函数外部的值比如下面这种<br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void testparametertransfer02(User u)&#123;</span><br><span class="line">        u = new User(200,&quot;东方不败&quot;);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure><br><br>2. 而当我们在函数内部改变引用对象内部的属性的值的时候，这种影响会扩散到函数外部，因为在函数内部复制的那个引用指向的跟函数外部指向的是一个地址，你改变其内部属性的值就是改变了外部指向的值，如下：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void testParameterTransfer01(User u)&#123;</span><br><span class="line">    u.name=&quot;风清扬&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>我们改变了传进来的User对象内部的值，那么外部的值也就被改变了<br></font>
+
+<p>所以说在函数内部通过赋值的操作就不要想了，行不通的弟弟。</p>
+<h3 id="包装类分析"><a href="#包装类分析" class="headerlink" title="包装类分析"></a>包装类分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Test_03 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String a = &quot;1&quot;;</span><br><span class="line">        String b = &quot;2&quot;;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    private static void swap(String num1, String num2) &#123;</span><br><span class="line">        String temp = num1;</span><br><span class="line">        num1 = num2;</span><br><span class="line">        num2 = temp;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在我们分析出来，在函数内部直接交换是行不通的。<br><br>我们都知道八大基本数据类型都对应其一个包装类，int–&gt;Integer,byte–&gt;Byte等。当我们用一个包装类来接收一个基本类型的时候发生了什么呢？比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer a = 1;</span><br></pre></td></tr></table></figure>
+<p>这里会发生自动装箱，先不考虑这个问题</p>
+<p>这里这个Integer对象将这个1到底存到了哪里呢？？</p>
+<p>Integer源码<br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131932080718912500.png" alt="image"></p>
+<p>其实呢，Integer这个对象会将这个基本数据存放到其内部的一个 int value中<br></p>
+<font size="3" color="red">注意：这个value是<font color="blue">final</font>类型的，就是不可变</font>
+
+<p>那么其他的包装类也一样。</p>
+<p>String不是一个包装类，但是String是一个对象，在String对象这个内部有一个<font size="3" color="red">char[] </font>数组，String就是将值保存到了这个<font size="3" color="red">char[]</font> 数组中的，而且这个<font size="3" color="red">char[]</font> 数组也是<font size="3" color="red">final</font>修饰的</p>
+<font size="3" color="red"><br>既然我们都说了，我们给传进来的引用直接赋值是不行的，我们只能想法去改变其内部属性，对吧。也就是说我们要去改变这些包装类和String类内部真正保存数据的那个东西，就像这样：</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public void testParameterTransfer01(User u)&#123;</span><br><span class="line">    u.name=&quot;风清扬&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<font size="3" color="red">但是，这些内部属性都是final修饰的，我们该怎么办？？？？？</font>
+
+<h2 id="四-反射技术"><a href="#四-反射技术" class="headerlink" title="四.反射技术"></a>四.反射技术</h2><p>看代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法</span><br><span class="line"> */</span><br><span class="line">public class Test_01 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer a = 1;//自动装箱 = Integer.valueof(1)</span><br><span class="line">        Integer b = 2;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void swap(Integer num1, Integer num2) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Field field = Integer.class.getDeclaredField(&quot;value&quot;);</span><br><span class="line">            field.setAccessible(true);</span><br><span class="line"></span><br><span class="line">            int temp = num1.intValue();</span><br><span class="line">            </span><br><span class="line">            //将num1中的value属性设置为num2中的value属性</span><br><span class="line">            field.set(num1,num2);</span><br><span class="line"></span><br><span class="line">            System.out.println(temp);</span><br><span class="line"></span><br><span class="line">            field.set(num2,temp);</span><br><span class="line"></span><br><span class="line">        &#125; catch (NoSuchFieldException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上是我们使用反射技术来实现的交换，有没有什么问题</p>
+<font size="3" color="red">问题大了去了</font>
+
+<p>打印结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">before swap a:1,b:2</span><br><span class="line">after swap a:2,b:2</span><br></pre></td></tr></table></figure>
+<font size="3" color="red">只交换了一般，这是怎么回事呢？？？</font>
+
+<h3 id="分析一波"><a href="#分析一波" class="headerlink" title="分析一波"></a>分析一波</h3><p>在我们执行下面这句代码的时候会发生一个自动装箱操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Integer a = 1;//自动装箱 = Integer.valueof(1)</span><br><span class="line">Integer b = 2;</span><br></pre></td></tr></table></figure>
+<p>而这个自动装箱操作内部呢，有一个<font size="3" color="red">Integer</font>的缓冲数组，叫做<font size="3" color="red">IntegerCache<br></font>,<font size="3" color="red">IntegerCacheIntegerCache</font>内部有一个已经初始化好的Integer[],而这个<font size="3" color="red">Integer[]</font>就是我们的真正的缓存数组</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131932091211412500.png" alt="image"><br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131932106350943750.png" alt="image"></p>
+<p>这个<font size="3" color="red">IntegerCache</font>的<font size="3" color="red">low</font>的范围是<font size="3" color="red">-128</font>而<font size="3" color="red">high</font>是<font size="3" color="red">+127</font>，也就说，如果我们这个穿进来的这个数如果<font size="3" color="red">大于-128且小于+127</font>,那么就将已经初始化好的这个缓存数组的值给它，也就是说现在这个<font size="3" color="red">a</font>和这个<font size="3" color="red">b</font>指向的是这个缓冲数组中的的值。</p>
+<p>现在我们比如执行<font size="3" color="red">Integer a = 1；</font>那么这个就会返回 <font size="3" color="red">IntegerCache.cache[1+(-(-128))] = IntegerCache.cache[129]</font></p>
+<p>而这个<font size="3" color="red">IntegerCache.cache[129]</font>的值正好是<font size="3" color="red">1</font>，就是<font size="3" color="red">人家帮咱们初始化好的</font>，提高效率的。那么依次类推<font size="3" color="red">IntegerCache.cache[130]</font>就等于<font size="3" color="red">2</font>，对吧，这里可以看懂吧</p>
+<p>那么我执行这段代码时</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Field field = Integer.class.getDeclaredField(&quot;value&quot;);</span><br><span class="line">field.setAccessible(true);</span><br><span class="line"></span><br><span class="line">int temp = num1.intValue();</span><br><span class="line"></span><br><span class="line">//将num1中的value属性设置为num2中的value属性</span><br><span class="line">field.set(num1,num2);</span><br></pre></td></tr></table></figure>
+<p><font size="3" color="red">Field field = Integer.class.getDeclaredField(“value”);</font>获取到<font size="3" color="red">Integer</font>的<font size="3" color="red">value</font>属性</p>
+<p><font size="3" color="red">field.set(num1,num2);</font>将<font size="3" color="red">num1</font>对象中的<font size="3" color="red">value</font>值设置为<font size="3" color="red">num2</font>中的<font size="3" color="red">value</font>值，就是将<font size="3" color="red">IntegerCache.cache[129]</font>的值设置为<font size="3" color="red">IntegerCache.cache[130]</font>（因为<font size="3" color="red">num2</font>是<font size="3" color="red">IntegerCache.cache[130]</font>），所以如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IntegerCache.cache[129] = num2 = 2 ===&gt; IntegerCache[129]=2</span><br></pre></td></tr></table></figure>
+<p>在当我们执行下面代码时，对发生什么呢？？？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">field.set(num2,temp);</span><br></pre></td></tr></table></figure>
+<p>将<font size="3" color="red">num2</font>中的<font size="3" color="red">value</font>值设置为<font size="3" color="red">temp</font>，也即将<font size="3" color="red">IntegerCache.cache[130]</font>的值设置为<font size="3" color="red">temp</font>，此时<font size="3" color="red">temp</font>是一个基本类型，而我们的<font size="3" color="red">field.set()</font>方法需要传进去两个<font size="3" color="red">Object类型</font>，此时<font size="3" color="red">temp</font>是<font size="3" color="red">int</font>类型，所以这里又会有一个自动装箱操作，即</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer temp = Integer.valueof(temp);</span><br></pre></td></tr></table></figure>
+<p>即这样，<font size="3" color="red">temp</font>中保存的是<font size="3" color="red">num1</font>的<font size="3" color="red">value</font>值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer temp = Integer.valueof(1);</span><br></pre></td></tr></table></figure></p>
+<p>此时它又去<font size="3" color="red">Integer</font>的缓冲数组中去比较了对吧，于是返回了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Integer temp = Integer.valueof(1) = IntegerCache.cache[129]</span><br></pre></td></tr></table></figure>
+<p>而此时 <font size="3" color="red">IntegerCache.cache[129]</font> 已经等于<font size="3" color="red">2</font>了，我们之前分析的，所以这里</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">temp = Integer.valueof(1) = IntegerCache.cache[129] = 2；</span><br></pre></td></tr></table></figure>
+<p>所以只改变了一半，那怎么操作呢？？？</p>
+<p>很简单</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">field.set(num2,new Integer(temp));</span><br></pre></td></tr></table></figure>
+<p>这样就ok了</p>
+<h2 id="最终代码"><a href="#最终代码" class="headerlink" title="最终代码"></a>最终代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package yp.Java_Interview;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_01</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2019/1/28/20:09</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">import java.lang.reflect.Field;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法</span><br><span class="line"> */</span><br><span class="line">public class Test_01 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer a = 1;//自动装箱 = Integer.valueof(1)</span><br><span class="line">        Integer b = 2;</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;before swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line">        swap(a, b);</span><br><span class="line">        System.out.println(&quot;after swap a:&quot; + a + &quot;,&quot; + &quot;b:&quot; + b);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static void swap(Integer num1, Integer num2) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Field field = Integer.class.getDeclaredField(&quot;value&quot;);</span><br><span class="line">            field.setAccessible(true);</span><br><span class="line"></span><br><span class="line">            int temp = num1.intValue();</span><br><span class="line">            System.out.println(temp);</span><br><span class="line"></span><br><span class="line">            field.set(num1,num2);// IntegerCache[129] = num2 = 2 ===&gt; IntegerCache[129]=2</span><br><span class="line"></span><br><span class="line">          /*  Integer bb = 1; // bb 到底是什么值？ 值是2</span><br><span class="line">            System.out.println(bb);//打印的是 2，有意思*/</span><br><span class="line"></span><br><span class="line">            System.out.println(temp);</span><br><span class="line"></span><br><span class="line">            field.set(num2,new Integer(temp));// IntegerCache[130] = temp = ? = 2</span><br><span class="line">           /*</span><br><span class="line">           或者这样</span><br><span class="line">            field.setInt(num1,temp);</span><br><span class="line">            */</span><br><span class="line"></span><br><span class="line">        &#125; catch (NoSuchFieldException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; catch (IllegalAccessException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/28/八.浅redis分布式锁/" rel="next" title="八.浅谈redis分布式锁">
+                <i class="fa fa-chevron-left"></i> 八.浅谈redis分布式锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一-面试题"><span class="nav-number">2.</span> <span class="nav-text">一.面试题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-常规思路（仅仅是思路）"><span class="nav-number">3.</span> <span class="nav-text">二.常规思路（仅仅是思路）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-引用传递呢？"><span class="nav-number">4.</span> <span class="nav-text">三.引用传递呢？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#我们再来看一下String类型-这个之前尧哥面试还问过我，我都说错了"><span class="nav-number">4.1.</span> <span class="nav-text">我们再来看一下String类型(这个之前尧哥面试还问过我，我都说错了)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存图解"><span class="nav-number">4.2.</span> <span class="nav-text">内存图解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数内的改变影响函数外的值的例子"><span class="nav-number">4.3.</span> <span class="nav-text">函数内的改变影响函数外的值的例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#包装类分析"><span class="nav-number">4.4.</span> <span class="nav-text">包装类分析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-反射技术"><span class="nav-number">5.</span> <span class="nav-text">四.反射技术</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#分析一波"><span class="nav-number">5.1.</span> <span class="nav-text">分析一波</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最终代码"><span class="nav-number">6.</span> <span class="nav-text">最终代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
