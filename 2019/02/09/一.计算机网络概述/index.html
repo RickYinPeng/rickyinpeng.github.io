@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="课程安排  互联网，因特网概述     因特网的组成             计算机网络的类别  以上分别是按照作用范围、使用者、拓扑结构、交换方式、工作方式来划分的  计算机网络的性能          计算机网络的体系结构  就比如说，现在我们有一个货物需要运到北京的某个地方去，我现在在陕西西安，那么货物先到西安火车站，再到达北京火车站，由北京火车站到我们具体要到达的地方去，中间经过了西安站，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RickYinPeng&#39;s blog">
+<meta property="og:url" content="http://yoursite.com/2019/02/09/一.计算机网络概述/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="课程安排  互联网，因特网概述     因特网的组成             计算机网络的类别  以上分别是按照作用范围、使用者、拓扑结构、交换方式、工作方式来划分的  计算机网络的性能          计算机网络的体系结构  就比如说，现在我们有一个货物需要运到北京的某个地方去，我现在在陕西西安，那么货物先到西安火车站，再到达北京火车站，由北京火车站到我们具体要到达的地方去，中间经过了西安站，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/4.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/5.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/6.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/7.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/8.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/9.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/10.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/11.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/12.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/13.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/14.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/15.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/16.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/17.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/18.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/19.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/20.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/21.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/22.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/23.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/24.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/25.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/26.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/27.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/28.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/29.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/30.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/31.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/32.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2_131925503077515000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3_131925503079858750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/4_131925540776265000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/5_131925540778921250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/6_131925542851265000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2_131927233938452500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3_131927233941421250.png">
+<meta property="og:updated_time" content="2019-01-23T13:24:08.531Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RickYinPeng&#39;s blog">
+<meta name="twitter:description" content="课程安排  互联网，因特网概述     因特网的组成             计算机网络的类别  以上分别是按照作用范围、使用者、拓扑结构、交换方式、工作方式来划分的  计算机网络的性能          计算机网络的体系结构  就比如说，现在我们有一个货物需要运到北京的某个地方去，我现在在陕西西安，那么货物先到西安火车站，再到达北京火车站，由北京火车站到我们具体要到达的地方去，中间经过了西安站，">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/02/09/一.计算机网络概述/"/>
+
+
+
+
+
+  <title> | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/09/一.计算机网络概述/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline"></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-09T12:17:37+08:00">
+                2019-02-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="课程安排"><a href="#课程安排" class="headerlink" title="课程安排"></a>课程安排</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3.png" alt="image"></p>
+<h2 id="互联网，因特网概述"><a href="#互联网，因特网概述" class="headerlink" title="互联网，因特网概述"></a>互联网，因特网概述</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/4.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/5.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/6.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/7.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/8.png" alt="image"></p>
+<h2 id="因特网的组成"><a href="#因特网的组成" class="headerlink" title="因特网的组成"></a>因特网的组成</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/9.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/10.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/11.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/12.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/13.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/14.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/15.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/16.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/17.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/18.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/19.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/20.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/21.png" alt="image"></p>
+<h2 id="计算机网络的类别"><a href="#计算机网络的类别" class="headerlink" title="计算机网络的类别"></a>计算机网络的类别</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/22.png" alt="image"></p>
+<blockquote>
+<font size="3" color="red">以上分别是按照作用范围、使用者、拓扑结构、交换方式、工作方式来划分的</font>
+</blockquote>
+<h2 id="计算机网络的性能"><a href="#计算机网络的性能" class="headerlink" title="计算机网络的性能"></a>计算机网络的性能</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/23.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/24.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/25.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/26.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/27.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/28.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/29.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/30.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/31.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/32.png" alt="image"></p>
+<h2 id="计算机网络的体系结构"><a href="#计算机网络的体系结构" class="headerlink" title="计算机网络的体系结构"></a>计算机网络的体系结构</h2><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2_131925503077515000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3_131925503079858750.png" alt="image"></p>
+<font size="3"><br>就比如说，现在我们有一个货物需要运到北京的某个地方去，我现在在陕西西安，那么货物先到西安火车站，再到达北京火车站，由北京火车站到我们具体要到达的地方去，中间经过了西安站，北京站，目的地。<br><br>我们的网络也一样，需要经过不同的地方(层)</font>
+
+<h3 id="OSI"><a href="#OSI" class="headerlink" title="OSI"></a>OSI</h3><font size="3" color="red">OSI:开放式系统互联参考模型(分七层)</font><br>1. 应用层：能够产生网络流量和用户交互的应用程序<br>&gt; QQ，浏览器，暴风影音，我们的电脑中的记事本不是我们说的数据通信中的应用层，它不牵扯数据通信自己就能够运行<br>2. 表示层：我们在数据通信的时候呢，考虑这个数据是不是要加密啊，是不是要压缩啊，是二进制呢还是ASCII码<br>&gt; QQ可以语音可以视频，开发人员如果在开发的时候如果原封不动的将视频传过来，那可能很大，这样就比较占带宽（开发人员做的）。QQ的数据在网上传的时候要加密，防止别人捕获。<br>3. 会话层：服务端和客户端建立会话（可以查木马 netstat -n）<br>&gt; <font size="3" color="red">可以使用 netstat /? 来查看命令的所有参数</font><br>4. 传输层：可以对我们进行可靠传输(是建立会话的)，不可靠传输（不建立会话），流量控制<br>&gt; 可靠传输：下载电影(不能丢包),<br><br>不可靠传输：域名解析–&gt;ip地址，向网上扔一个数据包就ok了，这个数据包就是问百度的ip地址是多少。屏幕广播也是不可靠传输<br>5. 网络层：IP地址编址，选择最佳的路径<br>&gt; 我们的网(Intnet)是一个非常冗余的网络结构，那么从一个地方到另一个地方可能有多个路径可以走，那么到底哪一条路径最近呢？由网络层负责给咱们选择<br>6. 数据链路层：数据如何封装，添加物理层地址(MAC地址)<br>7. 物理层：物理层规定电压，接口的标准<br><br>### 网络排错<br><br>从底层到高层逐一排查<br><br>### 网络安全和OSI参考模型<br><br>- 物理层安全<br>- 数据链路层安全 ：ADSL(拨号上网，现在是路由器帮我们拨号)，AP密码（无线网密码）<br>- 网络层安全：一个公司中有软件研发人员，而公司希望研发人员不能上网，于是就将研发部的网路的口禁止上网，就是这个口不能出去访问外网<br>- 应用层安全：应用程序开发的漏洞，SQL注入漏洞，上传漏洞<br><br>### 开放式系统信息交换设计的几个概念<br><br><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/4_131925540776265000.png" alt="image"><br><br><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/5_131925540778921250.png" alt="image"><br><br><font size="3"><br>各个实体之间用不同的协议来进行通信，也就是说两个实体协议不通，传过来的数据它就看不懂还怎么通信<br></font>
+
+<h3 id="五层协议对应的数据单元"><a href="#五层协议对应的数据单元" class="headerlink" title="五层协议对应的数据单元"></a>五层协议对应的数据单元</h3><p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/6_131925542851265000.png" alt="image"></p>
+<blockquote>
+<p>就是数据在各个层中的叫法，如数据在应用层叫做PDU，就是一些文件，如word等，而在运输层就叫做报文，在网络层叫做数据帧等</p>
+</blockquote>
+<p><strong><font size="3">老师解释：</font></strong><br></p>
+<ol>
+<li>在应用层，我们的应用程序将整块数据传到运输层</li>
+<li>在运输层中将我们的整块数据分组，然后加上TCP/IP协议（你想啊，这里是运输层加通信协议），然后现在各个这样一整个数据就被分成了各个组，这各个组就叫数据段</li>
+<li>到达网络层后，我们将IP地址加入这些数据段中（IP地址就是网络层地址），现在这些数据段就会被叫做数据包</li>
+<li>在数据链路层中在数据包中加入MAC地址，这就叫数据帧</li>
+<li>在物理层传的时候加上帧头和帧尾变成Bit</li>
+</ol>
+<p><strong><font size="3">传输数据：</font></strong></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/2_131927233938452500.png" alt="image"></p>
+<p>每一层都加上自己的东西</p>
+<p><strong><font size="3">接受数据：</font></strong></p>
+<p><img src="http://img.027cgb.com/606599/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/3_131927233941421250.png" alt="image"></p>
+<p>每一层再去掉自己的东西</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/29/九.浅析Java中的参数传值机制/" rel="next" title="九.浅析Java中的参数传值机制（面试题）">
+                <i class="fa fa-chevron-left"></i> 九.浅析Java中的参数传值机制（面试题）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/09/一、为什么要学习网络协议？/" rel="prev" title="一.为什么要学习网络协议">
+                一.为什么要学习网络协议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">72</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#课程安排"><span class="nav-number">1.</span> <span class="nav-text">课程安排</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互联网，因特网概述"><span class="nav-number">2.</span> <span class="nav-text">互联网，因特网概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#因特网的组成"><span class="nav-number">3.</span> <span class="nav-text">因特网的组成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络的类别"><span class="nav-number">4.</span> <span class="nav-text">计算机网络的类别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络的性能"><span class="nav-number">5.</span> <span class="nav-text">计算机网络的性能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算机网络的体系结构"><span class="nav-number">6.</span> <span class="nav-text">计算机网络的体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OSI"><span class="nav-number">6.1.</span> <span class="nav-text">OSI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五层协议对应的数据单元"><span class="nav-number">6.2.</span> <span class="nav-text">五层协议对应的数据单元</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
