@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="算法," />
+  <meta name="keywords" content="NoSQL," />
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
-<meta name="keywords" content="算法">
+<meta name="description" content="[toc] 前言复习一下之前看的东西，有些遗忘 SDS概述Redis它是一个使用C语言写的内存K-V数据库，但是Redis没有直接使用C语言传统的字符串表示，它构建了属于Redis自己的一种简单动态字符串，结构体定义如下： 1234567891011struct sdshdr&amp;#123;    //记录buf数组中已使用字节的数量    //等于SDS所保存字符串的长度    int len;">
+<meta name="keywords" content="NoSQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta property="og:url" content="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/index.html">
+<meta property="og:title" content="一、Redis-简单动态字符串(SDS)">
+<meta property="og:url" content="http://yoursite.com/2019/04/01/一、Redis-简单动态字符串(SDS)/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta property="og:description" content="[toc] 前言复习一下之前看的东西，有些遗忘 SDS概述Redis它是一个使用C语言写的内存K-V数据库，但是Redis没有直接使用C语言传统的字符串表示，它构建了属于Redis自己的一种简单动态字符串，结构体定义如下： 1234567891011struct sdshdr&amp;#123;    //记录buf数组中已使用字节的数量    //等于SDS所保存字符串的长度    int len;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-10-27T10:05:58.667Z">
+<meta property="og:updated_time" content="2019-03-31T17:21:06.315Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LeetCode-387：字符串中第一个唯一字符">
-<meta name="twitter:description" content="本题为LeetCode中第387道题，较为简单  给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。 案例:12345s = &amp;quot;leetcode&amp;quot;返回 0.s = &amp;quot;loveleetcode&amp;quot;,返回 2. 注意事项： 您可以假定该字符串只包含小写字母。 先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为">
+<meta name="twitter:title" content="一、Redis-简单动态字符串(SDS)">
+<meta name="twitter:description" content="[toc] 前言复习一下之前看的东西，有些遗忘 SDS概述Redis它是一个使用C语言写的内存K-V数据库，但是Redis没有直接使用C语言传统的字符串表示，它构建了属于Redis自己的一种简单动态字符串，结构体定义如下： 1234567891011struct sdshdr&amp;#123;    //记录buf数组中已使用字节的数量    //等于SDS所保存字符串的长度    int len;">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/04/01/一、Redis-简单动态字符串(SDS)/"/>
 
 
 
 
 
-  <title>LeetCode-387：字符串中第一个唯一字符 | RickYinPeng's blog</title>
+  <title>一、Redis-简单动态字符串(SDS) | RickYinPeng's blog</title>
   
 
 
@@ -264,7 +264,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/27/14.字符串中的第一个唯一字符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/01/一、Redis-简单动态字符串(SDS)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -281,7 +281,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LeetCode-387：字符串中第一个唯一字符</h1>
+          <h1 class="post-title" itemprop="name headline">一、Redis-简单动态字符串(SDS)</h1>
         
 
         <div class="post-meta">
@@ -293,8 +293,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-27T18:02:30+08:00">
-                2018-10-27
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-01T01:18:28+08:00">
+                2019-04-01
               </time>
             
 
@@ -316,8 +316,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/LeetCode/" itemprop="url" rel="index">
-                    <span itemprop="name">LeetCode</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -353,15 +353,25 @@
       
 
       
-        <blockquote>
-<p>本题为LeetCode中第387道题，较为简单</p>
-</blockquote>
-<p>给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。<br></p>
-<p><strong>案例:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s = &quot;leetcode&quot;</span><br><span class="line">返回 0.</span><br><span class="line"></span><br><span class="line">s = &quot;loveleetcode&quot;,</span><br><span class="line">返回 2.</span><br></pre></td></tr></table></figure></p>
-<p><strong>注意事项：</strong> 您可以假定该字符串只包含小写字母。<br></p>
-<p>先来看看博主的笨办法，这里我们使用了LinkedHashMap(因为有序，我们最先进去的字母就是最前面的字母),换成HashMap就不行，因为我们最终需要输出只出现一次的最早的字母，记住是最早出现且只出现了一次的字母，所以我们需要用LinkedHashMap来保证有序</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName First_Unique_Character_in_a_String</span><br><span class="line"> * @Description LeetCode中第387道题</span><br><span class="line"> * @date 2018/10/27/17:36</span><br><span class="line"> *</span><br><span class="line"> * 题目名称：字符串中的第一个唯一字符</span><br><span class="line"> */</span><br><span class="line">public class First_Unique_Character_in_a_String &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s = &quot;loveleetcode&quot;;</span><br><span class="line">        int i = firstUniqChar(s);</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 博主的笨办法</span><br><span class="line">     * @param s</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static int firstUniqChar(String s) &#123;</span><br><span class="line">        HashMap&lt;Character,Integer&gt; map = new LinkedHashMap&lt;&gt;();</span><br><span class="line">        for(int i = 0;i&lt;s.length();i++)&#123;</span><br><span class="line">            char index = s.charAt(i);</span><br><span class="line">            if(!map.containsKey(index))&#123;</span><br><span class="line">                map.put(index,1);</span><br><span class="line">            &#125;else&#123;</span><br><span class="line">                map.put(index,map.get(index)+1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(Map.Entry&lt;Character,Integer&gt; entry: map.entrySet())&#123;</span><br><span class="line">            if(entry.getValue()==1)&#123;</span><br><span class="line">                Character key = entry.getKey();</span><br><span class="line">                int indexOf = s.indexOf(key);</span><br><span class="line">                return indexOf;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>再来看看排行榜第一的大佬：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 这可能就是大佬吧，记下就行了</span><br><span class="line"> * @param s</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">public static int firstUniqChar_2(String s)&#123;</span><br><span class="line">    int res = -1;</span><br><span class="line"></span><br><span class="line">    for(char ch=&apos;a&apos;; ch&lt;=&apos;z&apos;; ch++) &#123;</span><br><span class="line">        int index = s.indexOf(ch);</span><br><span class="line">        if(index != -1 &amp;&amp; index == s.lastIndexOf(ch)) &#123;</span><br><span class="line">            res = res == -1?index:Math.min(res, index);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <p>[toc]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>复习一下之前看的东西，有些遗忘</p>
+<h2 id="SDS概述"><a href="#SDS概述" class="headerlink" title="SDS概述"></a>SDS概述</h2><p>Redis它是一个使用C语言写的内存K-V数据库，但是Redis没有直接使用C语言传统的字符串表示，它构建了属于Redis自己的一种简单动态字符串，结构体定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">struct sdshdr&#123;</span><br><span class="line">    //记录buf数组中已使用字节的数量</span><br><span class="line">    //等于SDS所保存字符串的长度</span><br><span class="line">    int len;</span><br><span class="line">    </span><br><span class="line">    //记录buf数组中未使用字节的数量</span><br><span class="line">    int free;</span><br><span class="line">    </span><br><span class="line">    //字节数组，用于保存字符串</span><br><span class="line">    char buf[];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>SDS和C字符串一样，都用 ‘\0’(空字符)来表示最后一位，不过保存空字符的1字节不计算在 SDS 的 len 属性里面。</p>
+<h2 id="SDS为什么比C字符串更适用于Redis"><a href="#SDS为什么比C字符串更适用于Redis" class="headerlink" title="SDS为什么比C字符串更适用于Redis"></a>SDS为什么比C字符串更适用于Redis</h2><h3 id="常数复杂度获取字符串长度"><a href="#常数复杂度获取字符串长度" class="headerlink" title="常数复杂度获取字符串长度"></a>常数复杂度获取字符串长度</h3><p>因为C字符串并不记录自身的长度信息，所以为了获取一个C字符串的长度，程序必须遍历整个字符串，对遇到的每个字符串计数，这个操作的时间复杂度为O(N)。<br><br>SDS它在len属性中记录了SDS本身的长度，所以获取一个SDS长度的时间复杂度为O(1)。<br><br>通过使用SDS而不是C字符串，Redis将获取字符串长度所需的复杂度从O(N)降到了O(1),确保获取字符串长度的工作不会成为Redis的性能瓶颈。</p>
+<h3 id="杜绝缓冲区溢出"><a href="#杜绝缓冲区溢出" class="headerlink" title="杜绝缓冲区溢出"></a>杜绝缓冲区溢出</h3><p>因为C字符串不记录自身长度，所以在执行strcat函数拼接字符串时，如果事先分配了足够的内存空间则不会产生溢出，但若是没有分配足够的内存空间，则会产生内存溢出，溢出到相邻的空间中。<br><br>而当SDS的API需要对SDS进行修改时，API会先检查SDS的空间是否满足修改的所需的要求，如果不能满足的话，API会自动将SDS的空间扩展至所需的大小，然后才执行实际的修改操作。(SDS有它自己的空间分配策略，下面会讲)</p>
+<h3 id="减少修改字符串时带来的内存重分配次数"><a href="#减少修改字符串时带来的内存重分配次数" class="headerlink" title="减少修改字符串时带来的内存重分配次数"></a>减少修改字符串时带来的内存重分配次数</h3><p>C字符串不记录自身的长度，所以我们每次增长或者缩短一个C字符串时，有可能会造成系统调用，从而给系统增加负担。</p>
+<ul>
+<li>如果程序增长字符串，在操作之前程序会先通过内存重分配来扩展底层数组的空间大小（如果忘了这一步则会产生缓冲区溢出）</li>
+<li>如果程序缩短字符串，在操作之前程序会先通过内存重分配来释放字符串不再使用的那部分空间（如果忘了这一步则会产生内存泄漏）</li>
+</ul>
+<p>一般程序中，如果修改的字符串长度的情况不太常出现，那么每次修改执行一次内存重分配还是可以接受的，但是当我们频繁修改的时候，因为内存重分配是一个很耗时的操作，对于像Redis这种追求速度的数据库，显然不能每次修改都去执行一次内存重分配。<br><br>在Redis中，SDS通过未使用空间解除了字符串长度和底层数组长度之间的关联，SDS中buf数组的长度不一定就是字符串数量加一，数组里面可以包含未使用的字节，而这些字节的数量就由SDS的free属性记录。通过未使用空间，SDS实现了空间预分配和惰性空间释放两种优化策略。</p>
+<ul>
+<li><strong>空间预分配</strong>：当对SDS修改后，如果SDS长度小于1MB，那么程序分配和len属性同样大小的未使用空间，这时len属性的值将和free属性的值相同。如果对SDS修改后，SDS长度将大于1MB，那么程序会分配1MB的未使用空间。<br>通过这种方式，每次SDS的API都会检查未使用空间是否足够，如果足够的话，API就会直接使用未使用空间而不会重新分配内存</li>
+<li><strong>惰性空间释放</strong>：当SDS的API需要缩短SDS保存的字符串时，程序并不立即使用内存重分配来回收缩短后多出来的字节，而是使用free属性将这些字节的数量记录起来，并等待将来使用。通过惰性空间释放，SDS避免了缩短字符串时所需的内存重分配操作。</li>
+</ul>
+<h3 id="二进制安全"><a href="#二进制安全" class="headerlink" title="二进制安全"></a>二进制安全</h3><p>C字符串的字符必须符合某种编码（ASCII），并且除了字符串的末尾外，字符串里不能包含空字符，否则最先被程序读入的空字符将被误认为是字符串结尾，这些限制使得C字符只能保存文本数据，不能保存像图片、音频、视频、压缩文件这样的二进制数据。<strong>但是SDS的API都是二进制安全的，所有的SDS的API都会以处理二进制的方式来处理SDS存放的buf数组里的数据，程序不会对其中的数据做任何限制、过滤、或者假设，这正是我们将SDS的buf属性称为字节数组的原因——Redis不是用这个数组来保存字符，而是用它来保存一系列二进制数据。<br>SDS使用len属性的值而不是空字符来判断字符串是否结束。</strong></p>
+<h3 id="兼容部分C字符串函数"><a href="#兼容部分C字符串函数" class="headerlink" title="兼容部分C字符串函数"></a>兼容部分C字符串函数</h3><p>虽然SDS的API都是二进制安全的，但是它们一样遵循C字符串以空字符结尾的惯例，这都是为了让SDS能够共用C字符串函数。</p>
 
       
     </div>
@@ -379,7 +389,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/算法/" rel="tag"># 算法</a>
+            <a href="/tags/NoSQL/" rel="tag"># NoSQL</a>
           
         </div>
       
@@ -392,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/10/27/2.2.3Java内存区域——堆，栈，方法区等/" rel="next" title="2.2.3——Java内存区域--堆、栈、方法区等">
-                <i class="fa fa-chevron-left"></i> 2.2.3——Java内存区域--堆、栈、方法区等
+              <a href="/2019/02/25/十五、HTTPS协议：点外卖的过程原来这么复杂/" rel="next" title="十五、HTTPS协议：点外卖的过程原来这么复杂">
+                <i class="fa fa-chevron-left"></i> 十五、HTTPS协议：点外卖的过程原来这么复杂
               </a>
             
           </div>
@@ -401,10 +411,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/10/28/NoSql/" rel="prev" title="NoSQL概述">
-                NoSQL概述 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -456,8 +462,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -537,6 +552,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDS概述"><span class="nav-number">2.</span> <span class="nav-text">SDS概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SDS为什么比C字符串更适用于Redis"><span class="nav-number">3.</span> <span class="nav-text">SDS为什么比C字符串更适用于Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#常数复杂度获取字符串长度"><span class="nav-number">3.1.</span> <span class="nav-text">常数复杂度获取字符串长度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#杜绝缓冲区溢出"><span class="nav-number">3.2.</span> <span class="nav-text">杜绝缓冲区溢出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#减少修改字符串时带来的内存重分配次数"><span class="nav-number">3.3.</span> <span class="nav-text">减少修改字符串时带来的内存重分配次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制安全"><span class="nav-number">3.4.</span> <span class="nav-text">二进制安全</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#兼容部分C字符串函数"><span class="nav-number">3.5.</span> <span class="nav-text">兼容部分C字符串函数</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
