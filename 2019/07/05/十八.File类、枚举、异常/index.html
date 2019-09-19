@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaSE," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.File类的基本用法java.io.File类：代表文件和目录。 在开发中，读取文件、生成文件、删除文件、修改文件的属性时经常会用到本类。 1.File类的常见构造方法:public File(String pathname)以pathname为路径创建File对象，如果pathname是相对路径，则默认的当前路径在系统属性user.dir中存储 文件的创建12345678910import">
+<meta name="keywords" content="JavaSE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十八.File类、枚举、异常">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/十八.File类、枚举、异常/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.File类的基本用法java.io.File类：代表文件和目录。 在开发中，读取文件、生成文件、删除文件、修改文件的属性时经常会用到本类。 1.File类的常见构造方法:public File(String pathname)以pathname为路径创建File对象，如果pathname是相对路径，则默认的当前路径在系统属性user.dir中存储 文件的创建12345678910import">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495611382530451.png">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495611400819053.png">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170520/1495272017528669.png">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170520/1495272264904706.png">
+<meta property="og:updated_time" content="2019-01-21T07:55:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十八.File类、枚举、异常">
+<meta name="twitter:description" content="一.File类的基本用法java.io.File类：代表文件和目录。 在开发中，读取文件、生成文件、删除文件、修改文件的属性时经常会用到本类。 1.File类的常见构造方法:public File(String pathname)以pathname为路径创建File对象，如果pathname是相对路径，则默认的当前路径在系统属性user.dir中存储 文件的创建12345678910import">
+<meta name="twitter:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495611382530451.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/十八.File类、枚举、异常/"/>
+
+
+
+
+
+  <title>十八.File类、枚举、异常 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十八.File类、枚举、异常/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">十八.File类、枚举、异常</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-File类的基本用法"><a href="#一-File类的基本用法" class="headerlink" title="一.File类的基本用法"></a>一.File类的基本用法</h2><p>java.io.File类：代表文件和目录。 在开发中，读取文件、生成文件、删除文件、修改文件的属性时经常会用到本类。</p>
+<h3 id="1-File类的常见构造方法-public-File-String-pathname"><a href="#1-File类的常见构造方法-public-File-String-pathname" class="headerlink" title="1.File类的常见构造方法:public File(String pathname)"></a>1.File类的常见构造方法:public File(String pathname)</h3><p>以pathname为路径创建File对象，如果pathname是相对路径，则默认的当前路径在系统属性user.dir中存储</p>
+<h4 id="文件的创建"><a href="#文件的创建" class="headerlink" title="文件的创建"></a>文件的创建</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">public class TestFile1 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        System.out.println(System.getProperty(&quot;user.dir&quot;));</span><br><span class="line">        File f = new File(&quot;a.txt&quot;); //相对路径：默认放到user.dir目录下面</span><br><span class="line">        f.createNewFile();//创建文件</span><br><span class="line">        File f2 = new File(&quot;d:/b.txt&quot;);//绝对路径</span><br><span class="line">        f2.createNewFile();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>user.dir就是本项目的目录</p>
+</blockquote>
+<h3 id="2-通过File对象可以访问文件的属性："><a href="#2-通过File对象可以访问文件的属性：" class="headerlink" title="2.通过File对象可以访问文件的属性："></a>2.通过File对象可以访问文件的属性：</h3><p><img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495611382530451.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">import java.util.Date;</span><br><span class="line">public class TestFile2 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        File f = new File(&quot;d:/b.txt&quot;);</span><br><span class="line">        System.out.println(&quot;File是否存在：&quot;+f.exists());</span><br><span class="line">        System.out.println(&quot;File是否是目录：&quot;+f.isDirectory());</span><br><span class="line">        System.out.println(&quot;File是否是文件：&quot;+f.isFile());</span><br><span class="line">        System.out.println(&quot;File最后修改时间：&quot;+new Date(f.lastModified()));</span><br><span class="line">        System.out.println(&quot;File的大小：&quot;+f.length());</span><br><span class="line">        System.out.println(&quot;File的文件名：&quot;+f.getName());</span><br><span class="line">        System.out.println(&quot;File的目录路径：&quot;+f.getPath());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-通过File对象创建空文件或目录-在该对象所指的文件或目录不存在的情况下"><a href="#3-通过File对象创建空文件或目录-在该对象所指的文件或目录不存在的情况下" class="headerlink" title="3.通过File对象创建空文件或目录(在该对象所指的文件或目录不存在的情况下)"></a>3.通过File对象创建空文件或目录(在该对象所指的文件或目录不存在的情况下)</h3><p><img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495611400819053.png" alt="image"></p>
+<h4 id="3-1-使用mkdir创建目录"><a href="#3-1-使用mkdir创建目录" class="headerlink" title="3.1 使用mkdir创建目录"></a>3.1 使用mkdir创建目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">public class TestFile3 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        File f = new File(&quot;d:/c.txt&quot;);</span><br><span class="line">        f.createNewFile(); // 会在d盘下面生成c.txt文件</span><br><span class="line">        f.delete(); // 将该文件或目录从硬盘上删除</span><br><span class="line">        File f2 = new File(&quot;d:/电影/华语/大陆&quot;);</span><br><span class="line">        boolean flag = f2.mkdir(); //目录结构中有一个不存在，则不会创建整个目录树</span><br><span class="line">        System.out.println(flag);//创建失败</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-使用mkdirs创建目录"><a href="#3-2-使用mkdirs创建目录" class="headerlink" title="3.2 使用mkdirs创建目录"></a>3.2 使用mkdirs创建目录</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">public class TestFile4 &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        File f = new File(&quot;d:/c.txt&quot;);</span><br><span class="line">        f.createNewFile(); // 会在d盘下面生成c.txt文件</span><br><span class="line">        f.delete(); // 将该文件或目录从硬盘上删除</span><br><span class="line">        File f2 = new File(&quot;d:/电影/华语/大陆&quot;);</span><br><span class="line">        boolean flag = f2.mkdirs();//目录结构中有一个不存在也没关系；创建整个目录树</span><br><span class="line">        System.out.println(flag);//创建成功</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-使用递归算法，以树状结构展示目录树"><a href="#4-使用递归算法，以树状结构展示目录树" class="headerlink" title="4.使用递归算法，以树状结构展示目录树"></a>4.使用递归算法，以树状结构展示目录树</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import java.io.File;</span><br><span class="line">public class TestFile6 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        File f = new File(&quot;d:/电影&quot;);</span><br><span class="line">        printFile(f, 0);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 打印文件信息</span><br><span class="line">     * @param file 文件名称</span><br><span class="line">     * @param level 层次数(实际就是：第几次递归调用)</span><br><span class="line">     */</span><br><span class="line">    static void printFile(File file, int level) &#123;</span><br><span class="line">        //输出层次数</span><br><span class="line">        for (int i = 0; i &lt; level; i++) &#123;</span><br><span class="line">            System.out.print(&quot;-&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        //输出文件名</span><br><span class="line">        System.out.println(file.getName());</span><br><span class="line">        //如果file是目录，则获取子文件列表，并对每个子文件进行相同的操作</span><br><span class="line">        if (file.isDirectory()) &#123;</span><br><span class="line">            File[] files = file.listFiles();</span><br><span class="line">            for (File temp : files) &#123;</span><br><span class="line">                //递归调用该方法：注意等+1</span><br><span class="line">                printFile(temp, level + 1);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二-枚举"><a href="#二-枚举" class="headerlink" title="二.枚举"></a>二.枚举</h2><p>JDK1.5引入了枚举类型。枚举类型的定义包括枚举声明和枚举体。格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">enum  枚举名 &#123;</span><br><span class="line">      枚举体（常量列表）</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>枚举体就是放置一些常量。</p>
+<h3 id="1-创建枚举类型"><a href="#1-创建枚举类型" class="headerlink" title="1.创建枚举类型"></a>1.创建枚举类型</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">enum Season &#123;</span><br><span class="line">    SPRING, SUMMER, AUTUMN, WINDER </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所有的枚举类型隐性地继承自 <font color="blue">java.lang.Enum</font>。<font size="3" color="red">枚举实质上还是类!</font>而每个被枚举的成员实质就是一个枚举类型的实例，他们默认都是<font size="3" color="red">public static final</font>修饰的。可以直接通过枚举类型名使用它们。</p>
+<h3 id="2-枚举使用"><a href="#2-枚举使用" class="headerlink" title="2.枚举使用"></a>2.枚举使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_06_Enum</span><br><span class="line"> * @Description 测试枚举</span><br><span class="line"> * @date 2019/1/21/12:00</span><br><span class="line"> */</span><br><span class="line">public class Test_06_Enum &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(Season.SPRING);</span><br><span class="line"></span><br><span class="line">        Season season = Season.AUTUMN;</span><br><span class="line"></span><br><span class="line">        switch (season)&#123;</span><br><span class="line">            case SPRING:</span><br><span class="line">                System.out.println(&quot;春天来了，播种的季节&quot;);</span><br><span class="line">                break;</span><br><span class="line">            case SUMMER:</span><br><span class="line">                System.out.println(&quot;夏天来了，游泳的季节&quot;);</span><br><span class="line">                break;</span><br><span class="line">            case AUTUMN:</span><br><span class="line">                System.out.println(&quot;秋天来了，收获的季节&quot;);</span><br><span class="line">                break;</span><br><span class="line">            case WINTER:</span><br><span class="line">                System.out.println(&quot;冬天来了，冬眠的季节&quot;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">enum Season&#123;</span><br><span class="line">    SPRING,SUMMER,AUTUMN,WINTER</span><br><span class="line">&#125;</span><br><span class="line">enum Week&#123;</span><br><span class="line">    星期一,星期二,星期三,星期四,星期五,星期六,星期天</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="三-异常-Exception-的概念"><a href="#三-异常-Exception-的概念" class="headerlink" title="三.异常(Exception)的概念"></a>三.异常(Exception)的概念</h2><p>异常指程序运行过程中出现的非正常现象，例如用户输入错误、除数为零、需要处理的文件不存在、数组下标越界等。</p>
+<p>在Java的异常处理机制中，引进了很多用来描述和处理异常的类，称为异常类。异常类定义中包含了该类异常的信息和对异常进行处理的方法。</p>
+<p>所谓异常处理，就是指程序在出现问题时依然可以正确的执行完。</p>
+<h3 id="1-异常的分析"><a href="#1-异常的分析" class="headerlink" title="1.异常的分析"></a>1.异常的分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class Test2 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int i=1/0;  //除数为0</span><br><span class="line">        System.out.println(i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.ArithmeticException: / by zero</span><br><span class="line">	at yp.JavaSE.Review_06.Test_01.main(Test_01.java:11)</span><br></pre></td></tr></table></figure>
+<font size="3">Java是采用面向对象的方式来处理异常的。处理过程：</font><br>1. <font size="3" color="red">抛出异常</font>：在执行一个方法时，如果发生异常，则这个方法生成代表该异常的一个对象，停止当前执行路径，并把异常对象提交给JRE。<br>2. <font size="3" color="red">捕获异常</font>：JRE得到该异常后，寻找相应的代码来处理该异常。JRE在方法的调用栈中查找，从生成异常的方法开始回溯，直到找到相应的异常处理代码为止。<br><br>### 2.<font color="red">异常分类</font>
+
+<p>JDK 中定义了很多异常类，这些类对应了各种各样可能出现的异常事件，所有异常对象都是派生于<font size="3" color="red">Throwable</font>类的一个实例。如果内置的异常类不能够满足需要，还可以创建自己的异常类。</p>
+<p>Java对异常进行了分类，不同类型的异常分别用不同的Java类表示，所有异常的根类为java.lang.Throwable，Throwable下面又派生了两个子类：<font size="3" color="red">Error</font>和<font size="3" color="red">Exception。</font></p>
+<p><img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170520/1495272017528669.png" alt="image"></p>
+<blockquote>
+<p>注意：这个人家面试会问你Error和Exception的区别</p>
+</blockquote>
+<h4 id="2-1-Error"><a href="#2-1-Error" class="headerlink" title="2.1 Error"></a>2.1 Error</h4><font size="3" color="red">Error是程序无法处理的错误</font>，表示运行应用程序中较严重问题。<font size="3" color="red">大多数错误与代码编写者执行的操作无关，而表示代码运行时 JVM(Java 虚拟机)出现的问题。</font>
+
+<p>例如，Java虚拟机运行错误(Virtual MachineError)，当 JVM 不再有继续执行操作所需的内存资源时，将出现 OutOfMemoryError。这些异常发生时，Java虚拟机(JVM)一般会选择线程终止。</p>
+<font size="3" color="blue">Error表明系统JVM已经处于不可恢复的崩溃状态中。<font size="3" color="red">记下来</font>
+
+<p><img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170520/1495272264904706.png" alt="image"></p>
+<h5 id="2-1-1-Error与Exception的区别"><a href="#2-1-1-Error与Exception的区别" class="headerlink" title="2.1.1 Error与Exception的区别"></a>2.1.1 <font size="3" color="red">Error与Exception的区别</font></h5><ol>
+<li>我开着车走在路上，一头猪冲在路中间，我刹车。这叫一个异常。</li>
+<li>我开着车在路上，发动机坏了，我停车，这叫错误。系统处于不可恢复的崩溃状态。发动机什么时候坏?我们普通司机能管吗?不能。发动机什么时候坏是汽车厂发动机制造商的事。</li>
+</ol>
+<blockquote>
+<p>哈哈。就是这种比喻</p>
+</blockquote>
+<h4 id="2-2-Exception"><a href="#2-2-Exception" class="headerlink" title="2.2 Exception"></a>2.2 Exception</h4><p>Exception是程序本身能够处理的异常，如：空指针异常(NullPointerException)、数组下标越界异常(ArrayIndexOutOfBoundsException)、类型转换异常(ClassCastException)、算术异常(ArithmeticException)等。</p>
+<p>Exception类是所有异常类的父类，其子类对应了各种各样可能出现的异常事件。 通常Java的异常可分为：</p>
+<ol>
+<li><font color="red">RuntimeException</font> 运行时异常</li>
+<li><font color="red">CheckedException</font> 已检查异常（编译期异常）</li>
+</ol>
+<h5 id="RuntimeException运行时异常"><a href="#RuntimeException运行时异常" class="headerlink" title="RuntimeException运行时异常"></a>RuntimeException运行时异常</h5><p>这类异常通常是由编程错误导致的，所以在编写程序时，并不要求必须使用异常处理机制来处理这类异常,经常需要通过增加“逻辑处理来避免这些异常”</p>
+<h5 id="CheckedException已检查异常"><a href="#CheckedException已检查异常" class="headerlink" title="CheckedException已检查异常"></a>CheckedException已检查异常</h5><p>所有不是RuntimeException的异常，统称为Checked Exception，又被称为“已检查异常”，如IOException、SQLException等以及用户自定义的Exception异常。 <font color="red">这类异常在编译时就必须做出处理，否则无法通过编译。</font></p>
+</font>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/十二、深入理解Java中的迭代器/" rel="next" title="十二.深入理解Java中的迭代器">
+                <i class="fa fa-chevron-left"></i> 十二.深入理解Java中的迭代器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/十五、HTTPS协议：点外卖的过程原来这么复杂/" rel="prev" title="十五、HTTPS协议：点外卖的过程原来这么复杂">
+                十五、HTTPS协议：点外卖的过程原来这么复杂 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-File类的基本用法"><span class="nav-number">1.</span> <span class="nav-text">一.File类的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-File类的常见构造方法-public-File-String-pathname"><span class="nav-number">1.1.</span> <span class="nav-text">1.File类的常见构造方法:public File(String pathname)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#文件的创建"><span class="nav-number">1.1.1.</span> <span class="nav-text">文件的创建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-通过File对象可以访问文件的属性："><span class="nav-number">1.2.</span> <span class="nav-text">2.通过File对象可以访问文件的属性：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-通过File对象创建空文件或目录-在该对象所指的文件或目录不存在的情况下"><span class="nav-number">1.3.</span> <span class="nav-text">3.通过File对象创建空文件或目录(在该对象所指的文件或目录不存在的情况下)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-使用mkdir创建目录"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 使用mkdir创建目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-使用mkdirs创建目录"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 使用mkdirs创建目录</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-使用递归算法，以树状结构展示目录树"><span class="nav-number">1.4.</span> <span class="nav-text">4.使用递归算法，以树状结构展示目录树</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-枚举"><span class="nav-number">2.</span> <span class="nav-text">二.枚举</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-创建枚举类型"><span class="nav-number">2.1.</span> <span class="nav-text">1.创建枚举类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-枚举使用"><span class="nav-number">2.2.</span> <span class="nav-text">2.枚举使用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-异常-Exception-的概念"><span class="nav-number">3.</span> <span class="nav-text">三.异常(Exception)的概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-异常的分析"><span class="nav-number">3.1.</span> <span class="nav-text">1.异常的分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-Error"><span class="nav-number">3.1.1.</span> <span class="nav-text">2.1 Error</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1-1-Error与Exception的区别"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">2.1.1 Error与Exception的区别</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-Exception"><span class="nav-number">3.1.2.</span> <span class="nav-text">2.2 Exception</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#RuntimeException运行时异常"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">RuntimeException运行时异常</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#CheckedException已检查异常"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">CheckedException已检查异常</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

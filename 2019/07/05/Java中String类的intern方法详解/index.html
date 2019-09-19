@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java基础之小知识点拆分," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="String类中intern方法的详解 其实博主也是在看Java虚拟机时看到的这么一个有趣的东西，所以今天就来给大家说说  咱们先来看看例子1234567public class Test_01_String_intern &amp;#123;    public static void main(String[] args) &amp;#123;        String s1 = &amp;quot;hellow&amp;">
+<meta name="keywords" content="Java基础之小知识点拆分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中String类的intern方法详解">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/Java中String类的intern方法详解/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="String类中intern方法的详解 其实博主也是在看Java虚拟机时看到的这么一个有趣的东西，所以今天就来给大家说说  咱们先来看看例子1234567public class Test_01_String_intern &amp;#123;    public static void main(String[] args) &amp;#123;        String s1 = &amp;quot;hellow&amp;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131868202471585000.png">
+<meta property="og:updated_time" content="2018-11-16T06:24:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java中String类的intern方法详解">
+<meta name="twitter:description" content="String类中intern方法的详解 其实博主也是在看Java虚拟机时看到的这么一个有趣的东西，所以今天就来给大家说说  咱们先来看看例子1234567public class Test_01_String_intern &amp;#123;    public static void main(String[] args) &amp;#123;        String s1 = &amp;quot;hellow&amp;">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131868202471585000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/Java中String类的intern方法详解/"/>
+
+
+
+
+
+  <title>Java中String类的intern方法详解 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/Java中String类的intern方法详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中String类的intern方法详解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="String类中intern方法的详解"><a href="#String类中intern方法的详解" class="headerlink" title="String类中intern方法的详解"></a>String类中intern方法的详解</h3><blockquote>
+<p>其实博主也是在看Java虚拟机时看到的这么一个有趣的东西，所以今天就来给大家说说</p>
+</blockquote>
+<h4 id="咱们先来看看例子"><a href="#咱们先来看看例子" class="headerlink" title="咱们先来看看例子"></a>咱们先来看看例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01_String_intern &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s1 = &quot;hellow&quot;;</span><br><span class="line">        String s2 = &quot;hellow&quot;;</span><br><span class="line">        System.out.println(s1==s2);//true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码的运行结果是true，这个显然很简单，但是我还是要说一下</p>
+<p>我们知道在jdk1.6的时候jvm中会在方法区中单独给String类型设置一块存储区域，我一般叫他”字符串常量池”,也就是说我们的字符串会放在那个区域中(字符串是常量大家都知道吧)，当Java程序中首次出现一个字符串时，jvm会在方法区中去找，如果没有这个字符串就将它放在字符串常量池中，当我们下一次再次创建跟它相同的字符串时，这个时候jvm会先去字符串常量池中寻找，如果有就将常量池中的字符串地址返回给它返回给它。(博主这里说的观点只是为了让你先大致了解，这个观点细化后是不正确，后面我会逐步深入说的)</p>
+<h4 id="再来看一个例子"><a href="#再来看一个例子" class="headerlink" title="再来看一个例子"></a>再来看一个例子</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01_String_intern &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s3 = &quot;world&quot;;</span><br><span class="line">        String s4 = new String(&quot;world&quot;);</span><br><span class="line">        System.out.println(s3==s4);//false</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面代码运行的结果是false</p>
+<p>我们来分析一下：</p>
+<ol>
+<li>首先声明s3,程序首次碰到”world”字符串，所以将”world”放入字符串常量池中，并返回引用(地址)给s3</li>
+<li>定义s4，系统发现字符串常量池中有”world”所以将world给它，然后jvm发现还有一个new关键字，于是它在堆内存中给s4重新申请一块空间并存放”world”,并且将堆内存中的地址给s4，之前从字符串常中拿的字符串就不再用了，也就是说现在s4它所指向的地址是堆内存那个world的地址，而不是字符串常量池中的，所以两者相比是false</li>
+</ol>
+<h3 id="String-intern方法"><a href="#String-intern方法" class="headerlink" title="String.intern方法"></a>String.intern方法</h3><p>先来看看1.6jdk的API如何说的大概看一下<br><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131868202471585000.png" alt="image"></p>
+<p>通俗的来讲就是String的intern方法就是将当前字符串放入字符串常量池中，如果常量池中没有那么将该字符串放入常量池并返回常量池中的引用，如果有则直接返回常量池中的引用。</p>
+<h4 id="我们来看看具体的例子我们再来分析"><a href="#我们来看看具体的例子我们再来分析" class="headerlink" title="我们来看看具体的例子我们再来分析"></a>我们来看看具体的例子我们再来分析</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01_String_intern &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s6 = new String(&quot;风清扬&quot;)+new String(&quot;独孤求败&quot;);</span><br><span class="line">        System.out.println(s6.intern()==s6);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码的运行结果怎么样，如果我们换成jdk1.6结果又是怎么样呢？？？</p>
+<p>上段代码在jdk1,6中是false</p>
+<p>在jdk1.7中结果为true</p>
+<p>这是什么原因呢？？？</p>
+<h4 id="jdk1-6和jdk1-7中小区别"><a href="#jdk1-6和jdk1-7中小区别" class="headerlink" title="jdk1.6和jdk1.7中小区别"></a>jdk1.6和jdk1.7中小区别</h4><p>在jdk1.6中我说过String类型的字符串常量池在方法区中，而jdk1.7的时候将字符串常量池移入到了堆内存中，这样也导致了intern方法的改变</p>
+<ul>
+<li>在jdk1.6中，intern()方法会把首次遇到的字符串实例<font size="3" color="red">复制到</font>永久代中(也就是方法区中),返回的也是永久代中的这个字符串实例的引用，而我们 </li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s6 = new String(&quot;风清扬&quot;)+new String(&quot;独孤求败&quot;);</span><br></pre></td></tr></table></figure>
+<p>这段代码中创建的字符串实例在堆上，这个我之前刚刚说过。所以现在s6指向的是不是堆内存中的地址。</p>
+<p>而s6.intern()方法是将s6这个字符串<font size="3" color="red">复制一份</font>放入字符串常量池中(<font size="3" color="green">注意：此时字符串常量池中是没有”风清扬独孤求败”这个字符串的,为什么没有？？不是说会将首次遇到的字符串放入字符串常量池中吗？？为什么它没有将s6放入呢？？因为你这个s6是拼接起来的啊，所以没有，自己可以百度)</font>，此时将复制到字符串常量池中的字符串的引用返回出去,也就是说s6.intern()返回的就是字符串常量池中放入的字符串的引用，所以现在s6.intern()指向的是字符串常量池中的地址，而s6指向的是堆内存中的地址，所以两者一比较肯定是<font size="3" color="red">false</font>啊</p>
+<ul>
+<li>在jdk1.7中的intern()的实现不会再复制实例，只是在常量池中记录首次出现的实例引用，因此intern()返回的引用和由下面代码创建的那个字符串实例是同一个。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s6 = new String(&quot;风清扬&quot;)+new String(&quot;独孤求败&quot;);</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>也就是说当我们执行s6.intern()方法的时候，jvm会将首次遇到的字符串的引用，记录下来并不是复制。于是它将s6这个引用记录下来，返回出去，也就是说s6.intern()返回的就是s6这个引用，于是当我们去比较的时候他们是相同的，也就是说字符串常量池中现在保存的是s6的引用,我们可以验证一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01_String_intern &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s6 = new String(&quot;风清扬&quot;)+new String(&quot;独孤求败&quot;);</span><br><span class="line">        System.out.println(s6.intern()==s6);</span><br><span class="line">        String s11 = &quot;风清扬独孤求败&quot;;</span><br><span class="line">        System.out.println(s11==s6);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输入结果是true,true</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s11 = &quot;风清扬独孤求败&quot;;</span><br></pre></td></tr></table></figure>
+<p>这句代码就是从字符串常量池中去找，发现有”风清扬独孤求败”，然后就将字符串常量池中的”风清扬独孤求败”这个字符串的引用(就是s6)给s11,然后我们比较s11和s6他们是相等得。</p>
+<font size="3">但是我们删去一句代码</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">public class Test_01_String_intern &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s6 = new String(&quot;风清扬&quot;)+new String(&quot;独孤求败&quot;);</span><br><span class="line">        &lt;!--System.out.println(s6.intern()==s6);--&gt;</span><br><span class="line">        String s11 = &quot;风清扬独孤求败&quot;;</span><br><span class="line">        System.out.println(s11==s6);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注释掉：System.out.println(s6.intern()==s6);，其实就是注释了s6.intern()这个方法，当我们注释了这个方法再运行，答案又是false了</p>
+</blockquote>
+<p>这个简单啊，你想啊你注释后intern方法没有调用就不会保存s6的引用，所以自然是false了</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java基础之小知识点拆分/" rel="tag"># Java基础之小知识点拆分</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/9.两数之和/" rel="prev" title="LeetCode-1：两数之和">
+                LeetCode-1：两数之和 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#String类中intern方法的详解"><span class="nav-number">1.</span> <span class="nav-text">String类中intern方法的详解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#咱们先来看看例子"><span class="nav-number">1.1.</span> <span class="nav-text">咱们先来看看例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#再来看一个例子"><span class="nav-number">1.2.</span> <span class="nav-text">再来看一个例子</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String-intern方法"><span class="nav-number">2.</span> <span class="nav-text">String.intern方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#我们来看看具体的例子我们再来分析"><span class="nav-number">2.1.</span> <span class="nav-text">我们来看看具体的例子我们再来分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jdk1-6和jdk1-7中小区别"><span class="nav-number">2.2.</span> <span class="nav-text">jdk1.6和jdk1.7中小区别</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

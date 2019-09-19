@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="框架," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈； Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转发：&amp;gt; 根据前面学习，我们知道Struts2的页面跳转方式的配置在struts.xml中action配置中的result中的type">
+<meta name="keywords" content="框架">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈； Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转发：&amp;gt; 根据前面学习，我们知道Struts2的页面跳转方式的配置在struts.xml中action配置中的result中的type">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/10.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/11.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/12.png">
+<meta property="og:updated_time" content="2018-10-05T02:42:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装">
+<meta name="twitter:description" content="今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈； Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;转发：&amp;gt; 根据前面学习，我们知道Struts2的页面跳转方式的配置在struts.xml中action配置中的result中的type">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Struts/10.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/"/>
+
+
+
+
+
+  <title>二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈；<br></p>
+<h3 id="Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）"><a href="#Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）" class="headerlink" title="Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:"></a>Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:</h3><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>转发</strong>：</font><br>&gt; 根据前面学习，我们知道Struts2的页面跳转方式的配置在struts.xml中action配置中的result中的type属性，这次我们来具体看看：<br><br>测试代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Demo1Action extends ActionSupport&#123;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;Demo1Action.execute()&quot;);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><font color="red">配置信息：</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 转发 --&gt;</span><br><span class="line">	&lt;action name=&quot;Demo1Action&quot; class=&quot;yp.itcast.a_result.Demo1Action&quot; method=&quot;execute&quot;&gt;</span><br><span class="line">		&lt;result name=&quot;success&quot; type=&quot;dispatcher&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">	&lt;/action&gt;</span><br></pre></td></tr></table></figure>
+<font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>重定向</strong>：</font><br><br><br><font color="red">配置信息：</font>（注意action中的name属性不同）：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 重定向 --&gt;</span><br><span class="line">	&lt;action name=&quot;Demo2Action&quot; class=&quot;yp.itcast.a_result.Demo2Action&quot; method=&quot;execute&quot;&gt;</span><br><span class="line">		&lt;result name=&quot;success&quot; type=&quot;redirect&quot;&gt;/hello.jsp&lt;/result&gt;</span><br><span class="line">	&lt;/action&gt;</span><br></pre></td></tr></table></figure><br><br><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>转发到action（注意是转发到action）</strong>：</font><br><br><br>测试代码：<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Demo3Action extends ActionSupport&#123;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;Demo3Action.execute()&quot;);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br><font color="red">配置信息：</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 转发到Action --&gt;</span><br><span class="line">		&lt;action name=&quot;Demo3Action&quot; class=&quot;yp.itcast.a_result.Demo3Action&quot; method=&quot;execute&quot;&gt;</span><br><span class="line">         &lt;result name=&quot;success&quot; type=&quot;chain&quot;&gt;</span><br><span class="line">         &lt;!-- action的名字 --&gt;</span><br><span class="line">             &lt;param name=&quot;actionName&quot;&gt;Demo1Action&lt;/param&gt;</span><br><span class="line">         &lt;!-- action所在命名空间 --&gt;</span><br><span class="line">             &lt;param name=&quot;namespace&quot;&gt;/&lt;/param&gt;</span><br><span class="line">         &lt;/result&gt;</span><br><span class="line">			</span><br><span class="line">		&lt;/action&gt;</span><br></pre></td></tr></table></figure>
+<font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>重定向到action</strong>：</font><br><br><br><font color="red">配置信息：</font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 重定向到action --&gt;</span><br><span class="line">	&lt;action name=&quot;Demo4Action&quot; class=&quot;yp.itcast.a_result.Demo4Action&quot; method=&quot;execute&quot;&gt;</span><br><span class="line">	 &lt;result  name=&quot;success&quot; type=&quot;redirectAction&quot;&gt;</span><br><span class="line">	     &lt;!-- action的名字 --&gt;</span><br><span class="line">            &lt;param name=&quot;actionName&quot;&gt;Demo1Action&lt;/param&gt;</span><br><span class="line">            &lt;!-- action所在命名空间 --&gt;</span><br><span class="line">            &lt;param name=&quot;namespace&quot;&gt;/&lt;/param&gt;</span><br><span class="line">        &lt;/result&gt;</span><br><span class="line">	&lt;/action&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="Struts2访问ServletAPI的方式"><a href="#Struts2访问ServletAPI的方式" class="headerlink" title="Struts2访问ServletAPI的方式:"></a>Struts2访问ServletAPI的方式:</h3><blockquote>
+<p>之前我们是在Servlet中写代码，有requets，session……等对象，但是我们在action对象中如何去获取Servlet中的这些类呢？</p>
+</blockquote>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>访问Servlet的原理</strong>：</font><br><br><img src="http://img.027cgb.com/606599/Struts/10.png" alt="image"></p>
+<p>这是什么意思呢？<br><br>就是Struts2中有一个ActionContext对象，算是Struts2的上下文对象吧，它会帮你获取到原生的ServletAPI并且将其储存起来，你需要的时候就去创建ActionContext对象，从中获取Servlet的Api</p>
+<blockquote>
+<p>注意：Struts2是线程安全的，它通过ThreadLocal类达到空间换取安全的目的，而synchranized（忘了咋写，尴尬）是通过时间换取安全的，两者目的相同，实现不同，具体可以百度ThreadLocal类看其原理，其次我们得知道，其实各个域对象其实是个map集合（点到这）；</p>
+</blockquote>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>ActionContext访问（推荐）</strong>：</font><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public class Demo5Action extends ActionSupport&#123;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		//request域对象=&gt;map</span><br><span class="line">		//不推荐</span><br><span class="line">		Map&lt;String, Object&gt; request = (Map&lt;String, Object&gt;)ActionContext.getContext().get(&quot;request&quot;);</span><br><span class="line">		//推荐</span><br><span class="line">		ActionContext.getContext().put(&quot;name&quot;, &quot;requestTom&quot;);</span><br><span class="line">		</span><br><span class="line">		//session域=&gt;map</span><br><span class="line">		Map&lt;String, Object&gt; session = ActionContext.getContext().getSession();</span><br><span class="line">		session.put(&quot;name&quot;, &quot;sessionTom&quot;);</span><br><span class="line">		</span><br><span class="line">		//application域（Context域）=&gt;map</span><br><span class="line">		Map&lt;String, Object&gt; application = ActionContext.getContext().getApplication();</span><br><span class="line">		application.put(&quot;name&quot;, &quot;applicationTom&quot;);</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>让我们跟进ActionContext.getContext()的getContext（）这段源码是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static ActionContext getContext() &#123;</span><br><span class="line">    return actionContext.get();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再次跟进actionContext.get()的actionContext会看到：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static ThreadLocal&lt;ActionContext&gt; actionContext = new ThreadLocal&lt;ActionContext&gt;();</span><br></pre></td></tr></table></figure>
+<p>是不是跟我说的一样：是使用ThreadLocal来获得Servlet的原生api</p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>通过ServletActionContext访问</strong>：</font><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">import javax.servlet.ServletContext;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">import javax.servlet.http.HttpSession;</span><br><span class="line"></span><br><span class="line">public class Demo6Action extends ActionSupport&#123;</span><br><span class="line"></span><br><span class="line">	//并不推荐</span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		//原生request</span><br><span class="line">		HttpServletRequest request = ServletActionContext.getRequest();</span><br><span class="line">		//原生session</span><br><span class="line">		HttpSession session = request.getSession();</span><br><span class="line">		//原生response</span><br><span class="line">		HttpServletResponse response = ServletActionContext.getResponse();</span><br><span class="line">		//原生servletContext</span><br><span class="line">		ServletContext servletContext = ServletActionContext.getServletContext();</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这种其实没有价值，因为它需要去依赖Servlet的一些jar包，我们写代码讲究低耦合，高内聚，所以并不推荐</p>
+</blockquote>
+<p>我们跟进ServletActionContext.getRequest()这段代码的getRequest（）的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static HttpServletRequest getRequest() &#123;</span><br><span class="line">        return (HttpServletRequest) ActionContext.getContext().get(HTTP_REQUEST);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>我们又发现了ActionContext对象，所以这种方法的本质其实还是通过ActionContext来获取的，最后一种方法也是这样，说Struts2有三种访问Servlet的方式的人只不过是个初学者，本质都是这一个；</p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>通过实现接口的方式访问</strong>：</font><br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public class Demo7Action extends ActionSupport implements ServletRequestAware&#123;</span><br><span class="line"></span><br><span class="line">	private HttpServletRequest request;</span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;原生request对象：&quot;+request);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setServletRequest(HttpServletRequest request) &#123;</span><br><span class="line">		// TODO Auto-generated method stub</span><br><span class="line">		this.request = request;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这种方式实现的接口后缀都是Aware，需要实现一个方法，这个方法就一行代码，简单的一皮，只需设置就行，还需创建设置的本地变量</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public void setServletRequest(HttpServletRequest request) &#123;</span><br><span class="line">	// TODO Auto-generated method stub</span><br><span class="line">	this.request = request;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>这个时候我们去到struts-default.xml文件中去找默认拦截器配置拦截器</p>
+</blockquote>
+<p>找到这段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">     &lt;interceptor-stack name=&quot;defaultStack&quot;&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;exception&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;alias&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;servletConfig&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;i18n&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;prepare&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;chain&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;scopedModelDriven&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;modelDriven&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;fileUpload&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;checkbox&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;datetime&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;multiselect&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;staticParams&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;actionMappingParams&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;params&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;conversionError&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;validation&quot;&gt;</span><br><span class="line">             &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;</span><br><span class="line">         &lt;/interceptor-ref&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;workflow&quot;&gt;</span><br><span class="line">             &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel,browse&lt;/param&gt;</span><br><span class="line">         &lt;/interceptor-ref&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;debugging&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;deprecation&quot;/&gt;</span><br><span class="line">     &lt;/interceptor-stack&gt;</span><br><span class="line"></span><br><span class="line">     &lt;!-- The completeStack is here for backwards compatibility for</span><br><span class="line">          applications that still refer to the defaultStack by the</span><br><span class="line">          old name --&gt;</span><br><span class="line">     &lt;interceptor-stack name=&quot;completeStack&quot;&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;defaultStack&quot;/&gt;</span><br><span class="line">     &lt;/interceptor-stack&gt;</span><br><span class="line"></span><br><span class="line">     &lt;!-- Sample execute and wait stack.</span><br><span class="line">          Note: execAndWait should always be the *last* interceptor. --&gt;</span><br><span class="line">     &lt;interceptor-stack name=&quot;executeAndWaitStack&quot;&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;execAndWait&quot;&gt;</span><br><span class="line">             &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel&lt;/param&gt;</span><br><span class="line">         &lt;/interceptor-ref&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;defaultStack&quot;/&gt;</span><br><span class="line">         &lt;interceptor-ref name=&quot;execAndWait&quot;&gt;</span><br><span class="line">             &lt;param name=&quot;excludeMethods&quot;&gt;input,back,cancel&lt;/param&gt;</span><br><span class="line">         &lt;/interceptor-ref&gt;</span><br><span class="line">     &lt;/interceptor-stack&gt;</span><br><span class="line"></span><br><span class="line">&lt;/interceptors&gt;</span><br></pre></td></tr></table></figure>
+<p>其中有个：                <interceptor-ref name="servletConfig">这个<br>这个是声明，我们看上面有它的定义：</interceptor-ref></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;interceptor name=&quot;servletConfig&quot; class=&quot;org.apache.struts2.interceptor.ServletConfigInterceptor&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<p>复制后面的org.apache.struts2.interceptor.ServletConfigInterceptor，<br>然后Ctrl+Shift+T，查找这个类（注意关联源码）<br>进去后是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line"> * $Id$</span><br><span class="line"> *</span><br><span class="line"> * Licensed to the Apache Software Foundation (ASF) under one</span><br><span class="line"> * or more contributor license agreements.  See the NOTICE file</span><br><span class="line"> * distributed with this work for additional information</span><br><span class="line"> * regarding copyright ownership.  The ASF licenses this file</span><br><span class="line"> * to you under the Apache License, Version 2.0 (the</span><br><span class="line"> * &quot;License&quot;); you may not use this file except in compliance</span><br><span class="line"> * with the License.  You may obtain a copy of the License at</span><br><span class="line"> *</span><br><span class="line"> *  http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="line"> *</span><br><span class="line"> * Unless required by applicable law or agreed to in writing,</span><br><span class="line"> * software distributed under the License is distributed on an</span><br><span class="line"> * &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY</span><br><span class="line"> * KIND, either express or implied.  See the License for the</span><br><span class="line"> * specific language governing permissions and limitations</span><br><span class="line"> * under the License.</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">package org.apache.struts2.interceptor;</span><br><span class="line"></span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">import javax.servlet.ServletContext;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line">import org.apache.struts2.StrutsStatics;</span><br><span class="line">import org.apache.struts2.servlet.interceptor.ServletPrincipalProxy;</span><br><span class="line">import org.apache.struts2.util.ServletContextAware;</span><br><span class="line"></span><br><span class="line">import com.opensymphony.xwork2.ActionContext;</span><br><span class="line">import com.opensymphony.xwork2.ActionInvocation;</span><br><span class="line">import com.opensymphony.xwork2.interceptor.AbstractInterceptor;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * &lt;!-- START SNIPPET: description --&gt;</span><br><span class="line"> *</span><br><span class="line"> * An interceptor which sets action properties based on the interfaces an action implements. For example, if the action</span><br><span class="line"> * implements &#123;@link ParameterAware&#125; then the action context&apos;s parameter map will be set on it.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p/&gt; This interceptor is designed to set all properties an action needs if it&apos;s aware of servlet parameters, the</span><br><span class="line"> * servlet context, the session, etc. Interfaces that it supports are:</span><br><span class="line"> *</span><br><span class="line"> * &lt;ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link ServletContextAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link ServletRequestAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link ServletResponseAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link ParameterAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link RequestAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link SessionAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link ApplicationAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;&#123;@link PrincipalAware&#125;&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;/ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;!-- END SNIPPET: description --&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p/&gt; &lt;u&gt;Interceptor parameters:&lt;/u&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;!-- START SNIPPET: parameters --&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;li&gt;None&lt;/li&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;/ul&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;!-- END SNIPPET: parameters --&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p/&gt; &lt;u&gt;Extending the interceptor:&lt;/u&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p/&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;!-- START SNIPPET: extending --&gt;</span><br><span class="line"> *</span><br><span class="line"> * There are no known extension points for this interceptor.</span><br><span class="line"> *</span><br><span class="line"> * &lt;!-- END SNIPPET: extending --&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;p/&gt; &lt;u&gt;Example code:&lt;/u&gt;</span><br><span class="line"> *</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> * &lt;!-- START SNIPPET: example --&gt;</span><br><span class="line"> * &amp;lt;action name=&quot;someAction&quot; class=&quot;com.examples.SomeAction&quot;&amp;gt;</span><br><span class="line"> *     &amp;lt;interceptor-ref name=&quot;servletConfig&quot;/&amp;gt;</span><br><span class="line"> *     &amp;lt;interceptor-ref name=&quot;basicStack&quot;/&amp;gt;</span><br><span class="line"> *     &amp;lt;result name=&quot;success&quot;&amp;gt;good_result.ftl&amp;lt;/result&amp;gt;</span><br><span class="line"> * &amp;lt;/action&amp;gt;</span><br><span class="line"> * &lt;!-- END SNIPPET: example --&gt;</span><br><span class="line"> * &lt;/pre&gt;</span><br><span class="line"> *</span><br><span class="line"> * @see ServletContextAware</span><br><span class="line"> * @see ServletRequestAware</span><br><span class="line"> * @see ServletResponseAware</span><br><span class="line"> * @see ParameterAware</span><br><span class="line"> * @see SessionAware</span><br><span class="line"> * @see ApplicationAware</span><br><span class="line"> * @see PrincipalAware</span><br><span class="line"> */</span><br><span class="line">public class ServletConfigInterceptor extends AbstractInterceptor implements StrutsStatics &#123;</span><br><span class="line"></span><br><span class="line">    private static final long serialVersionUID = 605261777858676638L;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Sets action properties based on the interfaces an action implements. Things like application properties,</span><br><span class="line">     * parameters, session attributes, etc are set based on the implementing interface.</span><br><span class="line">     *</span><br><span class="line">     * @param invocation an encapsulation of the action execution state.</span><br><span class="line">     * @throws Exception if an error occurs when setting action properties.</span><br><span class="line">     */</span><br><span class="line">    public String intercept(ActionInvocation invocation) throws Exception &#123;</span><br><span class="line">        final Object action = invocation.getAction();</span><br><span class="line">        final ActionContext context = invocation.getInvocationContext();</span><br><span class="line"></span><br><span class="line">        if (action instanceof ServletRequestAware) &#123;</span><br><span class="line">            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);</span><br><span class="line">            ((ServletRequestAware) action).setServletRequest(request);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (action instanceof ServletResponseAware) &#123;</span><br><span class="line">            HttpServletResponse response = (HttpServletResponse) context.get(HTTP_RESPONSE);</span><br><span class="line">            ((ServletResponseAware) action).setServletResponse(response);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (action instanceof ParameterAware) &#123;</span><br><span class="line">            ((ParameterAware) action).setParameters((Map)context.getParameters());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (action instanceof ApplicationAware) &#123;</span><br><span class="line">            ((ApplicationAware) action).setApplication(context.getApplication());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (action instanceof SessionAware) &#123;</span><br><span class="line">            ((SessionAware) action).setSession(context.getSession());</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        if (action instanceof RequestAware) &#123;</span><br><span class="line">            ((RequestAware) action).setRequest((Map) context.get(&quot;request&quot;));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (action instanceof PrincipalAware) &#123;</span><br><span class="line">            HttpServletRequest request = (HttpServletRequest) context.get(HTTP_REQUEST);</span><br><span class="line">            if(request != null) &#123;</span><br><span class="line">                // We are in servtlet environment, so principal information resides in HttpServletRequest</span><br><span class="line">                ((PrincipalAware) action).setPrincipalProxy(new ServletPrincipalProxy(request));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        if (action instanceof ServletContextAware) &#123;</span><br><span class="line">            ServletContext servletContext = (ServletContext) context.get(SERVLET_CONTEXT);</span><br><span class="line">            ((ServletContextAware) action).setServletContext(servletContext);</span><br><span class="line">        &#125;</span><br><span class="line">        return invocation.invoke();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看intercept方法，里面是不是又出现了ActionContext，还是通过ActionContext来获取Servlet的原生API的</p>
+<h3 id="Struts2获得参数的方式"><a href="#Struts2获得参数的方式" class="headerlink" title="Struts2获得参数的方式:"></a>Struts2获得参数的方式:</h3><p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>扩展</strong>：</font><br></p>
+<blockquote>
+<p>分清MVC和三层架构，两个不一样<br><img src="http://img.027cgb.com/606599/Struts/11.png" alt="image"><br><img src="http://img.027cgb.com/606599/Struts/12.png" alt="image"></p>
+</blockquote>
+<p>Action的生命周期：<br><br>1.每次请求到来时,都会创建一个新的Action实例<br><br>2.Action是线程安全的.可以使用成员变量接收参数<br></p>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>属性驱动获得参数</strong>：</font><br></p>
+<p>表单：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/Demo8Action&quot;&gt;</span><br><span class="line">	用户名：&lt;input type=&quot;text&quot; name=&quot;name&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">	年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">	生日：&lt;input type=&quot;text&quot; name=&quot;birthday&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">	&lt;input type=&quot;submit&quot; value=&quot;提交&quot;/&gt;</span><br><span class="line">&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">//struts2如何获得参数---方式一：</span><br><span class="line">public class Demo8Action extends ActionSupport &#123;</span><br><span class="line">	</span><br><span class="line">	public Demo8Action() &#123;		</span><br><span class="line">		super();</span><br><span class="line">		System.out.println(&quot;Demo8Action.Demo8Action()&quot;);</span><br><span class="line">	&#125;</span><br><span class="line">	//准备与参数键名称相同的属性</span><br><span class="line">	private String name;</span><br><span class="line">	//自动类型转换，只转换8大基本数据类型以及对应的包装类</span><br><span class="line">	private Integer age;</span><br><span class="line">	//支持特定类型字符串转换为Date类型，例如yyyy-MM-dd</span><br><span class="line">	private Date birthday;</span><br><span class="line"></span><br><span class="line">	public Date getBirthday() &#123;</span><br><span class="line">		return birthday;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setBirthday(Date birthday) &#123;</span><br><span class="line">		this.birthday = birthday;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public Integer getAge() &#123;</span><br><span class="line">		return age;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setAge(Integer age) &#123;</span><br><span class="line">		this.age = age;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String getName() &#123;</span><br><span class="line">		return name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setName(String name) &#123;</span><br><span class="line">		this.name = name;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;name:&quot;+name+&quot;,age:&quot;+age+&quot;,birthday:&quot;+birthday);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：这种方式还行，每个属性都需要get和set方法；</p>
+</blockquote>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>对象驱动获得参数</strong>：</font><br></p>
+<blockquote>
+<p>注意表单（name属性）：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/Demo9Action&quot;&gt;</span><br><span class="line">  		用户名：&lt;input type=&quot;text&quot; name=&quot;user.name&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		年龄：&lt;input type=&quot;text&quot; name=&quot;user.age&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		生日：&lt;input type=&quot;text&quot; name=&quot;user.birthday&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		&lt;input type=&quot;submit&quot; value=&quot;提交&quot;/&gt;</span><br><span class="line">  	&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">public class Demo9Action extends ActionSupport &#123;</span><br><span class="line">	</span><br><span class="line">	//准备一个User对象</span><br><span class="line">	private User user;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	public User getUser() &#123;</span><br><span class="line">		return user;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public void setUser(User user) &#123;</span><br><span class="line">		this.user = user;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(user);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>模型驱动获得参数</strong>：</font><br><br>表单（这次表单没变）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/Demo10Action&quot;&gt;</span><br><span class="line">  		用户名：&lt;input type=&quot;text&quot; name=&quot;name&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		年龄：&lt;input type=&quot;text&quot; name=&quot;age&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		生日：&lt;input type=&quot;text&quot; name=&quot;birthday&quot;  /&gt;&lt;br/&gt;</span><br><span class="line">  		&lt;input type=&quot;submit&quot; value=&quot;提交&quot;/&gt;</span><br><span class="line">  	&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//struts2如何获得参数---方式三</span><br><span class="line">//模型驱动</span><br><span class="line">public class Demo10Action extends ActionSupport implements ModelDriven&lt;User&gt;&#123;</span><br><span class="line">	</span><br><span class="line">	//准备User：成员变量（一定要初始化了就是new了）</span><br><span class="line">	private User user = new User();</span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;开始&quot;);</span><br><span class="line">		System.out.println(user);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public User getModel() &#123;</span><br><span class="line">		return user;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;<strong>封装集合类参数</strong>：</font><br><br>表单：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;form action=&quot;$&#123;pageContext.request.contextPath&#125;/Demo11Action&quot; method=&quot;post&quot;&gt;</span><br><span class="line">		list:&lt;input type=&quot;text&quot; name=&quot;list&quot;/&gt;&lt;br/&gt;</span><br><span class="line">		list:&lt;input type=&quot;text&quot; name=&quot;list[3]&quot;/&gt;&lt;br/&gt;</span><br><span class="line">		map:&lt;input type=&quot;text&quot; name=&quot;map[&apos;haha&apos;]&quot;/&gt;&lt;br/&gt;</span><br><span class="line">  		&lt;input type=&quot;submit&quot; value=&quot;提交&quot;/&gt;</span><br><span class="line">  	&lt;/form&gt;</span><br></pre></td></tr></table></figure>
+<p>代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">package yp.itcast.c_param;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line">import java.util.Map;</span><br><span class="line"></span><br><span class="line">import com.opensymphony.xwork2.ActionSupport;</span><br><span class="line"></span><br><span class="line">//struts2	封装集合类型参数</span><br><span class="line">public class Demo11Action extends ActionSupport&#123;</span><br><span class="line">	</span><br><span class="line">	//List</span><br><span class="line">	private List&lt;String&gt; list;</span><br><span class="line">	</span><br><span class="line">	//Map</span><br><span class="line">	private Map&lt;String,String&gt; map;</span><br><span class="line"></span><br><span class="line">	public Map&lt;String, String&gt; getMap() &#123;</span><br><span class="line">		return map;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setMap(Map&lt;String, String&gt; map) &#123;</span><br><span class="line">		this.map = map;</span><br><span class="line">	&#125;</span><br><span class="line">	public List&lt;String&gt; getList() &#123;</span><br><span class="line">		return list;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setList(List&lt;String&gt; list) &#123;</span><br><span class="line">		this.list = list;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public String execute() throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(&quot;list:&quot;+list);</span><br><span class="line">		System.out.println(&quot;map:&quot;+map);</span><br><span class="line">		</span><br><span class="line">		return SUCCESS;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/框架/" rel="tag"># 框架</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/3.宜立方商城——nginx搭建/" rel="next" title="三.宜立方商城——nginx搭建">
+                <i class="fa fa-chevron-left"></i> 三.宜立方商城——nginx搭建
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/13.宜立方商城——订单系统/" rel="prev" title="十三.宜立方商城——订单系统">
+                十三.宜立方商城——订单系统 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）"><span class="nav-number">1.</span> <span class="nav-text">Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Struts2访问ServletAPI的方式"><span class="nav-number">2.</span> <span class="nav-text">Struts2访问ServletAPI的方式:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Struts2获得参数的方式"><span class="nav-number">3.</span> <span class="nav-text">Struts2获得参数的方式:</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

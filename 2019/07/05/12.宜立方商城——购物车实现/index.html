@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.课程计划 购物车实现 订单确认页面展示  二.购物车的实现2.1 功能分析 购物车是一个独立的表现层工程。 添加购物车不要求登录。可以指定购买商品的数量。 展示购物车列表页面 修改购物车商品数量 删除购物车商品  2.2 工程搭建  全部参考content项目  三.未登录状态下购物车的实现3.1 添加购物车3.1.1 功能分析在不登陆的情况下也可以添加购物车。把购物车信息写入cookie。优">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十二.宜立方商城——购物车实现">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/12.宜立方商城——购物车实现/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.课程计划 购物车实现 订单确认页面展示  二.购物车的实现2.1 功能分析 购物车是一个独立的表现层工程。 添加购物车不要求登录。可以指定购买商品的数量。 展示购物车列表页面 修改购物车商品数量 删除购物车商品  2.2 工程搭建  全部参考content项目  三.未登录状态下购物车的实现3.1 添加购物车3.1.1 功能分析在不登陆的情况下也可以添加购物车。把购物车信息写入cookie。优">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131906173775460000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131906196557335000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131906196562803750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131906196573428750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131906196576085000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131906196579210000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131906196581866250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131906296899210000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131906296901866250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131906318786553750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131906317885460000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131906317885460000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131906316998741250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131906318786553750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131906341289678750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131906341292022500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131906341294991250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131906341297178750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131906420290616250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131906420292960000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131906430784835000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131906430787178750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131906430790772500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131906430793272500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131906451896866250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131906451899991250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28_131906567212647500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131906567205460000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131906567209366250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29_131906567216241250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30_131906567219210000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31_131906567221553750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32_131906567224366250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/33_131906567227335000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/34_131906567230147500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/35_131906567233272500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/36_131906567235772500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/37_131906567237335000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131907003587930703.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131907003587930703.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131907017326836953.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131907017330274453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131907026405899453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131907026407774453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131907026411680703.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131907026416524453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131907026420743203.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131907026422930703.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131907026425274453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131907051773711953.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131907066109649453.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131907066112305703.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131907071165118203.png">
+<meta property="og:updated_time" content="2019-01-02T12:41:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十二.宜立方商城——购物车实现">
+<meta name="twitter:description" content="一.课程计划 购物车实现 订单确认页面展示  二.购物车的实现2.1 功能分析 购物车是一个独立的表现层工程。 添加购物车不要求登录。可以指定购买商品的数量。 展示购物车列表页面 修改购物车商品数量 删除购物车商品  2.2 工程搭建  全部参考content项目  三.未登录状态下购物车的实现3.1 添加购物车3.1.1 功能分析在不登陆的情况下也可以添加购物车。把购物车信息写入cookie。优">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131906173775460000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/12.宜立方商城——购物车实现/"/>
+
+
+
+
+
+  <title>十二.宜立方商城——购物车实现 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/12.宜立方商城——购物车实现/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">十二.宜立方商城——购物车实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-课程计划"><a href="#一-课程计划" class="headerlink" title="一.课程计划"></a>一.课程计划</h2><ol>
+<li>购物车实现</li>
+<li>订单确认页面展示</li>
+</ol>
+<h2 id="二-购物车的实现"><a href="#二-购物车的实现" class="headerlink" title="二.购物车的实现"></a>二.购物车的实现</h2><h3 id="2-1-功能分析"><a href="#2-1-功能分析" class="headerlink" title="2.1 功能分析"></a>2.1 功能分析</h3><ol>
+<li>购物车是一个独立的表现层工程。</li>
+<li>添加购物车不要求登录。可以指定购买商品的数量。</li>
+<li>展示购物车列表页面</li>
+<li>修改购物车商品数量</li>
+<li>删除购物车商品</li>
+</ol>
+<h3 id="2-2-工程搭建"><a href="#2-2-工程搭建" class="headerlink" title="2.2 工程搭建"></a>2.2 工程搭建</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131906173775460000.png" alt="image"></p>
+<blockquote>
+<p>全部参考content项目</p>
+</blockquote>
+<h2 id="三-未登录状态下购物车的实现"><a href="#三-未登录状态下购物车的实现" class="headerlink" title="三.未登录状态下购物车的实现"></a>三.未登录状态下购物车的实现</h2><h3 id="3-1-添加购物车"><a href="#3-1-添加购物车" class="headerlink" title="3.1 添加购物车"></a>3.1 添加购物车</h3><h4 id="3-1-1-功能分析"><a href="#3-1-1-功能分析" class="headerlink" title="3.1.1 功能分析"></a>3.1.1 功能分析</h4><p>在不登陆的情况下也可以添加购物车。把购物车信息写入cookie。<br><br>优点：</p>
+<ol>
+<li>不占用服务端存储空间</li>
+<li>用户体验好。</li>
+<li>代码实现简单。</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>cookie中保存的容量有限。最大4k</li>
+<li>把购物车信息保存在cookie中，更换设备购物车信息不能同步。</li>
+</ol>
+<p>改造商品详情页面<br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131906196557335000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131906196562803750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131906196573428750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131906196576085000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131906196579210000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131906196581866250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131906296899210000.png" alt="image"></p>
+<h4 id="3-1-2-Controller"><a href="#3-1-2-Controller" class="headerlink" title="3.1.2 Controller"></a>3.1.2 Controller</h4><p>请求的url：/cart/add/{itemId}<br><br>参数：</p>
+<ol>
+<li>商品id： Long itemId</li>
+<li>商品数量： int num</li>
+</ol>
+<p>业务逻辑：</p>
+<ol>
+<li>从cookie中查询商品列表。</li>
+<li>判断商品在商品列表中是否存在。</li>
+<li>如果存在，商品数量相加。</li>
+<li>不存在，根据商品id查询商品信息。</li>
+<li>把商品添加到购车列表。</li>
+<li>把购车商品列表写入cookie。</li>
+</ol>
+<p>返回值：逻辑视图</p>
+<p>Cookie保存购物车</p>
+<ol>
+<li>key：cart</li>
+<li>Value：购物车列表转换成json数据。需要对数据进行编码。</li>
+<li>Cookie的有效期：保存7天。</li>
+</ol>
+<p>商品列表：<br><br>List<tbitem>，每个商品数据使用TbItem保存。当根据商品id查询商品信息后，取第一张图片保存到image属性中即可。</tbitem></p>
+<p>读写cookie可以使用CookieUtils工具类实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName CartController</span><br><span class="line"> * @Description 购物车处理Controller</span><br><span class="line"> * @date 2018/12/30/13:08</span><br><span class="line"> */</span><br><span class="line">@Controller</span><br><span class="line">public class CartController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ItemService itemService;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;COOKIE_CART_EXPIRE&#125;&quot;)</span><br><span class="line">    private Integer COOKIE_CART_EXPIRE;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/cart/add/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String addCart(@PathVariable Long itemId, @RequestParam(defaultValue = &quot;1&quot;) Integer num,</span><br><span class="line">                          HttpServletRequest request, HttpServletResponse response)&#123;</span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //判断商品在商品列表中是否存在</span><br><span class="line">        boolean flag = false;</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 这样比较是不行的，因为现在tbItem.getId()的返回值时Long</span><br><span class="line">             * itemId也是Long类型，两个对象使用==比较，比较的是地址而不是值</span><br><span class="line">             * 所以我们需要调用Long中一个方法longValue()来获取到long类型的值</span><br><span class="line">             */</span><br><span class="line">            //如果存在数量相加</span><br><span class="line">            if(tbItem.getId()==itemId.longValue())&#123;</span><br><span class="line">                flag = true;</span><br><span class="line">                //找到商品，数量相加</span><br><span class="line">                tbItem.setNum(tbItem.getNum()+num);</span><br><span class="line">                //跳出循环</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //如果不存在</span><br><span class="line">        if(!flag)&#123;</span><br><span class="line"></span><br><span class="line">            //根据商品id查询商品信息。得到一个TbItem对象</span><br><span class="line">            TbItem tbItem = itemService.getItemById(itemId);</span><br><span class="line"></span><br><span class="line">            //设置商品数量，因为现在这个数量是我们的库存，是从数据库中查出来的</span><br><span class="line">            tbItem.setNum(num);</span><br><span class="line"></span><br><span class="line">            //取一张图片</span><br><span class="line">            String image = tbItem.getImage();</span><br><span class="line"></span><br><span class="line">            if(StringUtils.isNotBlank(image))&#123;</span><br><span class="line">                tbItem.setImage(image.split(&quot;,&quot;)[0]);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //把商品添加到商品列表</span><br><span class="line">            cartList.add(tbItem);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //写入cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line"></span><br><span class="line">        //返回添加成功页面</span><br><span class="line">        return &quot;cartSuccess&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 从cookie中取购物车列表的信息</span><br><span class="line">     * @param request</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private List&lt;TbItem&gt; getCartListFromCookie(HttpServletRequest request)&#123;</span><br><span class="line">        String json = CookieUtils.getCookieValue(request, &quot;cart&quot;, true);</span><br><span class="line">        //判断json是否为空</span><br><span class="line">        if(StringUtils.isBlank(json))&#123;</span><br><span class="line">            return new ArrayList&lt;&gt;();</span><br><span class="line">        &#125;</span><br><span class="line">        //将json转换为List</span><br><span class="line">        List&lt;TbItem&gt; list = JsonUtils.jsonToList(json, TbItem.class);</span><br><span class="line">        return list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131906296901866250.png" alt="image"></p>
+<h3 id="3-2-展示购物车商品列表"><a href="#3-2-展示购物车商品列表" class="headerlink" title="3.2 展示购物车商品列表"></a>3.2 展示购物车商品列表</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131906318786553750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131906317885460000.png" alt="image"></p>
+<p>请求的url:/cart/cart<br><br>参数：无<br><br>返回值：逻辑视图<br><br>业务逻辑：<br></p>
+<ol>
+<li>从cookie中取商品列表。<br></li>
+<li>把商品列表传递给页面<br></li>
+</ol>
+<h4 id="3-2-1-Controller"><a href="#3-2-1-Controller" class="headerlink" title="3.2.1 Controller"></a>3.2.1 Controller</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/cart/cart&quot;)</span><br><span class="line">public String showCartList(HttpServletRequest request)&#123;</span><br><span class="line">    //从cookie中取购物车列表</span><br><span class="line">    List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line"></span><br><span class="line">    //把列表传给页面</span><br><span class="line">    request.setAttribute(&quot;cartList&quot;,cartList);</span><br><span class="line"></span><br><span class="line">    //返回逻辑视图</span><br><span class="line">    return &quot;cart&quot;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131906317885460000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131906316998741250.png" alt="image"></p>
+<h3 id="3-3-修改购物车商品数量"><a href="#3-3-修改购物车商品数量" class="headerlink" title="3.3 修改购物车商品数量"></a>3.3 修改购物车商品数量</h3><h4 id="3-3-1-功能分析"><a href="#3-3-1-功能分析" class="headerlink" title="3.3.1 功能分析"></a>3.3.1 功能分析</h4><ol>
+<li>在页面中可以修改商品数量</li>
+<li>重新计算小计和总计。</li>
+<li>修改需要写入cookie。<br>每次修改都需要向服务端发送一个ajax请求，在服务端修改cookie中的商品数量。</li>
+</ol>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131906318786553750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131906341289678750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131906341292022500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131906341294991250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131906341297178750.png" alt="image"></p>
+<p>请求的url：/cart/update/num/{itemId}/{num}<br><br>参数：long itemId、int num<br><br>业务逻辑：<br></p>
+<ol>
+<li>接收两个参数</li>
+<li>从cookie中取商品列表</li>
+<li>遍历商品列表找到对应商品</li>
+<li>更新商品数量</li>
+<li>把商品列表写入cookie。</li>
+<li>响应e3Result。Json数据。<br>返回值：<br><br>e3Result。Json数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/cart/update/num/&#123;itemId&#125;/&#123;num&#125;&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public E3Result updateCartNum(@PathVariable Long itemId,@PathVariable Integer num,</span><br><span class="line">                                  HttpServletRequest request,HttpServletResponse response)&#123;</span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //遍历商品列表找到对应商品</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            if(tbItem.getId().longValue()==itemId)&#123;</span><br><span class="line">                //更新数量</span><br><span class="line">                tbItem.setNum(num);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //把购物车列表写回cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line"></span><br><span class="line">        //返回成功</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131906420290616250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131906420292960000.png" alt="image"></p>
+<blockquote>
+<font size="3" color="red">406一般是缺少jackson的jar或者是以.html结尾的页面无法返回json</font>
+</blockquote>
+<h4 id="3-3-2-解决请求-html后缀无法返回json数据的问题"><a href="#3-3-2-解决请求-html后缀无法返回json数据的问题" class="headerlink" title="3.3.2 解决请求*.html后缀无法返回json数据的问题"></a>3.3.2 解决请求*.html后缀无法返回json数据的问题</h4><p>在springmvc中请求*.html不可以返回json数据。<br><br>修改web.xml，添加url拦截格式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;e3_cart_web&lt;/servlet-name&gt;</span><br><span class="line">  &lt;!--不过滤jsp页面（springmvc嘛）--&gt;</span><br><span class="line">    &lt;!--伪静态化--&gt;</span><br><span class="line">  &lt;url-pattern&gt;*.html&lt;/url-pattern&gt;</span><br><span class="line">&lt;/servlet-mapping&gt;</span><br><span class="line">&lt;servlet-mapping&gt;</span><br><span class="line">  &lt;servlet-name&gt;e3_cart_web&lt;/servlet-name&gt;</span><br><span class="line">  &lt;!--不过滤jsp页面（springmvc嘛）--&gt;</span><br><span class="line">  &lt;!--伪静态化--&gt;</span><br><span class="line">  &lt;url-pattern&gt;*.action&lt;/url-pattern&gt;</span><br><span class="line">&lt;/servlet-mapping&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>再添加一个<servlet-mapping>就行了，让它别以*.html请求了不就完事了吗</servlet-mapping></p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131906430784835000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131906430787178750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131906430790772500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131906430793272500.png" alt="image"></p>
+<h3 id="3-4-删除购物车商品"><a href="#3-4-删除购物车商品" class="headerlink" title="3.4 删除购物车商品"></a>3.4 删除购物车商品</h3><h4 id="3-4-1-功能分析"><a href="#3-4-1-功能分析" class="headerlink" title="3.4.1 功能分析"></a>3.4.1 功能分析</h4><p>请求的url：/cart/delete/{itemId}<br><br>参数：商品id<br><br>返回值：展示购物车列表页面。Url需要做redirect跳转。<br><br>业务逻辑：</p>
+<ol>
+<li>从url中取商品id</li>
+<li>从cookie中取购物车商品列表</li>
+<li>遍历列表找到对应的商品</li>
+<li>删除商品。</li>
+<li>把商品列表写入cookie。<br><br>返回逻辑视图：在逻辑视图中做redirect跳转</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/cart/delete/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String deleteCartItem(@PathVariable Long itemId,HttpServletRequest request,</span><br><span class="line">                                 HttpServletResponse response)&#123;</span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //遍历列表找到需要删除的商品</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            if(tbItem.getId().longValue()==itemId)&#123;</span><br><span class="line">                //删除商品</span><br><span class="line">                cartList.remove(tbItem);</span><br><span class="line">                //跳出循环</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //把购物车列表写回cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line">        //返回逻辑视图</span><br><span class="line">        return &quot;redirect:/cart/cart.html&quot;;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-4-2-Controller"><a href="#3-4-2-Controller" class="headerlink" title="3.4.2 Controller"></a>3.4.2 Controller</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131906451896866250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131906451899991250.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/cart/delete/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String deleteCartItem(@PathVariable Long itemId,HttpServletRequest request,</span><br><span class="line">                                 HttpServletResponse response)&#123;</span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //遍历列表找到需要删除的商品</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            if(tbItem.getId().longValue()==itemId)&#123;</span><br><span class="line">                //删除商品</span><br><span class="line">                cartList.remove(tbItem);</span><br><span class="line">                //跳出循环</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //把购物车列表写回cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line">        //返回逻辑视图</span><br><span class="line">        return &quot;redirect:/cart/cart.html&quot;;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="四-登录状态下购物车实现"><a href="#四-登录状态下购物车实现" class="headerlink" title="四.登录状态下购物车实现"></a>四.登录状态下购物车实现</h2><h3 id="4-1-功能分析"><a href="#4-1-功能分析" class="headerlink" title="4.1 功能分析"></a>4.1 功能分析</h3><p><font size="3" color="red">购物车数据保存位置</font>：</p>
+<ol>
+<li>未登录状态下，将购物车数据保存到cookie中</li>
+<li>登录状态下需要把购物车数据保存到服务端。需要永久保存，可以保存到数据库中。可以把购物车数据保存到redis中。</li>
+</ol>
+<p><font size="3" color="red">redis使用的数据类型</font>：</p>
+<ol>
+<li>使用Hash数据类型</li>
+<li>Hash的key应该是用户id。Hash中的field是商品id，value可以把商品信息转换为json</li>
+</ol>
+<p><font size="3" color="red">添加购物车</font>:</p>
+<ol>
+<li>登录状态下直接将商品数据放在redis中</li>
+<li>未登录状态下保存到cookie中</li>
+</ol>
+<p><font size="3" color="red">如何判断是否登录？</font>:</p>
+<ol>
+<li>从cookie中取token</li>
+<li>取不到就是未登录</li>
+<li>取到token，到redis中查询token是否过期</li>
+<li>如果过期就是未登录状态</li>
+<li>没过期就是登录状态</li>
+</ol>
+<h3 id="4-2-判断用户是否登录"><a href="#4-2-判断用户是否登录" class="headerlink" title="4.2 判断用户是否登录"></a>4.2 判断用户是否登录</h3><h4 id="4-2-1-功能分析"><a href="#4-2-1-功能分析" class="headerlink" title="4.2.1 功能分析"></a>4.2.1 功能分析</h4><p>应该使用springmvc的拦截器</p>
+<ol>
+<li>实现一个HandlerInterceptor接口</li>
+<li>在执行handler方法之前做业务处理</li>
+<li>从cookie中取token。使用CookieUtils工具类实现</li>
+<li>没有取到token，用户未登录。放行</li>
+<li>取到token，调用sso系统的服务，根据token查询用户信息</li>
+<li>没有返回用户信息。登录已过期，未登录，放行。</li>
+<li>返回用户信息。用户是否是登录状态。可以把用户对象保存到request中，在Controller中可以通过判断request中是否包含用户对象，确定是否为登录状态</li>
+</ol>
+<h4 id="4-2-2-LoginInterceptor"><a href="#4-2-2-LoginInterceptor" class="headerlink" title="4.2.2 LoginInterceptor"></a>4.2.2 LoginInterceptor</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName LoginInterceptor</span><br><span class="line"> * @Description 用户登录拦截器</span><br><span class="line"> * @date 2018/12/30/20:43</span><br><span class="line"> */</span><br><span class="line">public class LoginInterceptor implements HandlerInterceptor&#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private TokenService tokenService;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception &#123;</span><br><span class="line">        //前处理，执行handler之前执行的方法</span><br><span class="line">        //返回true：放行</span><br><span class="line">        //返回false:拦截</span><br><span class="line"></span><br><span class="line">        //1.从cookie中取token</span><br><span class="line">        String token = CookieUtils.getCookieValue(httpServletRequest, &quot;token&quot;);</span><br><span class="line">        //2.如果没有token，未登录状态,直接放行</span><br><span class="line">        if(StringUtils.isBlank(token))&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        //3.取到token，需要调用SSO系统的服务，根据token取用户信息</span><br><span class="line">        E3Result e3Result = tokenService.getUserByToken(token);</span><br><span class="line">        //4.没有取到用户信息。登录过期，直接放行。</span><br><span class="line">        if(e3Result.getStatus()!=200)&#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        //5.取到用户信息。登录状态。</span><br><span class="line">        TbUser tbUser = (TbUser) e3Result.getData();</span><br><span class="line">        //6.把用户信息放到request中。只需要在Controller中判断是否包含user信息。放行</span><br><span class="line">        httpServletRequest.setAttribute(&quot;user&quot;,tbUser);</span><br><span class="line">        return true;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception &#123;</span><br><span class="line">        //handler执行之后，返回ModelAndView之前</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception &#123;</span><br><span class="line">        //完成处理，返回ModelAndView之后</span><br><span class="line">        //可以在此处理异常</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28_131906567212647500.png" alt="image"></p>
+<h3 id="4-3-修改原来的Controller"><a href="#4-3-修改原来的Controller" class="headerlink" title="4.3 修改原来的Controller"></a>4.3 修改原来的Controller</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131906567205460000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131906567209366250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29_131906567216241250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30_131906567219210000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31_131906567221553750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32_131906567224366250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/33_131906567227335000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/34_131906567230147500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/35_131906567233272500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/36_131906567235772500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/37_131906567237335000.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(&quot;/cart/add/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String addCart(@PathVariable Long itemId, @RequestParam(defaultValue = &quot;1&quot;) Integer num,</span><br><span class="line">                          HttpServletRequest request, HttpServletResponse response)&#123;</span><br><span class="line">        //判断用户是否为登录状态</span><br><span class="line">        TbUser tbUser = (TbUser) request.getAttribute(&quot;user&quot;);</span><br><span class="line">        //如果是登录状态，就把购物车写入redis</span><br><span class="line">        if(tbUser!=null)&#123;</span><br><span class="line">            //保存到服务端</span><br><span class="line">            cartService.addCart(tbUser.getId(),itemId,num);</span><br><span class="line">            //返回逻辑视图</span><br><span class="line">            return &quot;cartSuccess&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        //如果未登录使用cookie</span><br><span class="line"></span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //判断商品在商品列表中是否存在</span><br><span class="line">        boolean flag = false;</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 这样比较是不行的，因为现在tbItem.getId()的返回值时Long</span><br><span class="line">             * itemId也是Long类型，两个对象使用==比较，比较的是地址而不是值</span><br><span class="line">             * 所以我们需要调用Long中一个方法longValue()来获取到long类型的值</span><br><span class="line">             */</span><br><span class="line">            //如果存在数量相加</span><br><span class="line">            if(tbItem.getId()==itemId.longValue())&#123;</span><br><span class="line">                flag = true;</span><br><span class="line">                //找到商品，数量相加</span><br><span class="line">                tbItem.setNum(tbItem.getNum()+num);</span><br><span class="line">                //跳出循环</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //如果不存在</span><br><span class="line">        if(!flag)&#123;</span><br><span class="line"></span><br><span class="line">            //根据商品id查询商品信息。得到一个TbItem对象</span><br><span class="line">            TbItem tbItem = itemService.getItemById(itemId);</span><br><span class="line"></span><br><span class="line">            //设置商品数量，因为现在这个数量是我们的库存，是从数据库中查出来的</span><br><span class="line">            tbItem.setNum(num);</span><br><span class="line"></span><br><span class="line">            //取一张图片</span><br><span class="line">            String image = tbItem.getImage();</span><br><span class="line"></span><br><span class="line">            if(StringUtils.isNotBlank(image))&#123;</span><br><span class="line">                tbItem.setImage(image.split(&quot;,&quot;)[0]);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            //把商品添加到商品列表</span><br><span class="line">            cartList.add(tbItem);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //写入cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line"></span><br><span class="line">        //返回添加成功页面</span><br><span class="line">        return &quot;cartSuccess&quot;;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-4-登录状态下展示购物车列表"><a href="#4-4-登录状态下展示购物车列表" class="headerlink" title="4.4 登录状态下展示购物车列表"></a>4.4 登录状态下展示购物车列表</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131907003587930703.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131907003587930703.png" alt="image"></p>
+<h4 id="4-4-1-功能分析"><a href="#4-4-1-功能分析" class="headerlink" title="4.4.1 功能分析"></a>4.4.1 功能分析</h4><ol>
+<li>判断用户是否为登录状态</li>
+<li>如果是登录状态</li>
+<li>从cookie中取购物车列表</li>
+<li>如果不为空，把cookie中的购物车商品和服务端的购物车商品合并</li>
+<li>把cookie中的购物车删除</li>
+<li>从服务端取购物车列表</li>
+<li>未登录状态</li>
+<li>从cookie中取购物车列表</li>
+</ol>
+<blockquote>
+<p>其中未登录状态下从cookie中取购物车列表我们已经做完了</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131907017326836953.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131907017330274453.png" alt="image"></p>
+<h4 id="4-4-2-完成Service服务"><a href="#4-4-2-完成Service服务" class="headerlink" title="4.4.2 完成Service服务"></a>4.4.2 完成Service服务</h4><h5 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h5><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131907026405899453.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public interface CartService &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 往redis中添加购物车</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemId 商品id</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result addCart(Long userId,Long itemId,Integer num);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 合并服务端购物车列表和Cookie中购物车列表信息</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemList Cookie中购物车信息</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result mergeCart(Long userId, List&lt;TbItem&gt; itemList);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 取redis中购物车列表</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    List&lt;TbItem&gt; getCartList(Long userId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="实现合并购物车"><a href="#实现合并购物车" class="headerlink" title="实现合并购物车"></a>实现合并购物车</h5><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131907026407774453.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public E3Result mergeCart(Long userId, List&lt;TbItem&gt; itemList) &#123;</span><br><span class="line">        //遍历商品列表</span><br><span class="line">        //把列表添加到购物车</span><br><span class="line">        //判断购物车中是否有此商品</span><br><span class="line">        //如果有，商品数量相加</span><br><span class="line">        //如果没有，添加新的商品</span><br><span class="line">        for (TbItem tbItem : itemList) &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 上面的这些逻辑我们可以直接调用商品的addCart方法，很简单</span><br><span class="line">             */</span><br><span class="line">            addCart(userId,tbItem.getId(),tbItem.getNum());</span><br><span class="line">        &#125;</span><br><span class="line">        //返回成功</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="从redis中取hash的值"><a href="#从redis中取hash的值" class="headerlink" title="从redis中取hash的值"></a>从redis中取hash的值</h5><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131907026411680703.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131907026416524453.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131907026420743203.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131907026422930703.png" alt="image"></p>
+<h5 id="从redis中取购物车列表"><a href="#从redis中取购物车列表" class="headerlink" title="从redis中取购物车列表"></a>从redis中取购物车列表</h5><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131907026425274453.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public List&lt;TbItem&gt; getCartList(Long userId) &#123;</span><br><span class="line">    //根据用户id查询购物车列表</span><br><span class="line">    List&lt;String&gt; jsonList = jedisClient.hvals(REDIS_CART_PRE + &quot;:&quot; + userId);</span><br><span class="line">    List&lt;TbItem&gt; tbItemList = new ArrayList&lt;&gt;();</span><br><span class="line">    for (String s : jsonList) &#123;</span><br><span class="line">        //将json转换成TbItem对象</span><br><span class="line">        TbItem tbItem = JsonUtils.jsonToPojo(s, TbItem.class);</span><br><span class="line">        //添加到列表</span><br><span class="line">        tbItemList.add(tbItem);</span><br><span class="line">    &#125;</span><br><span class="line">    return tbItemList;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Controller"><a href="#Controller" class="headerlink" title="Controller"></a>Controller</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">    * 展示购物车列表</span><br><span class="line">    * @param request</span><br><span class="line">    * @return</span><br><span class="line">    */</span><br><span class="line">   @RequestMapping(&quot;/cart/cart&quot;)</span><br><span class="line">   public String showCartList(HttpServletRequest request,HttpServletResponse response)&#123;</span><br><span class="line">       //从cookie中取购物车列表</span><br><span class="line">       List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line"></span><br><span class="line">       //判断用户是否为登录状态</span><br><span class="line">       TbUser tbUser = (TbUser) request.getAttribute(&quot;user&quot;);</span><br><span class="line">       //如果是登录状态</span><br><span class="line">       if(tbUser!=null)&#123;</span><br><span class="line">           //从cookie中取购物车列表(已经在外面取出了)</span><br><span class="line">           //如果不为空，把cookie中的购物车商品和服务端的购物车商品合并</span><br><span class="line">           cartService.mergeCart(tbUser.getId(), cartList);</span><br><span class="line"></span><br><span class="line">           //把cookie中的购物车删除</span><br><span class="line">           CookieUtils.deleteCookie(request,response,&quot;cart&quot;);</span><br><span class="line">           //从服务端取购物车列表</span><br><span class="line">           cartList = cartService.getCartList(tbUser.getId());</span><br><span class="line">       &#125;</span><br><span class="line">       //未登录状态</span><br><span class="line">       //把列表传给页面</span><br><span class="line">       request.setAttribute(&quot;cartList&quot;,cartList);</span><br><span class="line"></span><br><span class="line">       //返回逻辑视图</span><br><span class="line">       return &quot;cart&quot;;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131907051773711953.png" alt="image"></p>
+<blockquote>
+<p>测试成功</p>
+</blockquote>
+<h3 id="4-5-登录状态下修改、删除购物车-这个简单"><a href="#4-5-登录状态下修改、删除购物车-这个简单" class="headerlink" title="4.5 登录状态下修改、删除购物车(这个简单)"></a>4.5 登录状态下修改、删除购物车(这个简单)</h3><h4 id="4-5-1-接口"><a href="#4-5-1-接口" class="headerlink" title="4.5.1 接口"></a>4.5.1 接口</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131907066109649453.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package yp.e3mall.cart.service;</span><br><span class="line"></span><br><span class="line">import yp.e3mall.common.utils.E3Result;</span><br><span class="line">import yp.e3mall.pojo.TbItem;</span><br><span class="line"></span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public interface CartService &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 往redis中添加购物车</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemId 商品id</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result addCart(Long userId,Long itemId,Integer num);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 合并服务端购物车列表和Cookie中购物车列表信息</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemList Cookie中购物车信息</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result mergeCart(Long userId, List&lt;TbItem&gt; itemList);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 取redis中购物车列表</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    List&lt;TbItem&gt; getCartList(Long userId);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 更新redis中购物车中商品数量</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemId 商品id</span><br><span class="line">     * @param num    商品数量</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result updateCartNum(Long userId,Long itemId,int num);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     *</span><br><span class="line">     * @param userId 用户id</span><br><span class="line">     * @param itemId 商品id</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    E3Result deleteCartItem(Long userId,Long itemId);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-5-2-实现类"><a href="#4-5-2-实现类" class="headerlink" title="4.5.2 实现类"></a>4.5.2 实现类</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131907066112305703.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">package yp.e3mall.cart.service.impl;</span><br><span class="line"></span><br><span class="line">import org.apache.commons.lang3.StringUtils;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.beans.factory.annotation.Value;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line">import yp.e3mall.cart.service.CartService;</span><br><span class="line">import yp.e3mall.common.jedis.JedisClient;</span><br><span class="line">import yp.e3mall.common.utils.E3Result;</span><br><span class="line">import yp.e3mall.common.utils.JsonUtils;</span><br><span class="line">import yp.e3mall.mapper.TbItemMapper;</span><br><span class="line">import yp.e3mall.pojo.TbItem;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName CartServiceImpl</span><br><span class="line"> * @Description 购物车处理服务</span><br><span class="line"> * @date 2018/12/30/22:14</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class CartServiceImpl implements CartService&#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JedisClient jedisClient;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;REDIS_CART_PRE&#125;&quot;)</span><br><span class="line">    private String REDIS_CART_PRE;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private TbItemMapper tbItemMapper;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E3Result addCart(Long userId, Long itemId,Integer num) &#123;</span><br><span class="line">        //向redis中添加购物车</span><br><span class="line"></span><br><span class="line">        //数据类型是hash key：用户id  field：商品id value：商品信息</span><br><span class="line"></span><br><span class="line">        //判断商品是否存在</span><br><span class="line">        Boolean hexists = jedisClient.hexists(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;);</span><br><span class="line"></span><br><span class="line">        //如果存在，数量相加</span><br><span class="line">        if(hexists)&#123;</span><br><span class="line">            String json = jedisClient.hget(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;);</span><br><span class="line">            //把json转换成Tbitem</span><br><span class="line">            TbItem tbItem = JsonUtils.jsonToPojo(json, TbItem.class);</span><br><span class="line">            tbItem.setNum(tbItem.getNum()+num);</span><br><span class="line">            //写回redis</span><br><span class="line">            jedisClient.hset(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;,JsonUtils.objectToJson(tbItem));</span><br><span class="line">            return E3Result.ok();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //如果不存在，根据商品id取商品信息</span><br><span class="line">        TbItem tbItem = tbItemMapper.selectByPrimaryKey(itemId);</span><br><span class="line"></span><br><span class="line">        //设置购物车数量</span><br><span class="line">        tbItem.setNum(num);</span><br><span class="line"></span><br><span class="line">        String image = tbItem.getImage();</span><br><span class="line">        if(StringUtils.isNotBlank(image))&#123;</span><br><span class="line">            tbItem.setImage(image.split(&quot;,&quot;)[0]);</span><br><span class="line">        &#125;</span><br><span class="line">        //添加到购物车列表</span><br><span class="line">        jedisClient.hset(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;,JsonUtils.objectToJson(tbItem));</span><br><span class="line"></span><br><span class="line">        //返回成功</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E3Result mergeCart(Long userId, List&lt;TbItem&gt; itemList) &#123;</span><br><span class="line">        //遍历商品列表</span><br><span class="line">        //把列表添加到购物车</span><br><span class="line">        //判断购物车中是否有此商品</span><br><span class="line">        //如果有，商品数量相加</span><br><span class="line">        //如果没有，添加新的商品</span><br><span class="line">        for (TbItem tbItem : itemList) &#123;</span><br><span class="line">            /**</span><br><span class="line">             * 上面的这些逻辑我们可以直接调用商品的addCart方法，很简单</span><br><span class="line">             */</span><br><span class="line">            addCart(userId,tbItem.getId(),tbItem.getNum());</span><br><span class="line">        &#125;</span><br><span class="line">        //返回成功</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;TbItem&gt; getCartList(Long userId) &#123;</span><br><span class="line">        //根据用户id查询购物车列表</span><br><span class="line">        List&lt;String&gt; jsonList = jedisClient.hvals(REDIS_CART_PRE + &quot;:&quot; + userId);</span><br><span class="line">        List&lt;TbItem&gt; tbItemList = new ArrayList&lt;&gt;();</span><br><span class="line">        for (String s : jsonList) &#123;</span><br><span class="line">            //将json转换成TbItem对象</span><br><span class="line">            TbItem tbItem = JsonUtils.jsonToPojo(s, TbItem.class);</span><br><span class="line">            //添加到列表</span><br><span class="line">            tbItemList.add(tbItem);</span><br><span class="line">        &#125;</span><br><span class="line">        return tbItemList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E3Result updateCartNum(Long userId, Long itemId, int num) &#123;</span><br><span class="line">        //从redis中取出商品信息</span><br><span class="line">        String json = jedisClient.hget(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;);</span><br><span class="line">        TbItem tbItem = JsonUtils.jsonToPojo(json, TbItem.class);</span><br><span class="line">        tbItem.setNum(num);</span><br><span class="line">        //写回redis</span><br><span class="line">        jedisClient.hset(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;,JsonUtils.objectToJson(tbItem));</span><br><span class="line"></span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public E3Result deleteCartItem(Long userId, Long itemId) &#123;</span><br><span class="line">        jedisClient.hdel(REDIS_CART_PRE + &quot;:&quot; + userId, itemId + &quot;&quot;);</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-5-3-Controller-也很简单"><a href="#4-5-3-Controller-也很简单" class="headerlink" title="4.5.3 Controller(也很简单)"></a>4.5.3 Controller(也很简单)</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131907071165118203.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">     * 更新商品信息</span><br><span class="line">     * @param itemId    商品ID</span><br><span class="line">     * @param num       商品数量</span><br><span class="line">     * @param request</span><br><span class="line">     * @param response</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @RequestMapping(&quot;/cart/update/num/&#123;itemId&#125;/&#123;num&#125;&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public E3Result updateCartNum(@PathVariable Long itemId,@PathVariable Integer num,</span><br><span class="line">                                  HttpServletRequest request,HttpServletResponse response)&#123;</span><br><span class="line">        //判断用户是否登录</span><br><span class="line">        TbUser user = (TbUser) request.getAttribute(&quot;user&quot;);</span><br><span class="line">        if(user!=null)&#123;</span><br><span class="line">            cartService.updateCartNum(user.getId(),itemId,num);</span><br><span class="line">            return E3Result.ok();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //遍历商品列表找到对应商品</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            if(tbItem.getId().longValue()==itemId)&#123;</span><br><span class="line">                //更新数量</span><br><span class="line">                tbItem.setNum(num);</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        //把购物车列表写回cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line"></span><br><span class="line">        //返回成功</span><br><span class="line">        return E3Result.ok();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/cart/delete/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String deleteCartItem(@PathVariable Long itemId,HttpServletRequest request,</span><br><span class="line">                                 HttpServletResponse response)&#123;</span><br><span class="line">        //判断用户是否登录</span><br><span class="line">        TbUser user = (TbUser) request.getAttribute(&quot;user&quot;);</span><br><span class="line">        if(user!=null)&#123;</span><br><span class="line">            cartService.deleteCartItem(user.getId(),itemId);</span><br><span class="line">            return &quot;redirect:/cart/cart.html&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">        //从cookie中取购物车列表</span><br><span class="line">        List&lt;TbItem&gt; cartList = getCartListFromCookie(request);</span><br><span class="line">        //遍历列表找到需要删除的商品</span><br><span class="line">        for (TbItem tbItem : cartList) &#123;</span><br><span class="line">            if(tbItem.getId().longValue()==itemId)&#123;</span><br><span class="line">                //删除商品</span><br><span class="line">                cartList.remove(tbItem);</span><br><span class="line">                //跳出循环</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        //把购物车列表写回cookie</span><br><span class="line">        CookieUtils.setCookie(request,response,&quot;cart&quot;,JsonUtils.objectToJson(cartList),COOKIE_CART_EXPIRE,true);</span><br><span class="line">        //返回逻辑视图</span><br><span class="line">        return &quot;redirect:/cart/cart.html&quot;;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/2.宜立方商城dubbo的搭建和商品列表显示/" rel="next" title="二.宜立方商城——dubbo搭建和商城列表显示">
+                <i class="fa fa-chevron-left"></i> 二.宜立方商城——dubbo搭建和商城列表显示
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/11.宜立方商城——SSO单点登录/" rel="prev" title="十一.宜立方商城——SSO单点登录">
+                十一.宜立方商城——SSO单点登录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-课程计划"><span class="nav-number">1.</span> <span class="nav-text">一.课程计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-购物车的实现"><span class="nav-number">2.</span> <span class="nav-text">二.购物车的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-功能分析"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 功能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-工程搭建"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 工程搭建</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-未登录状态下购物车的实现"><span class="nav-number">3.</span> <span class="nav-text">三.未登录状态下购物车的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-添加购物车"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 添加购物车</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-功能分析"><span class="nav-number">3.1.1.</span> <span class="nav-text">3.1.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-Controller"><span class="nav-number">3.1.2.</span> <span class="nav-text">3.1.2 Controller</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-展示购物车商品列表"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 展示购物车商品列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-Controller"><span class="nav-number">3.2.1.</span> <span class="nav-text">3.2.1 Controller</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-修改购物车商品数量"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 修改购物车商品数量</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-1-功能分析"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.3.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3-2-解决请求-html后缀无法返回json数据的问题"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.3.2 解决请求*.html后缀无法返回json数据的问题</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-删除购物车商品"><span class="nav-number">3.4.</span> <span class="nav-text">3.4 删除购物车商品</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-1-功能分析"><span class="nav-number">3.4.1.</span> <span class="nav-text">3.4.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4-2-Controller"><span class="nav-number">3.4.2.</span> <span class="nav-text">3.4.2 Controller</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-登录状态下购物车实现"><span class="nav-number">4.</span> <span class="nav-text">四.登录状态下购物车实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-功能分析"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 功能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-判断用户是否登录"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 判断用户是否登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-1-功能分析"><span class="nav-number">4.2.1.</span> <span class="nav-text">4.2.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-2-2-LoginInterceptor"><span class="nav-number">4.2.2.</span> <span class="nav-text">4.2.2 LoginInterceptor</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-修改原来的Controller"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 修改原来的Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-登录状态下展示购物车列表"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 登录状态下展示购物车列表</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-1-功能分析"><span class="nav-number">4.4.1.</span> <span class="nav-text">4.4.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-4-2-完成Service服务"><span class="nav-number">4.4.2.</span> <span class="nav-text">4.4.2 完成Service服务</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#接口"><span class="nav-number">4.4.2.1.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#实现合并购物车"><span class="nav-number">4.4.2.2.</span> <span class="nav-text">实现合并购物车</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#从redis中取hash的值"><span class="nav-number">4.4.2.3.</span> <span class="nav-text">从redis中取hash的值</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#从redis中取购物车列表"><span class="nav-number">4.4.2.4.</span> <span class="nav-text">从redis中取购物车列表</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Controller"><span class="nav-number">4.4.2.5.</span> <span class="nav-text">Controller</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-登录状态下修改、删除购物车-这个简单"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 登录状态下修改、删除购物车(这个简单)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-1-接口"><span class="nav-number">4.5.1.</span> <span class="nav-text">4.5.1 接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-2-实现类"><span class="nav-number">4.5.2.</span> <span class="nav-text">4.5.2 实现类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-5-3-Controller-也很简单"><span class="nav-number">4.5.3.</span> <span class="nav-text">4.5.3 Controller(也很简单)</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

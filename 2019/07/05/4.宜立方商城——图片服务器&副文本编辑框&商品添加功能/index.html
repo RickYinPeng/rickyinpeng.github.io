@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！ 一.课程计划：123451、图片上传    a)图片服务器FastDFS(分布式文件系统)    b)图片上传功能实现2、富文本编辑器的使用KindEditor3、商品添加功能完成 二.图片服务器安装须知：1、存储空间可扩展。2、提供一个统一的访问方式。使用FastDFS，分布式文件系统。存储空间可以横向扩展，可以实现服务">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="四.宜立方商城——图片服务器&amp;副文本编辑框&amp;商品添加功能">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！ 一.课程计划：123451、图片上传    a)图片服务器FastDFS(分布式文件系统)    b)图片上传功能实现2、富文本编辑器的使用KindEditor3、商品添加功能完成 二.图片服务器安装须知：1、存储空间可扩展。2、提供一个统一的访问方式。使用FastDFS，分布式文件系统。存储空间可以横向扩展，可以实现服务">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/1.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/2.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/3_131831850765268125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/4_131831850772846250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/5_131831850778940000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/6_131831850784408750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/14.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/15.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/16.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/17.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/18.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/2_131832204939018125.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/3_131832204942455625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/4_131832204945658750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/5_131832204948002500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/6_131832207354408750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/7_131832210773471250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/8_131832210776752500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/1_131832204935580625.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Struts/9_131832212639955625.png">
+<meta property="og:updated_time" content="2018-10-06T06:10:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="四.宜立方商城——图片服务器&amp;副文本编辑框&amp;商品添加功能">
+<meta name="twitter:description" content="唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！ 一.课程计划：123451、图片上传    a)图片服务器FastDFS(分布式文件系统)    b)图片上传功能实现2、富文本编辑器的使用KindEditor3、商品添加功能完成 二.图片服务器安装须知：1、存储空间可扩展。2、提供一个统一的访问方式。使用FastDFS，分布式文件系统。存储空间可以横向扩展，可以实现服务">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Struts/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/"/>
+
+
+
+
+
+  <title>四.宜立方商城——图片服务器&副文本编辑框&商品添加功能 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">四.宜立方商城——图片服务器&副文本编辑框&商品添加功能</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！</p>
+<h2 id="一-课程计划："><a href="#一-课程计划：" class="headerlink" title="一.课程计划："></a>一.课程计划：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、图片上传</span><br><span class="line">    a)图片服务器FastDFS(分布式文件系统)</span><br><span class="line">    b)图片上传功能实现</span><br><span class="line">2、富文本编辑器的使用KindEditor</span><br><span class="line">3、商品添加功能完成</span><br></pre></td></tr></table></figure>
+<h2 id="二-图片服务器安装须知："><a href="#二-图片服务器安装须知：" class="headerlink" title="二.图片服务器安装须知："></a>二.图片服务器安装须知：</h2><font size="3"><br>1、存储空间可扩展。<br><br>2、提供一个统一的访问方式。<br><br>使用FastDFS，分布式文件系统。存储空间可以横向扩展，可以实现服务器的高可用。支持每个节点有备份机。<br></font>
+
+<h3 id="emsp-emsp-2-1-什么是FastDFS？"><a href="#emsp-emsp-2-1-什么是FastDFS？" class="headerlink" title="&emsp;&emsp;2.1 什么是FastDFS？"></a>&emsp;&emsp;2.1 什么是FastDFS？</h3><font size="3"><br>FastDFS是用c语言编写的一款开源的分布式文件系统。FastDFS为互联网量身定制，充分考虑了冗余备份、负载均衡、线性扩容等机制，并注重高可用、高性能等指标，使用FastDFS很容易搭建一套高性能的文件服务器集群提供文件上传、下载等服务。<br></font>
+
+<h3 id="emsp-emsp-2-2-FastDFS架构"><a href="#emsp-emsp-2-2-FastDFS架构" class="headerlink" title="&emsp;&emsp;2.2 FastDFS架构"></a>&emsp;&emsp;2.2 FastDFS架构</h3><font size="3"><br>FastDFS架构包括 Tracker server和Storage server。客户端请求Tracker server进行文件上传、下载，通过Tracker server调度最终由Storage server完成文件上传和下载。<br><br><br>Tracker server作用是负载均衡和调度，通过Tracker server在文件上传时可以根据一些策略找到Storage server提供文件上传服务。可以将tracker称为追踪服务器或调度服务器。<br><br><br>Storage server作用是文件存储，客户端上传的文件最终存储在Storage服务器上，Storage server没有实现自己的文件系统而是利用操作系统 的文件系统来管理文件。可以将storage称为存储服务器。<br><br><br><img src="http://img.027cgb.com/606599/Struts/1.png" alt="image"><br><br>服务端两个角色：<br><br><strong>Tracker</strong>：管理集群，tracker也可以实现集群。每个tracker节点地位平等。<br>收集Storage集群的状态。<br><br><strong>Storage</strong>：实际保存文件<br>Storage分为多个组，每个组之间保存的文件是不同的。每个组内部可以有多个成员，组成员内部保存的内容是一样的，组成员的地位是一致的，没有主从的概念。<br><br></font>
+
+<h3 id="emsp-emsp-2-3-文件上传的流程："><a href="#emsp-emsp-2-3-文件上传的流程：" class="headerlink" title="&emsp;&emsp;2.3 文件上传的流程："></a>&emsp;&emsp;2.3 文件上传的流程：</h3><font size="3/"><br><br><img src="http://img.027cgb.com/606599/Struts/2.png" alt="image"><br><br>客户端上传文件后存储服务器将文件ID返回给客户端，此文件ID用于以后访问该文件的索引信息。文件索引信息包括：组名，虚拟磁盘路径，数据两级目录，文件名。<br><br><img src="http://img.027cgb.com/606599/Struts/3_131831850765268125.png" alt="image"><br><br><strong>组名</strong>：文件上传后所在的storage组名称，在文件上传成功后有storage服务器返回，需要客户端自行保存。<br><br><strong>虚拟磁盘路径</strong>：storage配置的虚拟路径，与磁盘选项store_path*对应。如果配置了store_path0则是M00，如果配置了store_path1则是M01，以此类推。<br><br><strong>数据两级目录</strong>：storage服务器在每个虚拟磁盘路径下创建的两级目录，用于存储数据文件。<br><br><strong>文件名</strong>：与文件上传时不同。是由存储服务器根据特定信息生成，文件名包含：源存储服务器IP地址、文件创建时间戳、文件大小、随机数和文件拓展名等信息。<br>### &emsp;&emsp;2.4 文件下载：<br><img src="http://img.027cgb.com/606599/Struts/4_131831850772846250.png" alt="image"><br></font>
+
+<h3 id="emsp-emsp-2-5-最简单的FastDFS架构："><a href="#emsp-emsp-2-5-最简单的FastDFS架构：" class="headerlink" title="&emsp;&emsp;2.5 最简单的FastDFS架构："></a>&emsp;&emsp;2.5 最简单的FastDFS架构：</h3><p><img src="http://img.027cgb.com/606599/Struts/5_131831850778940000.png" alt="image"></p>
+<h2 id="三-图片服务器安装方法："><a href="#三-图片服务器安装方法：" class="headerlink" title="三.图片服务器安装方法："></a>三.图片服务器安装方法：</h2><h3 id="emsp-emsp-安装步骤"><a href="#emsp-emsp-安装步骤" class="headerlink" title="&emsp;&emsp;安装步骤:"></a>&emsp;&emsp;安装步骤:</h3><font size="3"> 
+
+<p>第一步：把图片服务器解压缩。</p>
+<p><img src="http://img.027cgb.com/606599/Struts/6_131831850784408750.png" alt="image"></p>
+<p>第二步：把图片服务器添加到Vmware中。</p>
+<p>第三步：Vmware的网络配置。</p>
+<p><img src="http://img.027cgb.com/606599/Struts/14.png" alt="image"></p>
+<blockquote>
+<p>因为我们在这里用的是别人搭建好的图片服务器，所以在这里网段要和别人的一样</p>
+</blockquote>
+<p>第四步：开机</p>
+<p><img src="http://img.027cgb.com/606599/Struts/15.png" alt="image"><br>移动：网络配置不发生变化。要使用图片服务器，需要保证网络配置不变。<br><br>复制：重新生成一块网卡mac地址是新地址。<br><br>Ip地址：192.168.25.133<br><br>用户名root<br><br>密码：itcast<br><br></p></font><p></p>
+<h2 id="四-图片服务器的使用："><a href="#四-图片服务器的使用：" class="headerlink" title="四.图片服务器的使用："></a>四.图片服务器的使用：</h2><h3 id="emsp-emsp-4-1-Java客户端"><a href="#emsp-emsp-4-1-Java客户端" class="headerlink" title="&emsp;&emsp;4.1 Java客户端:"></a>&emsp;&emsp;4.1 Java客户端:</h3><p><img src="http://img.027cgb.com/606599/Struts/16.png" alt="image"></p>
+<h3 id="emsp-emsp-4-2-上传图片"><a href="#emsp-emsp-4-2-上传图片" class="headerlink" title="&emsp;&emsp;4.2 上传图片:"></a>&emsp;&emsp;4.2 上传图片:</h3><h4 id="emsp-emsp-emsp-emsp-4-2-1-上传步骤"><a href="#emsp-emsp-emsp-emsp-4-2-1-上传步骤" class="headerlink" title="&emsp;&emsp;&emsp;&emsp; 4.2.1 上传步骤:"></a>&emsp;&emsp;&emsp;&emsp; 4.2.1 上传步骤:</h4><ol>
+<li>加载配置文件，配置文件中的内容就是tracker服务的地址。<br>配置文件内容：tracker_server=192.168.25.133:22122</li>
+<li>创建一个TrackerClient对象。直接new一个。</li>
+<li>使用TrackerClient对象创建连接，获得一个TrackerServer对象。</li>
+<li>创建一个StorageServer的引用，值为null</li>
+<li>创建一个StorageClient对象，需要两个参数TrackerServer对象、StorageServer的引用</li>
+<li>使用StorageClient对象上传图片。</li>
+<li>返回数组。包含组名和图片的路径。</li>
+</ol>
+<h4 id="emsp-emsp-emsp-emsp-4-2-2-代码"><a href="#emsp-emsp-emsp-emsp-4-2-2-代码" class="headerlink" title="&emsp;&emsp;&emsp;&emsp; 4.2.2 代码:"></a>&emsp;&emsp;&emsp;&emsp; 4.2.2 代码:</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName FastDfsTest</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/10/5/13:37</span><br><span class="line"> */</span><br><span class="line">public class FastDfsTest &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void testUpload() throws Exception&#123;</span><br><span class="line">        //创建一个配置文件，文件名任意。内容就是tracker服务器的地址</span><br><span class="line">        //使用全局对象加载配置文件</span><br><span class="line">        ClientGlobal.init(&quot;E:\\IdeaWorpace\\e_Store\\e3_manager_web\\src\\main\\resources\\conf\\client.conf&quot;);</span><br><span class="line"></span><br><span class="line">        //创建TrackerClient对象</span><br><span class="line">        TrackerClient trackerClient = new TrackerClient();</span><br><span class="line">        //通过TrackerClient获得一个TrackerServer对象</span><br><span class="line">        TrackerServer trackerServer = trackerClient.getConnection();</span><br><span class="line">        //创建一个StorageServer的引用，可以是null</span><br><span class="line">        StorageServer storageServer = null;</span><br><span class="line">        //创建一个StorageCilent，参数需要TrackServer和StorageServer</span><br><span class="line">        StorageClient storageClient = new StorageClient(trackerServer,storageServer);</span><br><span class="line">        //使用StorageCilent上传文件</span><br><span class="line">        String[] strings = storageClient.upload_file(</span><br><span class="line">                &quot;C:\\Users\\鹏哥\\Desktop\\照片\\韩花花\\QQ图片20171117214144.jpg&quot;,</span><br><span class="line">                &quot;jpg&quot;,</span><br><span class="line">                null);</span><br><span class="line">        for (String string: strings) &#123;</span><br><span class="line">            System.out.println(string);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>效果</strong>：<br><img src="http://img.027cgb.com/606599/Struts/17.png" alt="image"></p>
+<blockquote>
+<p>以上是博主喜欢的人，嘻嘻（不过我们分手了，我很爱她）</p>
+</blockquote>
+<h3 id="emsp-emsp-4-3-使用工具类上传"><a href="#emsp-emsp-4-3-使用工具类上传" class="headerlink" title="&emsp;&emsp;4.3 使用工具类上传:"></a>&emsp;&emsp;4.3 使用工具类上传:</h3><p><img src="http://img.027cgb.com/606599/Struts/18.png" alt="image"></p>
+<p><strong>工具类代码</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">public class FastDFSClient &#123;</span><br><span class="line"></span><br><span class="line">	private TrackerClient trackerClient = null;</span><br><span class="line">	private TrackerServer trackerServer = null;</span><br><span class="line">	private StorageServer storageServer = null;</span><br><span class="line">	private StorageClient1 storageClient = null;</span><br><span class="line">	</span><br><span class="line">	public FastDFSClient(String conf) throws Exception &#123;</span><br><span class="line">		if (conf.contains(&quot;classpath:&quot;)) &#123;</span><br><span class="line">			conf = conf.replace(&quot;classpath:&quot;, this.getClass().getResource(&quot;/&quot;).getPath());</span><br><span class="line">		&#125;</span><br><span class="line">		ClientGlobal.init(conf);</span><br><span class="line">		trackerClient = new TrackerClient();</span><br><span class="line">		trackerServer = trackerClient.getConnection();</span><br><span class="line">		storageServer = null;</span><br><span class="line">		storageClient = new StorageClient1(trackerServer, storageServer);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 上传文件方法</span><br><span class="line">	 * &lt;p&gt;Title: uploadFile&lt;/p&gt;</span><br><span class="line">	 * &lt;p&gt;Description: &lt;/p&gt;</span><br><span class="line">	 * @param fileName 文件全路径</span><br><span class="line">	 * @param extName 文件扩展名，不包含（.）</span><br><span class="line">	 * @param metas 文件扩展信息</span><br><span class="line">	 * @return</span><br><span class="line">	 * @throws Exception</span><br><span class="line">	 */</span><br><span class="line">	public String uploadFile(String fileName, String extName, NameValuePair[] metas) throws Exception &#123;</span><br><span class="line">		String result = storageClient.upload_file1(fileName, extName, metas);</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public String uploadFile(String fileName) throws Exception &#123;</span><br><span class="line">		return uploadFile(fileName, null, null);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public String uploadFile(String fileName, String extName) throws Exception &#123;</span><br><span class="line">		return uploadFile(fileName, extName, null);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	/**</span><br><span class="line">	 * 上传文件方法</span><br><span class="line">	 * &lt;p&gt;Title: uploadFile&lt;/p&gt;</span><br><span class="line">	 * &lt;p&gt;Description: &lt;/p&gt;</span><br><span class="line">	 * @param fileContent 文件的内容，字节数组</span><br><span class="line">	 * @param extName 文件扩展名</span><br><span class="line">	 * @param metas 文件扩展信息</span><br><span class="line">	 * @return</span><br><span class="line">	 * @throws Exception</span><br><span class="line">	 */</span><br><span class="line">	public String uploadFile(byte[] fileContent, String extName, NameValuePair[] metas) throws Exception &#123;</span><br><span class="line">		</span><br><span class="line">		String result = storageClient.upload_file1(fileContent, extName, metas);</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public String uploadFile(byte[] fileContent) throws Exception &#123;</span><br><span class="line">		return uploadFile(fileContent, null, null);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public String uploadFile(byte[] fileContent, String extName) throws Exception &#123;</span><br><span class="line">		return uploadFile(fileContent, extName, null);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>使用工具类代码</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testFastDfsClient() throws Exception&#123;</span><br><span class="line">    FastDFSClient fastDFSClient = new FastDFSClient(&quot;E:\\IdeaWorpace\\e_Store\\e3_manager_web\\src\\main\\resources\\conf\\client.conf&quot;);</span><br><span class="line">    String s = fastDFSClient.uploadFile(&quot;C:\\Users\\鹏哥\\Desktop\\照片\\韩花花\\韩花花mmexport1507127507770.jpg&quot;);</span><br><span class="line">    System.out.println(s);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="五-图片上传功能"><a href="#五-图片上传功能" class="headerlink" title="五.图片上传功能:"></a>五.图片上传功能:</h2><h3 id="emsp-emsp-5-1-功能分析"><a href="#emsp-emsp-5-1-功能分析" class="headerlink" title="&emsp;&emsp;5.1 功能分析"></a>&emsp;&emsp;5.1 功能分析</h3><p><img src="http://img.027cgb.com/606599/Struts/2_131832204939018125.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Struts/3_131832204942455625.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Struts/4_131832204945658750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Struts/5_131832204948002500.png" alt="image"></p>
+<blockquote>
+<p>使用的是KindEditor的多图片上传插件。<br><br>KindEditor 4.x 文档<br><br><a href="http://kindeditor.net/doc.php" target="_blank" rel="noopener">http://kindeditor.net/doc.php</a></p>
+</blockquote>
+<p><strong>请求的url</strong>：/pic/upload<br><br><strong>参数</strong>：MultiPartFile uploadFile<br><br><strong>返回值</strong>：<br></p>
+<p><img src="http://img.027cgb.com/606599/Struts/6_131832207354408750.png" alt="image"></p>
+<p>可以创建一个pojo对应返回值。可以使用map</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">业务逻辑：</span><br><span class="line">1、接收页面传递的图片信息uploadFile</span><br><span class="line">2、把图片上传到图片服务器。使用封装的工具类实现。需要取文件的内容和扩展名。</span><br><span class="line">3、图片服务器返回图片的url</span><br><span class="line">4、将图片的url补充完整，返回一个完整的url。</span><br><span class="line">5、把返回结果封装到一个Map对象中返回。</span><br></pre></td></tr></table></figure>
+<ol>
+<li>需要把commons-io、fileupload 的jar包添加到工程中。</li>
+<li>配置多媒体解析器。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 定义文件上传解析器 --&gt;</span><br><span class="line">	&lt;bean id=&quot;multipartResolver&quot;</span><br><span class="line">		class=&quot;org.springframework.web.multipart.commons.CommonsMultipartResolver&quot;&gt;</span><br><span class="line">		&lt;!-- 设定默认编码 --&gt;</span><br><span class="line">		&lt;property name=&quot;defaultEncoding&quot; value=&quot;UTF-8&quot;&gt;&lt;/property&gt;</span><br><span class="line">		&lt;!-- 设定文件上传的最大值5MB，5*1024*1024 --&gt;</span><br><span class="line">		&lt;property name=&quot;maxUploadSize&quot; value=&quot;5242880&quot;&gt;&lt;/property&gt;</span><br><span class="line">	&lt;/bean&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-5-2-Controller"><a href="#emsp-emsp-5-2-Controller" class="headerlink" title="&emsp;&emsp;5.2 Controller"></a>&emsp;&emsp;5.2 Controller</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName PictureController</span><br><span class="line"> * @Description 图片上传处理Controller</span><br><span class="line"> * @date 2018/10/5/16:05</span><br><span class="line"> */</span><br><span class="line"></span><br><span class="line">@Controller</span><br><span class="line">public class PictureController &#123;</span><br><span class="line"></span><br><span class="line">    @Value(&quot;$&#123;IMAGE_SERVER_URL&#125;&quot;)</span><br><span class="line">    private String IMAGE_SERVER_URL;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(value = &quot;/pic/upload&quot; ,produces=MediaType.TEXT_PLAIN_VALUE+&quot;;charset=utf-8&quot;)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public String uploadFile(MultipartFile uploadFile)&#123;</span><br><span class="line">        //把图片上传到图片服务器</span><br><span class="line">        try &#123;</span><br><span class="line">            FastDFSClient fastDFSClient = new FastDFSClient(&quot;classpath:conf/client.conf&quot;);</span><br><span class="line"></span><br><span class="line">            //得到一个图片的地址和文件名</span><br><span class="line">            String originalFilename = uploadFile.getOriginalFilename();</span><br><span class="line">            String extName = originalFilename.substring(originalFilename.indexOf(&quot;.&quot;)+1);</span><br><span class="line">            String url = fastDFSClient.uploadFile(uploadFile.getBytes(), extName);</span><br><span class="line">            //补充为完整的url</span><br><span class="line">            url = IMAGE_SERVER_URL+url;</span><br><span class="line">            //封装到map中返回</span><br><span class="line">            Map result = new HashMap&lt;Integer,String&gt;();</span><br><span class="line">            result.put(&quot;error&quot;,0);</span><br><span class="line">            result.put(&quot;url&quot;,url);</span><br><span class="line">            return JsonUtils.objectToJson(result);</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            Map result = new HashMap&lt;Integer,String&gt;();</span><br><span class="line">            result.put(&quot;error&quot;,1);</span><br><span class="line">            result.put(&quot;message&quot;,&quot;图片上传失败！！！&quot;);</span><br><span class="line">            return JsonUtils.objectToJson(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-5-3-解决浏览器兼容性问题："><a href="#emsp-emsp-5-3-解决浏览器兼容性问题：" class="headerlink" title="&emsp;&emsp;5.3 解决浏览器兼容性问题："></a>&emsp;&emsp;5.3 解决浏览器兼容性问题：</h3><p>KindEditor的图片上传插件，对浏览器兼容性不好。</p>
+<p>使用@ResponseBody注解返回java对象，页面中的请求头部分为<br><br>==Content-Type:application/json;charset=UTF-8==</p>
+<p>返回字符串时：<br><br>==Content-Type:text/plan;charset=UTF-8==</p>
+<p><img src="http://img.027cgb.com/606599/Struts/7_131832210773471250.png" alt="image"></p>
+<p>指定响应结果的content-type：</p>
+<p><img src="http://img.027cgb.com/606599/Struts/8_131832210776752500.png" alt="image"></p>
+<p><strong>KindEditor的多图片上传插件最后响应的content-type是text/plan格式的json字符串。兼容性是最好的。</strong></p>
+<p><img src="http://img.027cgb.com/606599/Struts/1_131832204935580625.png" alt="image"></p>
+<h2 id="六-富文本编辑器的使用方法"><a href="#六-富文本编辑器的使用方法" class="headerlink" title="六.富文本编辑器的使用方法"></a>六.富文本编辑器的使用方法</h2><h3 id="emsp-emsp-6-1-富文本编辑器介绍"><a href="#emsp-emsp-6-1-富文本编辑器介绍" class="headerlink" title="&emsp;&emsp;6.1 富文本编辑器介绍"></a>&emsp;&emsp;6.1 富文本编辑器介绍</h3><p><img src="http://img.027cgb.com/606599/Struts/9_131832212639955625.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">KindEditor</span><br><span class="line">http://kindeditor.net/</span><br><span class="line">UEditor：百度编辑器</span><br><span class="line">http://ueditor.baidu.com/website/</span><br><span class="line">CKEditor</span><br><span class="line">http://ckeditor.com/</span><br><span class="line"></span><br><span class="line">纯js开发，跟后台语言没有关系。</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-6-2-使用方法："><a href="#emsp-emsp-6-2-使用方法：" class="headerlink" title="&emsp;&emsp;6.2 使用方法："></a>&emsp;&emsp;6.2 使用方法：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">第一步：在jsp中引入KindEditor的css和js代码。</span><br><span class="line">第二步：在表单中添加一个textarea控件。是一个富文本编辑器的载体。类似数据源。</span><br><span class="line">第三步：初始化富文本编辑器。使用官方提供的方法初始化。</span><br><span class="line">第四步：取富文本编辑器的内容。</span><br><span class="line">表单提交之前，把富文本编辑器的内容同步到textarea控件中。</span><br></pre></td></tr></table></figure>
+<h2 id="七-商品添加功能实现"><a href="#七-商品添加功能实现" class="headerlink" title="七.商品添加功能实现"></a>七.商品添加功能实现</h2><h3 id="emsp-emsp-7-1功能分析"><a href="#emsp-emsp-7-1功能分析" class="headerlink" title="&emsp;&emsp;7.1功能分析"></a>&emsp;&emsp;7.1功能分析</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">请求的url：/item/save</span><br><span class="line">参数：表单的数据。可以使用pojo接收表单的数据，要求pojo的属性和input的name属性要一致。</span><br><span class="line">使用TbItem对象接收表单的数据。</span><br><span class="line">TbItem item,String desc</span><br><span class="line">返回值：</span><br><span class="line">Json数据。应该包含一个status的属性。</span><br><span class="line">可以使用E3Result，放到e3-common中。</span><br><span class="line"></span><br><span class="line">业务逻辑：</span><br><span class="line">1、生成商品id</span><br><span class="line">实现方案：</span><br><span class="line">a)Uuid，字符串，不推荐使用。</span><br><span class="line">b)数值类型，不重复。日期+时间+随机数20160402151333123123</span><br><span class="line">c)可以直接去毫秒值+随机数。可以使用。</span><br><span class="line">d)使用redis。Incr。推荐使用。</span><br><span class="line">使用IDUtils生成商品id</span><br><span class="line">2、补全TbItem对象的属性</span><br><span class="line">3、向商品表插入数据</span><br><span class="line">4、创建一个TbItemDesc对象</span><br><span class="line">5、补全TbItemDesc的属性</span><br><span class="line">6、向商品描述表插入数据</span><br><span class="line">7、E3Result.ok()</span><br></pre></td></tr></table></figure>
+<h3 id="emsp-emsp-7-2Dao层"><a href="#emsp-emsp-7-2Dao层" class="headerlink" title="&emsp;&emsp;7.2Dao层"></a>&emsp;&emsp;7.2Dao层</h3><p>向tb_item, tb_item_desc表中插入数据<br><br>可以使用逆向工程</p>
+<h3 id="emsp-emsp-7-3Service层"><a href="#emsp-emsp-7-3Service层" class="headerlink" title="&emsp;&emsp;7.3Service层"></a>&emsp;&emsp;7.3Service层</h3><p>参数：TbItem item,String desc<br><br>业务逻辑：略，参加上面<br><br>返回值：E3Result<br></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">   public E3Result addItem(TbItem tbItem, String desc) &#123;</span><br><span class="line">       //拿到的TbItem缺少ID，因为表单中的是cid，是商品的类目id，并不是商品的ID</span><br><span class="line">       //所以我们需要先生成商品的ID</span><br><span class="line"></span><br><span class="line">       //生成商品ID</span><br><span class="line">       long itemId = IDUtils.genItemId();</span><br><span class="line"></span><br><span class="line">       //补全TbItem的属性</span><br><span class="line">       tbItem.setId(itemId);</span><br><span class="line">       //商品状态，1-正常，2-下架，3-删除</span><br><span class="line">       tbItem.setStatus((byte)1);</span><br><span class="line">       //创建时间</span><br><span class="line">       tbItem.setCreated(new Date());</span><br><span class="line">       //更新时间</span><br><span class="line">       tbItem.setUpdated(new Date());</span><br><span class="line"></span><br><span class="line">       //向商品表插入数据</span><br><span class="line">       tbItemMapper.insert(tbItem);</span><br><span class="line"></span><br><span class="line">       //创建商品描述表对应的pojo对象</span><br><span class="line">       TbItemDesc itemDesc = new TbItemDesc();</span><br><span class="line">       itemDesc.setItemId(itemId);</span><br><span class="line">       itemDesc.setItemDesc(desc);</span><br><span class="line">       itemDesc.setCreated(new Date());</span><br><span class="line">       itemDesc.setUpdated(new Date());</span><br><span class="line"></span><br><span class="line">       //向商品描述表插入数据</span><br><span class="line">       tbItemDescMapper.insert(itemDesc);</span><br><span class="line"></span><br><span class="line">       //返回成功</span><br><span class="line"></span><br><span class="line">    return E3Result.ok();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>发布服务</p>
+<h3 id="emsp-emsp-7-4-表现层"><a href="#emsp-emsp-7-4-表现层" class="headerlink" title="&emsp;&emsp;7.4 表现层"></a>&emsp;&emsp;7.4 表现层</h3><p>引用服务</p>
+<h3 id="emsp-emsp-7-4-1-Controller"><a href="#emsp-emsp-7-4-1-Controller" class="headerlink" title="&emsp;&emsp;7.4.1 Controller"></a>&emsp;&emsp;7.4.1 Controller</h3><p>请求的url：/item/save<br><br>参数：TbItem item,String desc<br><br>返回值：E3Result<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 商品添加功能</span><br><span class="line"> * @param tbItem</span><br><span class="line"> * @param desc</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">@RequestMapping(value = &quot;/item/save&quot;,method = RequestMethod.POST)</span><br><span class="line">@ResponseBody</span><br><span class="line">public E3Result addItem(TbItem tbItem,String desc)&#123;</span><br><span class="line">    E3Result e3Result = itemService.addItem(tbItem, desc);</span><br><span class="line">    return e3Result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/一、为什么要学习网络协议？/" rel="next" title="一.为什么要学习网络协议">
+                <i class="fa fa-chevron-left"></i> 一.为什么要学习网络协议
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/4.面向过程和面向对象/" rel="prev" title="十.面向过程和面向对象">
+                十.面向过程和面向对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-课程计划："><span class="nav-number">1.</span> <span class="nav-text">一.课程计划：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-图片服务器安装须知："><span class="nav-number">2.</span> <span class="nav-text">二.图片服务器安装须知：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-1-什么是FastDFS？"><span class="nav-number">2.1.</span> <span class="nav-text">  2.1 什么是FastDFS？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-2-FastDFS架构"><span class="nav-number">2.2.</span> <span class="nav-text">  2.2 FastDFS架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-3-文件上传的流程："><span class="nav-number">2.3.</span> <span class="nav-text">  2.3 文件上传的流程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-2-5-最简单的FastDFS架构："><span class="nav-number">2.4.</span> <span class="nav-text">  2.5 最简单的FastDFS架构：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-图片服务器安装方法："><span class="nav-number">3.</span> <span class="nav-text">三.图片服务器安装方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-安装步骤"><span class="nav-number">3.1.</span> <span class="nav-text">  安装步骤:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-图片服务器的使用："><span class="nav-number">4.</span> <span class="nav-text">四.图片服务器的使用：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-1-Java客户端"><span class="nav-number">4.1.</span> <span class="nav-text">  4.1 Java客户端:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-2-上传图片"><span class="nav-number">4.2.</span> <span class="nav-text">  4.2 上传图片:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-2-1-上传步骤"><span class="nav-number">4.2.1.</span> <span class="nav-text">     4.2.1 上传步骤:</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#emsp-emsp-emsp-emsp-4-2-2-代码"><span class="nav-number">4.2.2.</span> <span class="nav-text">     4.2.2 代码:</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-4-3-使用工具类上传"><span class="nav-number">4.3.</span> <span class="nav-text">  4.3 使用工具类上传:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-图片上传功能"><span class="nav-number">5.</span> <span class="nav-text">五.图片上传功能:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-5-1-功能分析"><span class="nav-number">5.1.</span> <span class="nav-text">  5.1 功能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-5-2-Controller"><span class="nav-number">5.2.</span> <span class="nav-text">  5.2 Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-5-3-解决浏览器兼容性问题："><span class="nav-number">5.3.</span> <span class="nav-text">  5.3 解决浏览器兼容性问题：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六-富文本编辑器的使用方法"><span class="nav-number">6.</span> <span class="nav-text">六.富文本编辑器的使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-1-富文本编辑器介绍"><span class="nav-number">6.1.</span> <span class="nav-text">  6.1 富文本编辑器介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-6-2-使用方法："><span class="nav-number">6.2.</span> <span class="nav-text">  6.2 使用方法：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七-商品添加功能实现"><span class="nav-number">7.</span> <span class="nav-text">七.商品添加功能实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-1功能分析"><span class="nav-number">7.1.</span> <span class="nav-text">  7.1功能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-2Dao层"><span class="nav-number">7.2.</span> <span class="nav-text">  7.2Dao层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-3Service层"><span class="nav-number">7.3.</span> <span class="nav-text">  7.3Service层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-4-表现层"><span class="nav-number">7.4.</span> <span class="nav-text">  7.4 表现层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#emsp-emsp-7-4-1-Controller"><span class="nav-number">7.5.</span> <span class="nav-text">  7.4.1 Controller</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

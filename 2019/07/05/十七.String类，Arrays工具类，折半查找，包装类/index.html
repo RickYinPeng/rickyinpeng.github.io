@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JavaSE," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.String类1.String不可变的原理  String类里面的value是final修饰的  2.StringBuffer和StringBuilderStringBuffer和StringBuilder非常类似，均代表可变的字符序列。 这两个类都是抽象类AbstractStringBuilder的子类，方法几乎一模一样。    不可变和可变字符序列使用陷阱String一经初始化后，就不会再">
+<meta name="keywords" content="JavaSE">
+<meta property="og:type" content="article">
+<meta property="og:title" content="十七.String类，Arrays工具类，折半查找，包装类">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.String类1.String不可变的原理  String类里面的value是final修饰的  2.StringBuffer和StringBuilderStringBuffer和StringBuilder非常类似，均代表可变的字符序列。 这两个类都是抽象类AbstractStringBuilder的子类，方法几乎一模一样。    不可变和可变字符序列使用陷阱String一经初始化后，就不会再">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131923650926579531.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131924558178298281.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131924558180642031.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131924558182204531.png">
+<meta property="og:image" content="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495593568889579.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131924424516579531.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131924424518454531.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131924424520329531.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131924558176735781.png">
+<meta property="og:updated_time" content="2019-01-20T11:55:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="十七.String类，Arrays工具类，折半查找，包装类">
+<meta name="twitter:description" content="一.String类1.String不可变的原理  String类里面的value是final修饰的  2.StringBuffer和StringBuilderStringBuffer和StringBuilder非常类似，均代表可变的字符序列。 这两个类都是抽象类AbstractStringBuilder的子类，方法几乎一模一样。    不可变和可变字符序列使用陷阱String一经初始化后，就不会再">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131923650926579531.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/"/>
+
+
+
+
+
+  <title>十七.String类，Arrays工具类，折半查找，包装类 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">十七.String类，Arrays工具类，折半查找，包装类</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-String类"><a href="#一-String类" class="headerlink" title="一.String类"></a>一.String类</h2><h3 id="1-String不可变的原理"><a href="#1-String不可变的原理" class="headerlink" title="1.String不可变的原理"></a>1.String不可变的原理</h3><p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131923650926579531.png" alt="image"></p>
+<blockquote>
+<font color="red">String类里面的value是final修饰的</font>
+</blockquote>
+<h3 id="2-StringBuffer和StringBuilder"><a href="#2-StringBuffer和StringBuilder" class="headerlink" title="2.StringBuffer和StringBuilder"></a>2.StringBuffer和StringBuilder</h3><p>StringBuffer和StringBuilder非常类似，均代表可变的字符序列。 这两个类都是抽象类AbstractStringBuilder的子类，方法几乎一模一样。</p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/5_131924558178298281.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/6_131924558180642031.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/7_131924558182204531.png" alt="image"></p>
+<h4 id="不可变和可变字符序列使用陷阱"><a href="#不可变和可变字符序列使用陷阱" class="headerlink" title="不可变和可变字符序列使用陷阱"></a>不可变和可变字符序列使用陷阱</h4><p>String一经初始化后，就不会再改变其内容了。对String字符串的操作实际上是对其副本(原始拷贝)的操作，原来的字符串一点都没有改变。比如：</p>
+<p>String s =”a”; 创建了一个字符串</p>
+<p>s = s+”b”; 实际上原来的”a”字符串对象已经丢弃了，现在又产生了另一个字符串s+”b”(也就是”ab”)。 如果多次执行这些改变串内容的操作，会导致大量副本字符串对象存留在内存中，降低效率。如果这样的操作放到循环中，会极大影响程序的时间和空间性能，甚至会造成服务器的崩溃。</p>
+<p>相反，StringBuilder和StringBuffer类是对原字符串本身操作的，可以对字符串进行修改而不产生副本拷贝或者产生少量的副本。因此可以在循环中使用。</p>
+<h3 id="3-Arrays工具类的使用"><a href="#3-Arrays工具类的使用" class="headerlink" title="3.Arrays工具类的使用"></a>3.Arrays工具类的使用</h3><p>JDK提供的java.util.Arrays类，包含了常用的数组操作，方便我们日常开发。Arrays类包含了：排序、查找、填充、打印内容等常见的操作。</p>
+<h4 id="打印数组"><a href="#打印数组" class="headerlink" title="打印数组"></a>打印数组</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Arrays;</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String args[]) &#123;</span><br><span class="line">        int[] a = &#123; 1, 2 &#125;;</span><br><span class="line">        System.out.println(a); // 打印数组引用的值；</span><br><span class="line">        System.out.println(Arrays.toString(a)); // 打印数组元素的值；</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<font size="3" color="red">注意：<br>此处的Arrays.toString()方法是Arrays类的静态方法，不是前面讲的Object的toString()方法。</font>
+
+<font size="3" color="blue">探究：</font><br><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_07_overload</span><br><span class="line"> * @Description 测试方法重载</span><br><span class="line"> * @date 2019/1/20/8:49</span><br><span class="line"> */</span><br><span class="line">public class Test_07_overload &#123;</span><br><span class="line"></span><br><span class="line">    public void show(int a) &#123;</span><br><span class="line">        System.out.println(a);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 重载：</span><br><span class="line">     * 方法重载返回值不同不能重载</span><br><span class="line">     *</span><br><span class="line">     * @param a</span><br><span class="line">     */</span><br><span class="line">    /*public String show()&#123;&#125;*/</span><br><span class="line">    public void show(String a) &#123;</span><br><span class="line">        System.out.println(a);</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 1.刚刚我试图去new一个Arrays类，但发现new不出来，我点进源码发现它的构造函数是私有的</span><br><span class="line">         * 2.在 Java 中，区别一个方法和另一个方法的关键是“方法签名”。</span><br><span class="line">         * 3.方法签名不是单一元素，而是一个组合。方法签名由 方法名+参数列表 构成（返回值不同，Java编程思想中说过）</span><br><span class="line">         *</span><br><span class="line">         */</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * 重写：协变返回</span><br><span class="line">     *     1.父类的返回值类型是 Object 而子类的返回值类型是 String 等任意一个，这种情况是没问题的，而且好像有一个很高大上的术语叫“协变返回”</span><br><span class="line">     *     2.如果子类的返回值类型是父类的返回值类型的子类，比如例子中 Object 和 String 或者其它自定义类但是具有继承关系的情况。</span><br><span class="line">     *     3.注意，假如父类中是 Object 而子类中是 int 不构成协变返回，int 是基本数据类型，和 Object 不构成继承关系。如果是Integer 没问题</span><br><span class="line">     * 重写中还需要注意以下两点</span><br><span class="line">     *     1.子类重写的方法的访问控制符不能比父类的可见性小可以一样，也可以比父类的大，一般都保持一致\</span><br><span class="line">     *     2.在抛出异常方面，子类重写的方法抛出的异常的检查范围不能比父类的大。</span><br><span class="line">     */</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>&gt; 注意新名词：<font size="3" color="blue">协变返回</font>
+
+
+<h4 id="数组元素的排序"><a href="#数组元素的排序" class="headerlink" title="数组元素的排序"></a>数组元素的排序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Arrays;</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String args[]) &#123;</span><br><span class="line">        int[] a = &#123;1,2,323,23,543,12,59&#125;;</span><br><span class="line">        System.out.println(Arrays.toString(a));</span><br><span class="line">        Arrays.sort(a);</span><br><span class="line">        System.out.println(Arrays.toString(a));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="数组元素是引用类型的排序-Comparable接口的应用"><a href="#数组元素是引用类型的排序-Comparable接口的应用" class="headerlink" title="数组元素是引用类型的排序(Comparable接口的应用)"></a><font color="red">数组元素是引用类型的排序(Comparable接口的应用)</font></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Arrays;</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Man[] msMans = &#123; new Man(3, &quot;a&quot;), new Man(60, &quot;b&quot;), new Man(2, &quot;c&quot;) &#125;;</span><br><span class="line">        Arrays.sort(msMans);</span><br><span class="line">        System.out.println(Arrays.toString(msMans));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">class Man implements Comparable &#123;</span><br><span class="line">    int age;</span><br><span class="line">    int id;</span><br><span class="line">    String name;</span><br><span class="line"> </span><br><span class="line">    public Man(int age, String name) &#123;</span><br><span class="line">        super();</span><br><span class="line">        this.age = age;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return this.name;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    public int compareTo(Object o) &#123;</span><br><span class="line">        Man man = (Man) o;</span><br><span class="line">        if (this.age &lt; man.age) &#123;</span><br><span class="line">            return -1;</span><br><span class="line">        &#125;</span><br><span class="line">        if (this.age &gt; man.age) &#123;</span><br><span class="line">            return 1;</span><br><span class="line">        &#125;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="二分法查找"><a href="#二分法查找" class="headerlink" title="二分法查找"></a>二分法查找</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">import java.util.Arrays;</span><br><span class="line">public class Test &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] a = &#123;1,2,323,23,543,12,59&#125;;</span><br><span class="line">        System.out.println(Arrays.toString(a));</span><br><span class="line">        Arrays.sort(a);   //使用二分法查找，必须先对数组进行排序;</span><br><span class="line">        System.out.println(Arrays.toString(a));</span><br><span class="line">        //返回排序后新的索引位置,若未找到返回负数。</span><br><span class="line">        System.out.println(&quot;该元素的索引：&quot;+Arrays.binarySearch(a, 12)); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="二-冒泡排序，优化"><a href="#二-冒泡排序，优化" class="headerlink" title="二.冒泡排序，优化"></a>二.冒泡排序，优化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_08_冒泡排序</span><br><span class="line"> * @Description 优化冒泡排序</span><br><span class="line"> * @date 2019/1/20/10:01</span><br><span class="line"> */</span><br><span class="line">public class Test_08_冒泡排序 &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] values = &#123;3,4,2,4,5,7,1,2,8,9,10&#125;;</span><br><span class="line"></span><br><span class="line">        for(int i = 0;i&lt;values.length;i++)&#123;</span><br><span class="line">            boolean flag = true;</span><br><span class="line">            for(int j = 0;j&lt;values.length-1-i;j++)&#123;</span><br><span class="line">                if(values[j]&gt;values[j+1])&#123;</span><br><span class="line">                    int temp = values[j];</span><br><span class="line">                    values[j] = values[j+1];</span><br><span class="line">                    values[j+1] = temp;</span><br><span class="line">                    flag = false;</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(Arrays.toString(values));</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;---------------------------&quot;);</span><br><span class="line">            if(flag == true)&#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<font size="3" color="red">注意的几个点：</font><br>1. 外层循环控制总循环次数<br>2. 内层循环控制两两比较的次数<br>3. <font color="red">内层循环之前写错过</font>，来看看，里面有个 <font size="3" color="red">j&lt;values.length-1-i</font> (这个i是外层循环的控制变量)，为什么要减i呢？<br>因为你每次两两比较完之后最后一个元素就是最大的，这个元素就不再比较了<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">for(int i = 0;i&lt;values.length;i++)&#123;</span><br><span class="line">    for(int j = 0;j&lt;values.length-1-i;j++)&#123;</span><br><span class="line">        if(values[j]&gt;values[j+1])&#123;</span><br><span class="line">                    int temp = values[j];</span><br><span class="line">                    values[j] = values[j+1];</span><br><span class="line">                    values[j+1] = temp;</span><br><span class="line">                    flag = false;</span><br><span class="line">                &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>## 三.折半查找<br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_09_二分查找</span><br><span class="line"> * @Description 二分查找</span><br><span class="line"> * @date 2019/1/20/11:39</span><br><span class="line"> */</span><br><span class="line">public class Test_09_二分查找 &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] arry = &#123;30,20,50,10,80,9,7,12,100,40,8&#125;;</span><br><span class="line">        Arrays.sort(arry);</span><br><span class="line"></span><br><span class="line">        int value = 10;</span><br><span class="line"></span><br><span class="line">        System.out.println(Arrays.toString(arry));</span><br><span class="line">        int i = myBinarySearch(arry, value);</span><br><span class="line">        System.out.println(i);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static int myBinarySearch(int[] arr,int value)&#123;</span><br><span class="line">        int low = 0;</span><br><span class="line">        int high = arr.length-1;</span><br><span class="line">        while(low&lt;=high)&#123;</span><br><span class="line">            int mid = (low+high)/2;</span><br><span class="line">            if(value==arr[mid])&#123;</span><br><span class="line">                return mid;</span><br><span class="line">            &#125;</span><br><span class="line">            if(value&gt;arr[mid])&#123;</span><br><span class="line">                low = mid+1;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if(value&lt;arr[mid])&#123;</span><br><span class="line">                high = mid-1;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>## 四.包装类<br><br> Java是面向对象的语言，但并不是“纯面向对象”的，因为我们经常用到的基本数据类型就不是对象。但是我们在实际应用中经常需要将基本数据转化成对象，以便于操作。比如：将基本数据类型存储到Object[]数组或集合中的操作等等。<br><br> 为了解决这个不足，Java在设计类时为每个基本数据类型设计了一个对应的类进行代表，这样八个和基本数据类型对应的类统称为包装类(Wrapper Class)。<br><br> 包装类均位于java.lang包，八种包装类和基本数据类型的对应关系如下<br><br> <img src="https://www.sxt.cn/360shop/Public/admin/UEditor/20170524/1495593568889579.png" alt="image"><br><br> 在这八个类名中，除了Integer和Character类以外，其它六个类的类名和基本数据类型一致，只是类名的第一个字母大写而已。<br><br> <font color="red">在这八个类中，除了Character和Boolean以外，其他的都是“数字型”，“数字型”都是java.lang.Number的子类。Number类是抽象类，因此它的抽象方法，所有子类都需要提供实现。Number类提供了抽象方法：intValue()、longValue()、floatValue()、doubleValue()，意味着所有的“数字型”包装类都可以互相转型。</font>
+
+<p> <img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/1_131924424516579531.png" alt="image"></p>
+<p> <img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/2_131924424518454531.png" alt="image"></p>
+<p> <img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/3_131924424520329531.png" alt="image"></p>
+<h3 id="4-1-包装类的用途"><a href="#4-1-包装类的用途" class="headerlink" title="4.1 包装类的用途"></a>4.1 包装类的用途</h3><ol>
+<li>作为和基本数据类型对应的类型存在，方便涉及到对象的操作，如Object[]、集合等的操作</li>
+<li>包含每种基本数据类型的相关属性如最大值、最小值等，以及相关的操作方法(这些操作方法的作用是在基本数据类型、包装类对象、字符串之间提供相互之间的转化!)。</li>
+</ol>
+<h3 id="4-2-包装类的使用"><a href="#4-2-包装类的使用" class="headerlink" title="4.2 包装类的使用"></a>4.2 包装类的使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class Test &#123;</span><br><span class="line">    /** 测试Integer的用法，其他包装类与Integer类似 */</span><br><span class="line">    void testInteger() &#123;</span><br><span class="line">        // 基本类型转化成Integer对象</span><br><span class="line">        Integer int1 = new Integer(10);</span><br><span class="line">        Integer int2 = Integer.valueOf(20); // 官方推荐这种写法</span><br><span class="line">        // Integer对象转化成int</span><br><span class="line">        int a = int1.intValue();</span><br><span class="line">        // 字符串转化成Integer对象</span><br><span class="line">        Integer int3 = Integer.parseInt(&quot;334&quot;);</span><br><span class="line">        Integer int4 = new Integer(&quot;999&quot;);</span><br><span class="line">        // Integer对象转化成字符串</span><br><span class="line">        String str1 = int3.toString();</span><br><span class="line">        // 一些常见int类型相关的常量</span><br><span class="line">        System.out.println(&quot;int能表示的最大整数：&quot; + Integer.MAX_VALUE); </span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Test test  = new Test();</span><br><span class="line">        test.testInteger();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-包装类的的缓存问题"><a href="#4-3-包装类的的缓存问题" class="headerlink" title="4.3 包装类的的缓存问题"></a>4.3 <font color="red">包装类的的缓存问题</font></h3><p>整型、char类型所对应的包装类，在自动装箱时，对于-128~127之间的值会进行缓存处理，其目的是提高效率。</p>
+<p>缓存处理的原理为：<font color="blue">如果数据在-128~127这个区间，那么在类加载时就已经为该区间的每个数值创建了对象，并将这256个对象存放到一个名为cache的数组中。每当自动装箱过程发生时(或者手动调用valueOf()时)，就会先判断数据是否在该区间，如果在则直接获取数组中对应的包装类对象的引用，如果不在该区间，则会通过new调用包装类的构造方法来创建对象。</font></p>
+<p>Integer类相关源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">public static Integer getInteger(String nm, int val) &#123;</span><br><span class="line">    Integer result = getInteger(nm, null);</span><br><span class="line">    return (result == null) ? Integer.valueOf(val) : result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/Java%E5%9F%BA%E7%A1%80/4_131924558176735781.png" alt="image"><br>这段代码中我们需要解释下面几个问题：</p>
+<ol>
+<li>IntegerCache类为Integer类的一个静态内部类，仅供Integer类使用。</li>
+<li>一般情况下 IntegerCache.low为-128，IntegerCache.high为127，IntegerCache.cache为内部类的一个静态属性</li>
+</ol>
+<p>IntegerCache类相关源码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">private static class IntegerCache &#123;</span><br><span class="line">    static final int low = -128;</span><br><span class="line">    static final int high;</span><br><span class="line">    static final Integer cache[];</span><br><span class="line">    static &#123;</span><br><span class="line">        // high value may be configured by property</span><br><span class="line">        int h = 127;</span><br><span class="line">        String integerCacheHighPropValue =</span><br><span class="line">                sun.misc.VM.getSavedProperty(&quot;java.lang.Integer.IntegerCache.high&quot;);</span><br><span class="line">        if (integerCacheHighPropValue != null) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                int i = parseInt(integerCacheHighPropValue);</span><br><span class="line">                i = Math.max(i, 127);</span><br><span class="line">                // Maximum array size is Integer.MAX_VALUE</span><br><span class="line">                h = Math.min(i, Integer.MAX_VALUE - (-low) -1);</span><br><span class="line">            &#125; catch( NumberFormatException nfe) &#123;</span><br><span class="line">                // If the property cannot be parsed into an int, ignore it.</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        high = h;</span><br><span class="line">        cache = new Integer[(high - low) + 1];</span><br><span class="line">        int j = low;</span><br><span class="line">        for(int k = 0; k &lt; cache.length; k++)</span><br><span class="line">            cache[k] = new Integer(j++);</span><br><span class="line"> </span><br><span class="line">        // range [-128, 127] must be interned (JLS7 5.1.7)</span><br><span class="line">        assert IntegerCache.high &gt;= 127;</span><br><span class="line">    &#125;</span><br><span class="line">    private IntegerCache() &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由上面的源码我们可以看到，<font color="red" size="3">静态代码块的目的就是初始化数组cache的，这个过程会在类加载时完成。</font></p>
+<p>测试代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Test3 &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer in1 = -128;</span><br><span class="line">        Integer in2 = -128;</span><br><span class="line">        System.out.println(in1 == in2);//true 因为123在缓存范围内</span><br><span class="line">        System.out.println(in1.equals(in2));//true</span><br><span class="line">        Integer in3 = 1234;</span><br><span class="line">        Integer in4 = 1234;</span><br><span class="line">        System.out.println(in3 == in4);//false 因为1234不在缓存范围内</span><br><span class="line">        System.out.println(in3.equals(in4));//true</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="五-自动装箱和拆箱"><a href="#五-自动装箱和拆箱" class="headerlink" title="五.自动装箱和拆箱"></a>五.自动装箱和拆箱</h2><p>其实呢，所谓的自动都是骗人的，只不过是编译器在运行的时候帮我做了，看起来是自动的一样，其实是骗人的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Test_11_AutoBox</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2019/1/20/15:40</span><br><span class="line"> */</span><br><span class="line">public class Test_11_AutoBox &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        /**</span><br><span class="line">         * 其实编译器帮我执行的是：</span><br><span class="line">         *         Integer a = Integer.valueof(234);</span><br><span class="line">         */</span><br><span class="line">        Integer a = 234;</span><br><span class="line"></span><br><span class="line">        /**</span><br><span class="line">         * 其实编译器帮我执行的是：</span><br><span class="line">         *         int b = a.intValue();</span><br><span class="line">         */</span><br><span class="line">        int b = a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="注意："><a href="#注意：" class="headerlink" title="注意："></a><font color="red">注意：</font></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer c = null;  -----&gt;   Integer c = Integer.valueof(null);</span><br><span class="line"></span><br><span class="line">//自动拆箱，报错，空指针异常</span><br><span class="line">int d = c;         -----&gt;   int d = c.intValue();</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>上面这两句代码会产生异常，空指针异常</p>
+</blockquote>
+<p>因为我们在调用 <font size="3" color="red">int d = c.intValue();</font> 来进行自动拆箱时c是一个null值，所以报了空指针异常</p>
+<blockquote>
+<p>控制箱异常是怎么报的呢？<font size="3" color="red">就是当前你这个对象是null，你还用这个null去调用它的方法，这个时候就会包空指针异常</font></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaSE/" rel="tag"># JavaSE</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/十五、HTTPS协议：点外卖的过程原来这么复杂/" rel="next" title="十五、HTTPS协议：点外卖的过程原来这么复杂">
+                <i class="fa fa-chevron-left"></i> 十五、HTTPS协议：点外卖的过程原来这么复杂
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/六、Redis-对象/" rel="prev" title="六、Redis-对象">
+                六、Redis-对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-String类"><span class="nav-number">1.</span> <span class="nav-text">一.String类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-String不可变的原理"><span class="nav-number">1.1.</span> <span class="nav-text">1.String不可变的原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-StringBuffer和StringBuilder"><span class="nav-number">1.2.</span> <span class="nav-text">2.StringBuffer和StringBuilder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#不可变和可变字符序列使用陷阱"><span class="nav-number">1.2.1.</span> <span class="nav-text">不可变和可变字符序列使用陷阱</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Arrays工具类的使用"><span class="nav-number">1.3.</span> <span class="nav-text">3.Arrays工具类的使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#打印数组"><span class="nav-number">1.3.1.</span> <span class="nav-text">打印数组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组元素的排序"><span class="nav-number">1.3.2.</span> <span class="nav-text">数组元素的排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数组元素是引用类型的排序-Comparable接口的应用"><span class="nav-number">1.3.3.</span> <span class="nav-text">数组元素是引用类型的排序(Comparable接口的应用)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#二分法查找"><span class="nav-number">1.3.4.</span> <span class="nav-text">二分法查找</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-冒泡排序，优化"><span class="nav-number">2.</span> <span class="nav-text">二.冒泡排序，优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-包装类的用途"><span class="nav-number">2.1.</span> <span class="nav-text">4.1 包装类的用途</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-包装类的使用"><span class="nav-number">2.2.</span> <span class="nav-text">4.2 包装类的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-包装类的的缓存问题"><span class="nav-number">2.3.</span> <span class="nav-text">4.3 包装类的的缓存问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五-自动装箱和拆箱"><span class="nav-number">3.</span> <span class="nav-text">五.自动装箱和拆箱</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#注意："><span class="nav-number">3.1.</span> <span class="nav-text">注意：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

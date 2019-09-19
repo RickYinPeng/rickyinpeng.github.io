@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JVM," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言莫名奇妙的电脑主板坏了，正好看看书我们之前了解了Java虚拟机的内存模型后(这与后面的Java内存模型在概念是不一样的)，这篇文章来看看Java中对象的存活条件以及垃圾回收算法 对象已死吗Java中垃圾收集器(这个下一篇会将)在对堆进行回收前，是不是要先去确定的知道堆中哪些对象还是”活着”,而那些已经”死去”，总不可能随意回收对象吧！ 引用计数法很多的教科书判断对象是否存活的算法是这样的：给对">
+<meta name="keywords" content="JVM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Java虚拟机-二">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/深入理解Java虚拟机-一/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="前言莫名奇妙的电脑主板坏了，正好看看书我们之前了解了Java虚拟机的内存模型后(这与后面的Java内存模型在概念是不一样的)，这篇文章来看看Java中对象的存活条件以及垃圾回收算法 对象已死吗Java中垃圾收集器(这个下一篇会将)在对堆进行回收前，是不是要先去确定的知道堆中哪些对象还是”活着”,而那些已经”死去”，总不可能随意回收对象吧！ 引用计数法很多的教科书判断对象是否存活的算法是这样的：给对">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-12-31T09:08:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解Java虚拟机-二">
+<meta name="twitter:description" content="前言莫名奇妙的电脑主板坏了，正好看看书我们之前了解了Java虚拟机的内存模型后(这与后面的Java内存模型在概念是不一样的)，这篇文章来看看Java中对象的存活条件以及垃圾回收算法 对象已死吗Java中垃圾收集器(这个下一篇会将)在对堆进行回收前，是不是要先去确定的知道堆中哪些对象还是”活着”,而那些已经”死去”，总不可能随意回收对象吧！ 引用计数法很多的教科书判断对象是否存活的算法是这样的：给对">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/深入理解Java虚拟机-一/"/>
+
+
+
+
+
+  <title>深入理解Java虚拟机-二 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/深入理解Java虚拟机-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入理解Java虚拟机-二</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>莫名奇妙的电脑主板坏了，正好看看书<br><br>我们之前了解了Java虚拟机的内存模型后(这与后面的Java内存模型在概念是不一样的)，这篇文章来看看Java中对象的存活条件以及垃圾回收算法</p>
+<h3 id="对象已死吗"><a href="#对象已死吗" class="headerlink" title="对象已死吗"></a>对象已死吗</h3><p>Java中垃圾收集器(这个下一篇会将)在对堆进行回收前，是不是要先去确定的知道堆中哪些对象还是”活着”,而那些已经”死去”，总不可能随意回收对象吧！</p>
+<h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>很多的教科书判断对象是否存活的算法是这样的：<font size="3" color="red">给对象添加一个引用计数器，每当有一个地方引用它时，计数器就加1；当引用失效时，计数器就减1；任何时刻计数器为0的对象就是不可能再被使用的。</font></p>
+<p>虽然引用计数法的实现简单，而且判定效率也很高，在大部分情况下是一个不错的算法。但是,至少主流的Java虚拟机里面没有选用引用计数法来管理内存，<font size="3" color="red">其中最主要的原因是它很难解决对象之间相互循环引用的问题。</font></p>
+<p>我们可以参考下面代码，来说明一下循环引用的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> *  循环引用案列</span><br><span class="line"> */</span><br><span class="line">public class ReferenceCountingGC &#123;</span><br><span class="line">    public Object instance = null;</span><br><span class="line">    </span><br><span class="line">    private static final int _1MB = 1024*1024;</span><br><span class="line">    </span><br><span class="line">    private byte[] bigSize = new byte[2*_1MB];</span><br><span class="line">    </span><br><span class="line">    public static void testGC()&#123;</span><br><span class="line">        ReferenceCountingGC objA = new ReferenceCountingGC();</span><br><span class="line">        ReferenceCountingGC objB = new ReferenceCountingGC();</span><br><span class="line">        objA.instance = objB;</span><br><span class="line">        objB.instance = objA;</span><br><span class="line">        </span><br><span class="line">        objA = null;</span><br><span class="line">        objB = null;</span><br><span class="line">        </span><br><span class="line">        System.gc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行testGC方法：对象objA和objB都有字段instance，赋值令objA.instance = objB及objB.instance = objA;除此之外，这两个对象再无任何引用，实际上这两个对象已经不可能再被访问了，但是它们因为互相引用着对方，导致它们的引用计数都不为0，于是引用计数法无法通知GC收集器回收它们。</p>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><p>在主流的程序语言中，都是通过可达性分析算法来判断对象是否存活的。这个算法的基本思路就是：通过一系列被称为”GC Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链，当一个对象到”GC Roots”没有任何引用链时，即不可达，则证明此对象时不可用的。<br><br>在Java语言中，可作为GC Roots 的对象包括下面几种：</p>
+<ul>
+<li><strong>虚拟机栈(栈帧中的本地变量表)中引用的对象</strong></li>
+<li><strong>方法区中类静态属性引用的对象</strong></li>
+<li><strong>方法区中常量引用的对象</strong></li>
+<li><strong>本地方法栈中JNI(Native方法)引用的对象</strong></li>
+</ul>
+<h4 id="Java中的引用"><a href="#Java中的引用" class="headerlink" title="Java中的引用"></a>Java中的引用</h4><p>无论是通过引用计数法还是可达性分析算法判断对象是否存活都与”引用”有关。在JDK1.2之前，Java中引用的定义很传统：<strong>如果reference类型的数据中存储的数值代表的是另外一块内存的地址，就称为这块内存代表着一个引用</strong>。这样就只有引用或者没有引用这两种状态，但是对于描述一些”食之无味,弃之可惜”的对象就显得无能为力。所以在JDK1.2之后就，Java的引用被扩展了，分为：<strong>强引用</strong>，<strong>软引用</strong>，<strong>弱引用</strong>，<strong>虚引用</strong></p>
+<ul>
+<li><font size="3" color="red">强引用</font>：在程序中普遍存在的，类似我们手动<strong>new</strong>出来的对象，只要强引用还在，垃圾收集器永远不会回收被引用的对象</li>
+<li><font size="3" color="red">软引用</font>：对于程序来说有用但是并非必需的对象。<strong>对于软引用关联着的对象，在系统将要发生内存溢出异常之前，将会把这些对象列进回收范围之中进行第二次回收。如果这次回收还没有足够的内存才会抛出内存溢出异常</strong>。jdk1.2提供了SoftReference类来实现软引用</li>
+<li><font size="3" color="red">弱引用</font>：描述非必需对象，它的强度比软引用要更弱一些，<strong>被弱引用关联的对象只能生存到下一次垃圾收集发生之前</strong>。也就是说当垃圾收集进行时，无论当前内存是否足够，都会回收掉被弱引用关联的对象。JDK1.2之后提供了WeakReference来实现弱引用。</li>
+<li><font size="3" color="red">虚引用</font>：也称幽林引用或者幻影引用，<strong>最弱的一种引用关系</strong>。<strong>一个对象是否有虚引用的存在，完全不会对其生存时间构成影响，也无法通过虚引用来取得一个对象的实例</strong>。设置虚引用的目的就是这个对象被垃圾收集时收到一个系统通知。JDK1.2之后提供PhantomRference来实现虚引用。</li>
+</ul>
+<h4 id="对象生存还是死亡"><a href="#对象生存还是死亡" class="headerlink" title="对象生存还是死亡"></a>对象生存还是死亡</h4><font color="green">在可达性分析中当一个对象与 GC Roots 不可达时，也就是没有在 GC Roots 的引用链上，那么在垃圾回收时，也并不是一定会被回收的。</font>真正的要回收一个对象，至少要经历两次标记过程：<font size="3" color="red">如果对象在可达性分析之后发现没有与 GC Roots 相连接的引用链，那么会被第一次标记并且进行一次筛选，筛选的条件是此对象是否有必要执行finalize()方法，当对象重写了finalize()方法或者finalize()方法已经被虚拟机调用过，虚拟机将这两种情况都视为”没有必要执行”<br></font>
+
+<p>如果一个对象被认为有必要去执行finalize()方法，那么这个对象将会放置在一个叫做F-Quene的队列之中，并在稍后由一个由虚拟机自动建立的优先级低的Finalizer线程去执行它。<strong>这里说的执行仅仅指触发这个方法，但并不承诺会等待它运行结束，这是因为，如果一个对象在finalize()方法中执行缓慢，或者发生了死循环，将会导致F-Quene队列中其他对象处于永久等待，导致整个内存回收系统崩溃</strong>。</p>
+<p>前面说到已经将对象放入F-Quene队列中，接下来会对F-Quen队列中的对象进行第二次小规模的标记，<strong>如果对象想要逃脱被回收的命运，那么finalize()方法将是它最后的救命稻草</strong>。<strong>对象只需要在finalize()方法中重新与引用链上的任何一个对象建立关联即可</strong>，那么在第二次标记时它将被移除出”即将回收”的集合；如果对象这时候还没有逃脱，那么基本上就真的凉了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">public class FinalizeEscapeGC&#123;</span><br><span class="line">    public static FinalizeEscapeGC SAVE_HOOK=null;</span><br><span class="line">    public void isAlive()&#123;</span><br><span class="line">        System.out.println(&quot;i am still alive&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @override</span><br><span class="line">    protected void finalize()&#123;//重写了finalize()方法</span><br><span class="line">     	super.finalize();</span><br><span class="line">        System.out.println(&quot;finalize method executed!&quot;);</span><br><span class="line">        FinalizeEscapeGC.SAVE_HOOK=this;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String []args)throws Throwable&#123;</span><br><span class="line">        SAVE_HOOK=new FinalizeEscapeGC();</span><br><span class="line">        SAVE_HOOK=null;</span><br><span class="line">        System.gc();//在这里拯救自己</span><br><span class="line">        Thread.sleep(500);</span><br><span class="line">        if(SAVE_HOOK!=null)&#123;</span><br><span class="line">            SAVE_HOOK.isAlive();</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            System.out.println(&quot;i am dead&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        SAVE_HOOK=null;</span><br><span class="line">        System.gc();//由于finalize()已经执行过一次 这里不会执行</span><br><span class="line">        Thread.sleep(500);</span><br><span class="line">        if(SAVE_HOOK!=null)&#123;</span><br><span class="line">            SAVE_HOOK.isAlive();</span><br><span class="line">        &#125;else&#123;</span><br><span class="line">            System.out.println(&quot;i am dead&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">/**</span><br><span class="line">输出：</span><br><span class="line">	finalized method executed!</span><br><span class="line">	i am still alive</span><br><span class="line">	i am dead</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+<p>在第一次调用System.gc()的时候,触发垃圾回收，在进行垃圾回收时进行第一次标记，发现该对象重写了finalize()方法，将该对象放入到F-Queue中，有jvm开启Finalizer线程去执行队列中对象分finalize()方法，在执行了finalize()方法之后，该对象又被重新链到了引用链上，再进行第二次标记的时候又移出队列，对象复活。在触发第二次System.gc()的时候，<font size="3" color="red">由于finalize()方法只能执行一次</font>，对象没有机会进入F-Queue，直接被回收。</p>
+<h4 id="方法区-永久代-的回收"><a href="#方法区-永久代-的回收" class="headerlink" title="方法区(永久代)的回收"></a>方法区(永久代)的回收</h4><p>永久代的垃圾收集主要回收两部分内容：<strong>废弃常量和无用的类</strong>。关于废弃常量回收，比如字符串“abc”进入了常量池中，但是当前系统没有任何一个String对象引用”abc”，如果此时发生垃圾回收，而且必要的情况下这个”abc“常量就会被系统清理出常量池。常量池中的其他类(接口),方法，字段的符号引用也是如此。<br>但是对于无用的类来说，回收一个无用的类条件就要苛刻许多。类需要满足下面3个条件才能算是”无用的类”</p>
+<ul>
+<li><strong>该类所有的实例都已经被回收，也就是Java堆中不存在该类的任何实例</strong></li>
+<li><strong>加载该类的ClassLoader(类加载器)已经被回收</strong></li>
+<li><strong>该类对应的java.lang.Class对象没有在任何地方被引用，无法在任何地方通过反射访问该类的方法</strong></li>
+</ul>
+<p>满足了以上条件，类才有机会被虚拟机回收。</p>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><h4 id="标记-清除法-最基本的"><a href="#标记-清除法-最基本的" class="headerlink" title="标记-清除法(最基本的)"></a>标记-清除法(最基本的)</h4><p><strong>标记清楚法分为两个阶段</strong></p>
+<ol>
+<li>标记阶段：首先标记出所有需要回收的对象；</li>
+<li>清楚阶段：在标记完成之后统一回收所有被标记的对象；(其标记过程前面说过：引用计数法和可达性分析算法)</li>
+</ol>
+<p><strong>缺点</strong>：</p>
+<ol>
+<li>效率问题，标记和清除两个过程的效率都不高；</li>
+<li>空间问题，标记清楚之后会产生大量的不连续的内存碎片，空间碎片太多可能会导致以后在程序中需要分配大对象时，无法找到足够的空间，而不得不提前出发一次垃圾收集</li>
+</ol>
+<h4 id="复制算法-回收新生代-Minor-GC"><a href="#复制算法-回收新生代-Minor-GC" class="headerlink" title="复制算法(回收新生代 Minor GC)"></a>复制算法(回收新生代 Minor GC)</h4><p>是为了解决效率问题，它将内存按容量分为大小相等得两块，每次只使用其中一块，当这块内存使用完了，需要回收垃圾的时候，就将这块内存上<font size="3" color="red">还存活的对象</font>复制到另一块我们没有用的内存上去，然后垃圾回收就把已使用过的内存空间一次清理掉。<br><br>这样每次都在对整个半区进行内存回收，内存分配时也就不考虑内存碎片的情况，只要移动堆顶的指针按顺序分配内存即可。</p>
+<p><strong>缺点</strong>：将内存缩小为原来的一半，未免太费内存了点。</p>
+<p>现在的商业虚拟机都采用这种收集算法来回收新生代，因为新生代中的对象98%都是”朝生夕死”，所以可以不需要按照 1:1 来划分内存空间，而是<strong>将内存划分为了一块较大的Eden空间和两块较小的Survivor空间</strong>(Eden,From Survivor,To Survivor空间)比例是 8:1:1<br><br>回收时，将Eden和Survivor中存活的对象一次性复制到另外一块Survivor空间中，最后清理掉Eden和刚刚使用过的Survivor空间。然而当Survivor空间不够用时怎么办？这个时候就需要通过分配担保机制来让其进入老年代(这个后面会将)</p>
+<font size="3" color="red">这里可以和后面讲的内存分配策略一起看</font>
+
+<h4 id="标记-整理算法-回收老年代-Major-GC"><a href="#标记-整理算法-回收老年代-Major-GC" class="headerlink" title="标记-整理算法(回收老年代 Major GC)"></a>标记-整理算法(回收老年代 Major GC)</h4><p><strong>复制收集算法在对象存活率较高时</strong>，<strong>就要进行较多的复制操作</strong>，<strong>效率就会变低</strong>。而老年代一般是经过好多次Minor GC存活下来的对象，比较稳定，采用复制算法效率会很低。<br><br>根据老年代的特点，有人提出了另外一种”标记-整理(Mark-Compact)”算法,其过程与标记——清理算法一样，<font size="3" color="red">但后续步骤不是直接对可回收对象进行清理，而是让所有存活的对象都向一端移动，然后直接清理掉端边界以外的内存。</font></p>
+<h4 id="分代收集算法"><a href="#分代收集算法" class="headerlink" title="分代收集算法"></a>分代收集算法</h4><p>当前商业虚拟机的垃圾收集都采用”分代收集”算法，这种算法并没有什么新的思想，只是根据对象存活周期的不同将内存划分为几块。一般是把Java堆分为新生代和老年代，这样就可以根据各个年代的特点采用最适当的收集算法。<br></p>
+<p><font size="3" color="red">新生代</font>：每次垃圾回收就发现有大量的对象死去，只有少量存活，所以选用复制算法<br></p>
+<p><font size="3" color="red">老年代</font>：对象存活率高，没有额外的空间进行分配担保，就必须使用”标记——清理”或者”标记——整理”算法进行回收。</p>
+<h3 id="HotSpot的算法实现"><a href="#HotSpot的算法实现" class="headerlink" title="HotSpot的算法实现"></a>HotSpot的算法实现</h3><p>上面说了对象存活判定算法和垃圾收集算法，而在HotSpot虚拟机中实现这些算法时，必须对算法的执行效率有严格的考量，才能保证虚拟机高效运行</p>
+<h4 id="枚举根节点"><a href="#枚举根节点" class="headerlink" title="枚举根节点"></a>枚举根节点</h4><p>从可达性分析中从GC Roots节点找引用链操作为例，<font color="red">可作为GC Roots的节点主要在全局性的引用(例如常量或类静态属性)与执行上下文(栈帧中的本地变量表)中，现在有些应用方法区就数百兆，一一检查这些引用，会耗费很多的时间。</font><br><br>另外，<font color="red">可达性分析对执行时间的敏感还体现在GC停顿上，因为这项分析工作必须在一个确保一致性的快照中进行。</font>一致性是指在整个分析期间整个执行系统看起来就像被冻结在某个时间点上，不可以出现分析过程中对象的引用关系还在不断变化的情况。这点是导致GC进行时必须<font color="red">停掉所有Java执行线程(Stop The World)</font>的其中一个原因。</p>
+<p>目前的主流的Java虚拟机使用的是准确式GC，当执行系统停下来的时候，不需要去挨个检查完所有执行上下文和全局的引用位置，虚拟机应该是有办法直接知道哪些地方存放着对象引用。在HotSpot中，使用一组称为OopMap的数据结构来达到这个目的，在类加载完成的时候，HotSpot就把对象内什么偏移量上是什么类型的数据计算出来，在编译过程中也会在特定位置记录下栈和寄存器中哪些位置是引用。这样GC在扫描的时候就可以直接得知这些信息。</p>
+<h4 id="安全点"><a href="#安全点" class="headerlink" title="安全点"></a>安全点</h4><p>通过OopMap的协助下，HotSpot可以迅速完成GC Roots枚举，但同时也带来一个问题，<font color="red">OopMap内容变化的指令非常多，如果为每一条指令都生成对应的OopMap，那将会需要大量的额外空间，这样GC的空间成本会变得很高。</font>实际上，HotSpot也没有为每条指令都生成OopMap，<font size="3" color="red">只是在特定的位置记录了这些信息，这些位置称为安全点(SafePoint),</font>即程序执行并非在所有的地方都能停顿下来进行GC，只有到达安全点时才能暂停。<br><br>安全点的选定基本上是以程序”是否具有让程序长时间执行的特征”为标准的。<br></p>
+<p>在GC发生时，还有一个问题，就是如何让所有线程都”跑”到最近的安全点上再停顿下来。这里有两种方案</p>
+<ul>
+<li><font color="blue">抢先式中断</font>：不需要线程的执行代码主动配合，在GC发生时，首先把所有线程全部中断，如果发现有线程中断的地方不在安全点上，就恢复线程，让它”跑”到安全点上。(几乎没有虚拟机使用)</li>
+<li><font color="blue">主动式中断</font>：当GC需要中断线程的时候，不直接对线程操作，而是在于安全点重合的地方设置一个标志，各个线程执行时主动去轮询这个标志，发现中断标志为真时就自己中断挂起。</li>
+</ul>
+<h4 id="安全区域"><a href="#安全区域" class="headerlink" title="安全区域"></a>安全区域</h4><p><strong>安全区域是指在一段代码片段中，引用关系不会发生变化。在这个区域中任何地方开始GC都是安全的</strong>。</p>
+<p>在线程执行到安全区域中的代码时，首先标识自己已经进入了安全区域(Safe Region),当在这段时间里JVM要发起GC时，就不用管标识自己为安全区域状态的线程了。在线程要离开安全区域时，它要检查是否完成了根节点的枚举，如果完成了，那线程就继续执行，否则就必须等待直到收到可以安全离开安全区域的信号为止。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/" rel="next" title="十.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页">
+                <i class="fa fa-chevron-left"></i> 十.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/四、DHCP与PXE：IP是怎么来的，又是怎么没的？/" rel="prev" title="四、DHCP与PXE：IP是怎么来的，又是怎么没的？">
+                四、DHCP与PXE：IP是怎么来的，又是怎么没的？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象已死吗"><span class="nav-number">2.</span> <span class="nav-text">对象已死吗</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#引用计数法"><span class="nav-number">2.1.</span> <span class="nav-text">引用计数法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#可达性分析算法"><span class="nav-number">2.2.</span> <span class="nav-text">可达性分析算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java中的引用"><span class="nav-number">2.3.</span> <span class="nav-text">Java中的引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象生存还是死亡"><span class="nav-number">2.4.</span> <span class="nav-text">对象生存还是死亡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法区-永久代-的回收"><span class="nav-number">2.5.</span> <span class="nav-text">方法区(永久代)的回收</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">3.</span> <span class="nav-text">垃圾回收算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-清除法-最基本的"><span class="nav-number">3.1.</span> <span class="nav-text">标记-清除法(最基本的)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复制算法-回收新生代-Minor-GC"><span class="nav-number">3.2.</span> <span class="nav-text">复制算法(回收新生代 Minor GC)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标记-整理算法-回收老年代-Major-GC"><span class="nav-number">3.3.</span> <span class="nav-text">标记-整理算法(回收老年代 Major GC)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分代收集算法"><span class="nav-number">3.4.</span> <span class="nav-text">分代收集算法</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HotSpot的算法实现"><span class="nav-number">4.</span> <span class="nav-text">HotSpot的算法实现</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#枚举根节点"><span class="nav-number">4.1.</span> <span class="nav-text">枚举根节点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安全点"><span class="nav-number">4.2.</span> <span class="nav-text">安全点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安全区域"><span class="nav-number">4.3.</span> <span class="nav-text">安全区域</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

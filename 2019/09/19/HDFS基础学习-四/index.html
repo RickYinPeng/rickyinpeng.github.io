@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="NameNode和SecondaryNameNodeNN和2NN工作机制思考：NameNode中的元数据是存储在哪里的？ 首先，我们做个假设，如果存储在NameNode节点的磁盘中，因为经常需要进行随机访问，还有响应客户请求，必然是效率过低。因此，元数据需要存放在内存中。但如果只存在内存中，一旦断电，元数据丢失，整个集群就无法工作了。因此产生在磁盘中备份元数据的FsImage。 这样又会带来新的问">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HDFS基础学习-四">
+<meta property="og:url" content="http://yoursite.com/2019/09/19/HDFS基础学习-四/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="NameNode和SecondaryNameNodeNN和2NN工作机制思考：NameNode中的元数据是存储在哪里的？ 首先，我们做个假设，如果存储在NameNode节点的磁盘中，因为经常需要进行随机访问，还有响应客户请求，必然是效率过低。因此，元数据需要存放在内存中。但如果只存在内存中，一旦断电，元数据丢失，整个集群就无法工作了。因此产生在磁盘中备份元数据的FsImage。 这样又会带来新的问">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132131590935676250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132131611836613750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132131612759895000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132131641951770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/31.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/32.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/33.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/34.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/35.png">
+<meta property="og:updated_time" content="2019-09-19T04:42:09.764Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HDFS基础学习-四">
+<meta name="twitter:description" content="NameNode和SecondaryNameNodeNN和2NN工作机制思考：NameNode中的元数据是存储在哪里的？ 首先，我们做个假设，如果存储在NameNode节点的磁盘中，因为经常需要进行随机访问，还有响应客户请求，必然是效率过低。因此，元数据需要存放在内存中。但如果只存在内存中，一旦断电，元数据丢失，整个集群就无法工作了。因此产生在磁盘中备份元数据的FsImage。 这样又会带来新的问">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132131590935676250.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/19/HDFS基础学习-四/"/>
+
+
+
+
+
+  <title>HDFS基础学习-四 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/19/HDFS基础学习-四/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HDFS基础学习-四</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-19T12:40:34+08:00">
+                2019-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="NameNode和SecondaryNameNode"><a href="#NameNode和SecondaryNameNode" class="headerlink" title="NameNode和SecondaryNameNode"></a>NameNode和SecondaryNameNode</h3><h4 id="NN和2NN工作机制"><a href="#NN和2NN工作机制" class="headerlink" title="NN和2NN工作机制"></a>NN和2NN工作机制</h4><p>思考：NameNode中的元数据是存储在哪里的？</p>
+<p>首先，我们做个假设，如果存储在NameNode节点的磁盘中，因为经常需要进行随机访问，还有响应客户请求，必然是效率过低。因此，元数据需要存放在内存中。但如果只存在内存中，一旦断电，元数据丢失，整个集群就无法工作了。<font size="3" color="red">因此产生在磁盘中备份元数据的FsImage。</font></p>
+<p>这样又会带来新的问题，当在内存中的元数据更新时，如果同时更新FsImage，就会导致效率过低，但如果不更新，就会发生一致性问题，一旦NameNode节点断电，就会产生数据丢失。<font size="3" color="red">因此，引入Edits文件(只进行追加操作，效率很高)。每当元数据有更新或者添加元数据时，修改内存中的元数据并追加到Edits中。</font>这样，一旦NameNode节点断电，可以通过FsImage和Edits的合并，合成元数据。</p>
+<p>但是，如果长时间添加数据到Edits中，会导致该文件数据过大，效率降低，而且一旦断电，恢复元数据需要的时间过长。因此，需要定期进行FsImage和Edits的合并，如果这个操作由NameNode节点完成，又会效率过低。<font size="3" color="red">因此，引入一个新的节点SecondaryNamenode，专门用于FsImage和Edits的合并。</font></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132131590935676250.png" alt="image"></p>
+<ol>
+<li><font size="3" color="orange">第一阶段：NameNode启动</font></li>
+</ol>
+<ul>
+<li>（1）第一次启动NameNode格式化后，创建Fsimage和Edits文件。如果不是第一次启动，直接加载编辑日志和镜像文件到内存。</li>
+<li>（2）客户端对元数据进行增删改的请求。</li>
+<li>（3）NameNode记录操作日志，更新滚动日志。</li>
+<li>（4）NameNode在内存中对数据进行增删改。</li>
+</ul>
+<ol start="2">
+<li><font size="3" color="orange">第二阶段：Secondary NameNode工作</font></li>
+</ol>
+<ul>
+<li>（1）Secondary NameNode询问NameNode是否需要CheckPoint。直接带回NameNode是否检查结果。</li>
+<li>（2）Secondary NameNode请求执行CheckPoint。</li>
+<li>（3）NameNode滚动正在写的Edits日志。</li>
+<li>（4）将滚动前的编辑日志和镜像文件拷贝到Secondary NameNode。</li>
+<li>（5）Secondary NameNode加载编辑日志和镜像文件到内存，并合并。</li>
+<li>（6）生成新的镜像文件fsimage.chkpoint。</li>
+<li>（7）拷贝fsimage.chkpoint到NameNode。</li>
+<li>（8）NameNode将fsimage.chkpoint重新命名成fsimage。</li>
+</ul>
+<font size="3" color="red">NN和2NN工作机制详解：</font><br><br>Fsimage：NameNode内存中元数据序列化后形成的文件。<br><br>Edits：记录客户端更新元数据信息的每一步操作（可通过Edits运算出元数据）。<br><br>NameNode启动时，先滚动Edits并生成一个空的edits.inprogress，然后加载Edits和Fsimage到内存中，此时NameNode内存就持有最新的元数据信息。Client开始对NameNode发送元数据的增删改的请求，这些请求的操作首先会被记录到edits.inprogress中（查询元数据的操作不会被记录在Edits中，因为查询操作不会更改元数据信息），如果此时NameNode挂掉，重启后会从Edits中读取元数据的信息。然后，NameNode会在内存中执行元数据的增删改的操作。<br><br>由于Edits中记录的操作会越来越多，Edits文件会越来越大，导致NameNode在启动加载Edits时会很慢，所以需要对Edits和Fsimage进行合并（所谓合并，就是将Edits和Fsimage加载到内存中，照着Edits中的操作一步步执行，最终形成新的Fsimage）。SecondaryNameNode的作用就是帮助NameNode进行Edits和Fsimage的合并工作。<br><br>SecondaryNameNode首先会询问NameNode是否需要CheckPoint（触发CheckPoint需要满足两个条件中的任意一个，定时时间到和Edits中数据写满了）。直接带回NameNode是否检查结果。SecondaryNameNode执行CheckPoint操作，首先会让NameNode滚动Edits并生成一个空的edits.inprogress，滚动Edits的目的是给Edits打个标记，以后所有新的操作都写入edits.inprogress，其他未合并的Edits和Fsimage会拷贝到SecondaryNameNode的本地，然后将拷贝的Edits和Fsimage加载到内存中进行合并，生成fsimage.chkpoint，然后将fsimage.chkpoint拷贝给NameNode，重命名为Fsimage后替换掉原来的Fsimage。NameNode在启动时就只需要加载之前未合并的Edits和Fsimage即可，因为合并过的Edits中的元数据信息已经被记录在Fsimage中。<br><br>#### Fsimage和Edits解析<br><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21.png" alt="image"><br><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132131611836613750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132131612759895000.png" alt="image"><br><br>&gt; seen_txid的内容就是当前最新的编辑日志的编号<br><br><font size="3" color="red">查看Fsimage内容</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132131641951770000.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6.png" alt="image"></p>
+<blockquote>
+<p>将转换出的xml复制到外面，比如IDEA中，格式化后就可以方便的查看</p>
+</blockquote>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7.png" alt="image"></p>
+<blockquote>
+<p>但是这个xml的信息不全，这是为什么？？因为我们查看的不是最新的fsimage啊</p>
+</blockquote>
+<font size="3" color="red">查看Edits内容</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9.png" alt="image"></p>
+<blockquote>
+<p>所以我们现在将集群给搞挂了，传一些数据，看其是怎么运行的</p>
+</blockquote>
+<font size="3" color="red">先关闭集群</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11.png" alt="image"></p>
+<font size="3" color="red">破坏集群</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14.png" alt="image"></p>
+<font size="3" color="red">启动集群</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16.png" alt="image"></p>
+<font size="3" color="red">上传文件</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17.png" alt="image"></p>
+<font size="3" color="red">再次查看fsimage和edits的内容</font>
+
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20.png" alt="image"></p>
+<h4 id="CheckPoint时间设置"><a href="#CheckPoint时间设置" class="headerlink" title="CheckPoint时间设置"></a>CheckPoint时间设置</h4><ol>
+<li>通常情况下，SecondaryNameNode每隔一小时执行一次。</li>
+</ol>
+<font size="3" color="red">[hdfs-default.xml]</font>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.period<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>3600<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>一分钟检查一次操作次数，3当操作次数达到1百万时，SecondaryNameNode执行一次。</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.txns<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>1000000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">description</span>&gt;</span>操作动作次数<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.check.period<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>60<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">description</span>&gt;</span> 1分钟检查一次操作次数<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span> &gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="NameNode故障处理"><a href="#NameNode故障处理" class="headerlink" title="NameNode故障处理"></a>NameNode故障处理</h4><h5 id="方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；"><a href="#方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；" class="headerlink" title="方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；"></a>方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；</h5><ol>
+<li>kill -9 NameNode进程</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22.png" alt="image"></p>
+<ol start="2">
+<li>删除NameNode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23.png" alt="image"></p>
+<ol start="3">
+<li>拷贝SecondaryNameNode中数据到原NameNode存储数据目录</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 dfs]$ scp -r root@hadoop104:/opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary/* ./name/</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25.png" alt="image"></p>
+<ol start="4">
+<li>重新启动NameNode</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</span><br></pre></td></tr></table></figure>
+<h5 id="方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。"><a href="#方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。" class="headerlink" title="方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。"></a>方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。</h5><ol>
+<li>修改hdfs-site.xml中的</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.checkpoint.period<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>120<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/module/hadoop-2.7.2/data/tmp/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/31.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28.png" alt="image"></p>
+<ol start="2">
+<li>kill -9 NameNode进程</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29.png" alt="image"></p>
+<ol start="3">
+<li>删除NameNode存储的数据（/opt/module/hadoop-2.7.2/data/tmp/dfs/name）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ rm -rf /opt/module/hadoop-2.7.2/data/tmp/dfs/name/*</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>如果SecondaryNameNode不和NameNode在一个主机节点上，需要将SecondaryNameNode存储数据的目录拷贝到NameNode存储数据的平级目录，并删除in_use.lock文件</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 dfs]$ scp -r root@hadoop104:/opt/module/hadoop-2.7.2/data/tmp/dfs/namesecondary ./</span><br><span class="line"></span><br><span class="line">[root@hadoop102 namesecondary]$ rm -rf in_use.lock</span><br><span class="line"></span><br><span class="line">[root@hadoop102 dfs]$ pwd</span><br><span class="line">/opt/module/hadoop-2.7.2/data/tmp/dfs</span><br><span class="line"></span><br><span class="line">[root@hadoop102 dfs]$ ls</span><br><span class="line">data  name  namesecondary</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30.png" alt="image"></p>
+<ol start="5">
+<li>导入检查点数据（等待一会ctrl+c结束掉）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode -importCheckpoint</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/32.png" alt="image"></p>
+<blockquote>
+<p>ctrl+c结束掉后，发现namenode又挂了</p>
+</blockquote>
+<ol start="6">
+<li>启动NameNode</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ sbin/hadoop-daemon.sh start namenode</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/33.png" alt="image"></p>
+<h4 id="集群的安全模式"><a href="#集群的安全模式" class="headerlink" title="集群的安全模式"></a>集群的安全模式</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/34.png" alt="image"></p>
+<h5 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h5><p>集群处于安全模式，不能执行重要操作（写操作）。集群启动完成后，自动退出安全模式。</p>
+<ul>
+<li>bin/hdfs dfsadmin -safemode get        （功能描述：查看安全模式状态）</li>
+<li>bin/hdfs dfsadmin -safemode enter      （功能描述：进入安全模式状态）</li>
+<li>bin/hdfs dfsadmin -safemode leave        （功能描述：离开安全模式状态）</li>
+<li>bin/hdfs dfsadmin -safemode wait        （功能描述：等待安全模式状态）</li>
+</ul>
+<h5 id="模拟等待安全模式"><a href="#模拟等待安全模式" class="headerlink" title="模拟等待安全模式"></a>模拟等待安全模式</h5><ol>
+<li>查看当前模式</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ hdfs dfsadmin -safemode get</span><br><span class="line">Safe mode is OFF</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>先进入安全模式</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode enter</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>创建并执行下面的脚本</li>
+</ol>
+<p>在/opt/module/hadoop-2.7.2路径上，编辑一个脚本safemode.sh</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ touch safemode.sh</span><br><span class="line">[root@hadoop102 hadoop-2.7.2]$ vim safemode.sh</span><br><span class="line"></span><br><span class="line">#!/bin/bash</span><br><span class="line">hdfs dfsadmin -safemode wait</span><br><span class="line">hdfs dfs -put /opt/module/hadoop-2.7.2/README.txt /</span><br><span class="line"></span><br><span class="line">[root@hadoop102 hadoop-2.7.2]$ chmod 777 safemode.sh</span><br><span class="line"></span><br><span class="line">[root@hadoop102 hadoop-2.7.2]$ bash safemode.sh</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/35.png" alt="image"></p>
+<ol start="4">
+<li>再打开一个窗口，执行</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ bin/hdfs dfsadmin -safemode leave</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li>观察</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">（a）再观察上一个窗口</span><br><span class="line">    Safe mode is OFF</span><br><span class="line">（b）HDFS集群上已经有上传的数据了。</span><br></pre></td></tr></table></figure>
+<h4 id="NameNode多目录配置"><a href="#NameNode多目录配置" class="headerlink" title="NameNode多目录配置"></a>NameNode多目录配置</h4><font size="3" color="red">注意得把集群重新配置，删除data和logs，并且format namenode</font>
+
+<ol>
+<li>NameNode的本地目录可以配置成多个，且每个目录存放内容相同，增加了可靠性</li>
+<li>具体配置如下</li>
+</ol>
+<ul>
+<li>在hdfs-site.xml文件中增加如下内容</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;</span><br><span class="line">&lt;value&gt;file:///$&#123;hadoop.tmp.dir&#125;/dfs/name1,file:///$&#123;hadoop.tmp.dir&#125;/dfs/name2&lt;/value&gt;</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>停止集群，删除data和logs中所有数据。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ rm -rf data/ logs/</span><br><span class="line">[root@hadoop103 hadoop-2.7.2]$ rm -rf data/ logs/</span><br><span class="line">[root@hadoop104 hadoop-2.7.2]$ rm -rf data/ logs/</span><br></pre></td></tr></table></figure>
+<ul>
+<li>格式化集群并启动。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 hadoop-2.7.2]$ bin/hdfs namenode –format</span><br><span class="line">[root@hadoop102 hadoop-2.7.2]$ sbin/start-dfs.sh</span><br></pre></td></tr></table></figure>
+<ul>
+<li>查看结果</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop102 dfs]$ ll</span><br><span class="line">总用量 12</span><br><span class="line">drwx------. 3 root root 4096 12月 11 08:03 data</span><br><span class="line">drwxrwxr-x. 3 root root 4096 12月 11 08:03 name1</span><br><span class="line">drwxrwxr-x. 3 root root 4096 12月 11 08:03 name2</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/19/HDFS基础学习-三/" rel="next" title="HDFS基础学习-三">
+                <i class="fa fa-chevron-left"></i> HDFS基础学习-三
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#NameNode和SecondaryNameNode"><span class="nav-number">1.</span> <span class="nav-text">NameNode和SecondaryNameNode</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#NN和2NN工作机制"><span class="nav-number">1.1.</span> <span class="nav-text">NN和2NN工作机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CheckPoint时间设置"><span class="nav-number">1.2.</span> <span class="nav-text">CheckPoint时间设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NameNode故障处理"><span class="nav-number">1.3.</span> <span class="nav-text">NameNode故障处理</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；"><span class="nav-number">1.3.1.</span> <span class="nav-text">方法一：将SecondaryNameNode中数据拷贝到NameNode存储数据的目录；</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。"><span class="nav-number">1.3.2.</span> <span class="nav-text">方法二：使用-importCheckpoint选项启动NameNode守护进程，从而将SecondaryNameNode中数据拷贝到NameNode目录中。</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集群的安全模式"><span class="nav-number">1.4.</span> <span class="nav-text">集群的安全模式</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#基本语法"><span class="nav-number">1.4.1.</span> <span class="nav-text">基本语法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#模拟等待安全模式"><span class="nav-number">1.4.2.</span> <span class="nav-text">模拟等待安全模式</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NameNode多目录配置"><span class="nav-number">1.5.</span> <span class="nav-text">NameNode多目录配置</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

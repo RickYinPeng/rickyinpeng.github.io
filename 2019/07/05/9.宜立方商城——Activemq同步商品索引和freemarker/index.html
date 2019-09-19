@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="宜立方商城项目," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一.课程计划12341、Activemq整合springMQ的应用场景2、添加商品同步索引库3、商品详情页面动态展示4、展示详情页面使用缓存 二.Activemq整合spring2.1 使用方法第一步：引用相关的jar包。    12345678      &amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;	&amp;">
+<meta name="keywords" content="宜立方商城项目">
+<meta property="og:type" content="article">
+<meta property="og:title" content="九.宜立方商城——Activemq同步商品索引和freemark">
+<meta property="og:url" content="http://yoursite.com/2019/07/05/9.宜立方商城——Activemq同步商品索引和freemarker/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="一.课程计划12341、Activemq整合springMQ的应用场景2、添加商品同步索引库3、商品详情页面动态展示4、展示详情页面使用缓存 二.Activemq整合spring2.1 使用方法第一步：引用相关的jar包。    12345678      &amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;	&amp;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131879747710156250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131879747712968750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131879747716406250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131879747719218750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131879747724843750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131879747727968750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131879747731406250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131879747734531250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131879747748593750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131879747736718750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131879747739375000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131879747742500000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131879747755312500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131879747745000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131879747758125000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131880319821093750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131880319826875000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131880319831093750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131880331156562500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131880331162656250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131880319853750000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131880319856718750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131880319862656250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131880323620312500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10%E3%80%81.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131880319870000000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131880319878437500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131880319884531250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131882002372057500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131882002376120000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131882002379713750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131882002382682500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131882002386432500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131882002389713750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131882002529401250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131882002533463750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131882002538307500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131882002542370000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131882058544557500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131882058549088750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131882058551745000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131882058556120000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131882058559401250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131882058562213750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131882058565026250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131882058568620000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131882123069401250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131882123071901250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131882123074088750.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131882123077995000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131882123081276250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131882123084870000.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131882123087682500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131882140259401250.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28_131882140282682500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29_131882140296432500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30_131882140300182500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32_131882218905807500.png">
+<meta property="og:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31_131882218901901250.png">
+<meta property="og:updated_time" content="2018-12-03T07:32:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="九.宜立方商城——Activemq同步商品索引和freemark">
+<meta name="twitter:description" content="一.课程计划12341、Activemq整合springMQ的应用场景2、添加商品同步索引库3、商品详情页面动态展示4、展示详情页面使用缓存 二.Activemq整合spring2.1 使用方法第一步：引用相关的jar包。    12345678      &amp;lt;dependency&amp;gt;	&amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;	&amp;">
+<meta name="twitter:image" content="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131879747710156250.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/07/05/9.宜立方商城——Activemq同步商品索引和freemarker/"/>
+
+
+
+
+
+  <title>九.宜立方商城——Activemq同步商品索引和freemark | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/9.宜立方商城——Activemq同步商品索引和freemarker/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">九.宜立方商城——Activemq同步商品索引和freemark</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-05T08:25:32+08:00">
+                2019-07-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一-课程计划"><a href="#一-课程计划" class="headerlink" title="一.课程计划"></a>一.课程计划</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、Activemq整合springMQ的应用场景</span><br><span class="line">2、添加商品同步索引库</span><br><span class="line">3、商品详情页面动态展示</span><br><span class="line">4、展示详情页面使用缓存</span><br></pre></td></tr></table></figure>
+<h2 id="二-Activemq整合spring"><a href="#二-Activemq整合spring" class="headerlink" title="二.Activemq整合spring"></a>二.Activemq整合spring</h2><h3 id="2-1-使用方法"><a href="#2-1-使用方法" class="headerlink" title="2.1 使用方法"></a>2.1 使用方法</h3><font size="3">第一步：引用相关的jar包。</font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131879747710156250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131879747712968750.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">      &lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-jms&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.springframework&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;spring-context-support&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<font size="3"></font><br><font size="3">第二步：配置Activemq整合spring。配置ConnectionFactory</font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131879747716406250.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">	xmlns:context=&quot;http://www.springframework.org/schema/context&quot; xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line">	xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot; xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;</span><br><span class="line">xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">	xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span><br><span class="line">	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd</span><br><span class="line">	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.2.xsd </span><br><span class="line">	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.2.xsd</span><br><span class="line">	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.2.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	&lt;!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 --&gt;</span><br><span class="line">	&lt;bean id=&quot;targetConnectionFactory&quot; class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;</span><br><span class="line">		&lt;property name=&quot;brokerURL&quot; value=&quot;tcp://192.168.25.168:61616&quot; /&gt;</span><br><span class="line">	&lt;/bean&gt;</span><br><span class="line">	&lt;!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory --&gt;</span><br><span class="line">	&lt;bean id=&quot;connectionFactory&quot;</span><br><span class="line">		class=&quot;org.springframework.jms.connection.SingleConnectionFactory&quot;&gt;</span><br><span class="line">		&lt;!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory --&gt;</span><br><span class="line">		&lt;property name=&quot;targetConnectionFactory&quot; ref=&quot;targetConnectionFactory&quot; /&gt;</span><br><span class="line">	&lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<font size="3">第三步：配置生产者。<br>使用JMSTemplate对象。发送消息。<br>第四步：在spring容器中配置Destination。</font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131879747719218750.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/context</span><br><span class="line">	    http://www.springframework.org/schema/context/spring-context-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/aop</span><br><span class="line">	    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/tx</span><br><span class="line">	    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/util</span><br><span class="line">	    http://www.springframework.org/schema/util/spring-util-4.2.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 --&gt;</span><br><span class="line">    &lt;bean id=&quot;targetConnectionFactory&quot; class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://192.168.25.128:61616&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory --&gt;</span><br><span class="line">    &lt;bean id=&quot;connectionFactory&quot;</span><br><span class="line">          class=&quot;org.springframework.jms.connection.SingleConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory --&gt;</span><br><span class="line">        &lt;property name=&quot;targetConnectionFactory&quot; ref=&quot;targetConnectionFactory&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 配置生产者 --&gt;</span><br><span class="line">    &lt;!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 --&gt;</span><br><span class="line">    &lt;bean id=&quot;jmsTemplate&quot; class=&quot;org.springframework.jms.core.JmsTemplate&quot;&gt;</span><br><span class="line">        &lt;!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 --&gt;</span><br><span class="line">        &lt;property name=&quot;connectionFactory&quot; ref=&quot;connectionFactory&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--这个是队列目的地，点对点的 --&gt;</span><br><span class="line">    &lt;bean id=&quot;queueDestination&quot; class=&quot;org.apache.activemq.command.ActiveMQQueue&quot;&gt;</span><br><span class="line">        &lt;constructor-arg&gt;</span><br><span class="line">            &lt;value&gt;spring-queue&lt;/value&gt;</span><br><span class="line">        &lt;/constructor-arg&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--这个是主题目的地，一对多的 --&gt;</span><br><span class="line">    &lt;bean id=&quot;topicDestination&quot; class=&quot;org.apache.activemq.command.ActiveMQTopic&quot;&gt;</span><br><span class="line">        &lt;constructor-arg value=&quot;topic&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<font size="3">第五步：代码测试</font>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">package yp.e3mall.activemq;</span><br><span class="line"></span><br><span class="line">import org.junit.Test;</span><br><span class="line">import org.springframework.context.ApplicationContext;</span><br><span class="line">import org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line">import org.springframework.jms.core.JmsTemplate;</span><br><span class="line">import org.springframework.jms.core.MessageCreator;</span><br><span class="line"></span><br><span class="line">import javax.jms.Destination;</span><br><span class="line">import javax.jms.JMSException;</span><br><span class="line">import javax.jms.Message;</span><br><span class="line">import javax.jms.Session;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName ActiveMqString</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/11/29/20:46</span><br><span class="line"> */</span><br><span class="line">public class ActiveMqString &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void sendMessage() throws Exception&#123;</span><br><span class="line">        //初始化spring容器</span><br><span class="line">        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;classpath:spring/applicationContext-activemq.xml&quot;);</span><br><span class="line">        //从容器中获得JmsTemplate对象</span><br><span class="line">        JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);</span><br><span class="line">        //从容器中获得一个Destination对象</span><br><span class="line">        Destination  queueDestination = (Destination) applicationContext.getBean(&quot;queueDestination&quot;);</span><br><span class="line">        //发送消息</span><br><span class="line">        jmsTemplate.send(queueDestination, new MessageCreator() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Message createMessage(Session session) throws JMSException &#123;</span><br><span class="line">                return session.createTextMessage(&quot;send activemq messgae&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131879747724843750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131879747727968750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131879747731406250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131879747734531250.png" alt="image"></p>
+<h3 id="2-2-代码测试"><a href="#2-2-代码测试" class="headerlink" title="2.2 代码测试"></a>2.2 代码测试</h3><h4 id="2-2-1-发送消息"><a href="#2-2-1-发送消息" class="headerlink" title="2.2.1 发送消息"></a>2.2.1 发送消息</h4><font size="3"><br>第一步：初始化一个spring容器<br><br>第二步：从容器中获得JMSTemplate对象。<br><br>第三步：从容器中获得一个Destination对象<br><br>第四步：使用JMSTemplate对象发送消息，需要知道Destination<br><br></font>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName ActiveMqString</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/11/29/20:46</span><br><span class="line"> */</span><br><span class="line">public class ActiveMqString &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void sendMessage() throws Exception&#123;</span><br><span class="line">        //初始化spring容器</span><br><span class="line">        ApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;classpath:spring/applicationContext-activemq.xml&quot;);</span><br><span class="line">        //从容器中获得JmsTemplate对象</span><br><span class="line">        JmsTemplate jmsTemplate = applicationContext.getBean(JmsTemplate.class);</span><br><span class="line">        //从容器中获得一个Destination对象</span><br><span class="line">        Destination  queueDestination = (Destination) applicationContext.getBean(&quot;queueDestination&quot;);</span><br><span class="line">        //发送消息</span><br><span class="line">        jmsTemplate.send(queueDestination, new MessageCreator() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Message createMessage(Session session) throws JMSException &#123;</span><br><span class="line">                return session.createTextMessage(&quot;send activemq messgae&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-2-接收消息"><a href="#2-2-2-接收消息" class="headerlink" title="2.2.2 接收消息"></a>2.2.2 接收消息</h4><font size="3">e3-search-Service中接收消息。<br><br>第一步：把Activemq相关的jar包添加到工程中<br><br><br><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131879747748593750.png" alt="image"><br><br>第二步：创建一个MessageListener的实现类。<br><br></font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131879747736718750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131879747739375000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131879747742500000.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName MyMessageListener</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/11/29/21:46</span><br><span class="line"> */</span><br><span class="line">public class MyMessageListener implements MessageListener&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(Message message) &#123;</span><br><span class="line">        //取消息内容</span><br><span class="line">        TextMessage textMessage = (TextMessage) message;</span><br><span class="line">        try &#123;</span><br><span class="line">            String text = ((TextMessage) message).getText();</span><br><span class="line">            System.out.println(text);</span><br><span class="line">        &#125; catch (JMSException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131879747755312500.png" alt="image"></p>
+<font size="3">第三步：配置spring和Activemq整合。</font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131879747745000000.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;</span><br><span class="line">       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;</span><br><span class="line">       xmlns:p=&quot;http://www.springframework.org/schema/p&quot;</span><br><span class="line">       xmlns:aop=&quot;http://www.springframework.org/schema/aop&quot;</span><br><span class="line">       xmlns:tx=&quot;http://www.springframework.org/schema/tx&quot;</span><br><span class="line">       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/context</span><br><span class="line">	    http://www.springframework.org/schema/context/spring-context-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/aop</span><br><span class="line">	    http://www.springframework.org/schema/aop/spring-aop-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/tx</span><br><span class="line">	    http://www.springframework.org/schema/tx/spring-tx-4.2.xsd</span><br><span class="line">	    http://www.springframework.org/schema/util</span><br><span class="line">	    http://www.springframework.org/schema/util/spring-util-4.2.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供 --&gt;</span><br><span class="line">    &lt;bean id=&quot;targetConnectionFactory&quot; class=&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;brokerURL&quot; value=&quot;tcp://192.168.25.128:61616&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory --&gt;</span><br><span class="line">    &lt;bean id=&quot;connectionFactory&quot;</span><br><span class="line">          class=&quot;org.springframework.jms.connection.SingleConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory --&gt;</span><br><span class="line">        &lt;property name=&quot;targetConnectionFactory&quot; ref=&quot;targetConnectionFactory&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--这里我们配置消费者，所以生产者我们就注释掉--&gt;</span><br><span class="line">    &lt;!--&amp;lt;!&amp;ndash; 配置生产者 &amp;ndash;&amp;gt;</span><br><span class="line">    &amp;lt;!&amp;ndash; Spring提供的JMS工具类，它可以进行消息发送、接收等 &amp;ndash;&amp;gt;</span><br><span class="line">    &lt;bean id=&quot;jmsTemplate&quot; class=&quot;org.springframework.jms.core.JmsTemplate&quot;&gt;</span><br><span class="line">        &amp;lt;!&amp;ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &amp;ndash;&amp;gt;</span><br><span class="line">        &lt;property name=&quot;connectionFactory&quot; ref=&quot;connectionFactory&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!--这个是队列目的地，点对点的 --&gt;</span><br><span class="line">    &lt;bean id=&quot;queueDestination&quot; class=&quot;org.apache.activemq.command.ActiveMQQueue&quot;&gt;</span><br><span class="line">        &lt;constructor-arg&gt;</span><br><span class="line">            &lt;value&gt;spring-queue&lt;/value&gt;</span><br><span class="line">        &lt;/constructor-arg&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!--这个是主题目的地，一对多的 --&gt;</span><br><span class="line">    &lt;bean id=&quot;topicDestination&quot; class=&quot;org.apache.activemq.command.ActiveMQTopic&quot;&gt;</span><br><span class="line">        &lt;constructor-arg value=&quot;topic&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">    &lt;!-- 接收消息 --&gt;</span><br><span class="line">    &lt;!-- 配置监听器 --&gt;</span><br><span class="line">    &lt;bean id=&quot;myMessageListener&quot; class=&quot;yp.e3mall.search.message.MyMessageListener&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 消息监听容器 --&gt;</span><br><span class="line">    &lt;bean class=&quot;org.springframework.jms.listener.DefaultMessageListenerContainer&quot;&gt;</span><br><span class="line">        &lt;property name=&quot;connectionFactory&quot; ref=&quot;connectionFactory&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;destination&quot; ref=&quot;queueDestination&quot; /&gt;</span><br><span class="line">        &lt;property name=&quot;messageListener&quot; ref=&quot;myMessageListener&quot; /&gt;</span><br><span class="line">    &lt;/bean&gt;</span><br><span class="line">&lt;/beans&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131879747758125000.png" alt="image"></p>
+<font size="3">第四步：测试代码。</font>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName MessageConsumer</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/11/29/21:58</span><br><span class="line"> */</span><br><span class="line">public class MessageConsumer &#123;</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">     public void msgConsumer() throws Exception&#123;</span><br><span class="line">         //初始化spring容器</span><br><span class="line">         ApplicationContext applicationContext = new ClassPathXmlApplicationContext(&quot;classpath:spring/applicationContext-activemq.xml&quot;);</span><br><span class="line"></span><br><span class="line">         //等待</span><br><span class="line">         System.in.read();</span><br><span class="line"></span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="三-添加商品同步索引库"><a href="#三-添加商品同步索引库" class="headerlink" title="三.添加商品同步索引库"></a>三.添加商品同步索引库</h2><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131880319821093750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131880319826875000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131880319831093750.png" alt="image"></p>
+<h3 id="3-1-Consumer-我们先来写接受者代码"><a href="#3-1-Consumer-我们先来写接受者代码" class="headerlink" title="3.1 Consumer(我们先来写接受者代码)"></a>3.1 Consumer(我们先来写接受者代码)</h3><h4 id="3-1-1-功能分析"><a href="#3-1-1-功能分析" class="headerlink" title="3.1.1 功能分析"></a>3.1.1 功能分析</h4><ol>
+<li>接收消息。需要创建MessageListener接口的实现类。</li>
+<li>取消息，取商品id。</li>
+<li>根据商品id查询数据库。</li>
+<li>创建一SolrInputDocument对象。</li>
+<li>使用SolrServer对象写入索引库。返回成功，返回e3Result。</li>
+</ol>
+<h4 id="3-1-2-Dao层"><a href="#3-1-2-Dao层" class="headerlink" title="3.1.2 Dao层"></a>3.1.2 Dao层</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131880331156562500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131880331162656250.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id=&quot;getItemById&quot; parameterType=&quot;long&quot; resultType=&quot;yp.e3mall.common.pojo.SearchItem&quot;&gt;</span><br><span class="line">  select</span><br><span class="line">    a.id,</span><br><span class="line">    a.title,</span><br><span class="line">    a.sell_point,</span><br><span class="line">    a.price,</span><br><span class="line">    a.image,</span><br><span class="line">    b.name  category_name</span><br><span class="line">  from tb_item a</span><br><span class="line">  LEFT JOIN tb_item_cat b</span><br><span class="line">  on a.cid = b.id</span><br><span class="line">  where a.status = 1</span><br><span class="line">  AND a.id=#&#123;itemid&#125;;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="3-1-3-监听器-Service"><a href="#3-1-3-监听器-Service" class="headerlink" title="3.1.3 监听器(Service)"></a>3.1.3 监听器(Service)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName ItemAddMessageListener</span><br><span class="line"> * @Description 监听商品添加事件，接受消息后，将对应的商品信息同步到索引库</span><br><span class="line"> * @date 2018/11/30/12:14</span><br><span class="line"> */</span><br><span class="line">public class ItemAddMessageListener implements MessageListener &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ItemMapper itemMapperp;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private SolrServer solrServer;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onMessage(Message message) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            System.out.println(&quot;接受到消息，并同步索引库！！！&quot;);</span><br><span class="line">            //从消息中取商品id</span><br><span class="line">            TextMessage textMessage = (TextMessage) message;</span><br><span class="line"></span><br><span class="line">            String text = textMessage.getText();</span><br><span class="line">            long id = Long.valueOf(text);</span><br><span class="line"></span><br><span class="line">            //根据商品id查询商品信息</span><br><span class="line">            SearchItem searchItem = itemMapperp.getItemById(id);</span><br><span class="line"></span><br><span class="line">            //创建文档对象</span><br><span class="line">            SolrInputDocument document = new SolrInputDocument();</span><br><span class="line">            //向文档对象中添加域</span><br><span class="line">            document.addField(&quot;id&quot;, searchItem.getId());</span><br><span class="line">            System.out.println(searchItem.getId());</span><br><span class="line">            document.addField(&quot;item_title&quot;, searchItem.getTitle());</span><br><span class="line">            System.out.println(searchItem.getTitle());</span><br><span class="line">            document.addField(&quot;item_sell_point&quot;, searchItem.getSell_point());</span><br><span class="line">            System.out.println(searchItem.getSell_point());</span><br><span class="line">            document.addField(&quot;item_price&quot;, searchItem.getPrice());</span><br><span class="line">            System.out.println(searchItem.getPrice());</span><br><span class="line">            document.addField(&quot;item_image&quot;, searchItem.getImage());</span><br><span class="line">            System.out.println(searchItem.getImage());</span><br><span class="line">            document.addField(&quot;item_category_name&quot;, searchItem.getCategory_name());</span><br><span class="line"></span><br><span class="line">            //把文档对象写入索引库</span><br><span class="line">            solrServer.add(document);</span><br><span class="line"></span><br><span class="line">            //提交</span><br><span class="line">            solrServer.commit();</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131880319853750000.png" alt="image"></p>
+<h4 id="3-1-4-Spring配置监听"><a href="#3-1-4-Spring配置监听" class="headerlink" title="3.1.4 Spring配置监听"></a>3.1.4 Spring配置监听</h4><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131880319856718750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131880319862656250.png" alt="image"></p>
+<h3 id="3-2-Producer"><a href="#3-2-Producer" class="headerlink" title="3.2 Producer"></a>3.2 Producer</h3><font size="3"><br>e3-manager-server工程中发送消息。<br><br>当商品添加完成后发送一个TextMessage，包含一个商品id。</font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131880323620312500.png" alt="image"></p>
+<blockquote>
+<p>上图中使用topic来作为目的地，itemAddTopic相当于是发送到哪个队列</p>
+</blockquote>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10%E3%80%81.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/11_131880319870000000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131880319878437500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131880319884531250.png" alt="image"></p>
+<blockquote>
+<p>所以我们之前接受者的代码需要加上Thread.sleep(1000)</p>
+</blockquote>
+<p>具体发送消息代码实现：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public E3Result addItem(TbItem tbItem, String desc) &#123;</span><br><span class="line">        //拿到的TbItem缺少ID，因为表单中的是cid，是商品的类目id，并不是商品的ID</span><br><span class="line">        //所以我们需要先生成商品的ID</span><br><span class="line"></span><br><span class="line">        //生成商品ID</span><br><span class="line">        long itemId = IDUtils.genItemId();</span><br><span class="line"></span><br><span class="line">        //补全TbItem的属性</span><br><span class="line">        tbItem.setId(itemId);</span><br><span class="line">        //商品状态，1-正常，2-下架，3-删除</span><br><span class="line">        tbItem.setStatus((byte)1);</span><br><span class="line">        //创建时间</span><br><span class="line">        tbItem.setCreated(new Date());</span><br><span class="line">        //更新时间</span><br><span class="line">        tbItem.setUpdated(new Date());</span><br><span class="line"></span><br><span class="line">        //向商品表插入数据</span><br><span class="line">        tbItemMapper.insert(tbItem);</span><br><span class="line"></span><br><span class="line">        //创建商品描述表对应的pojo对象</span><br><span class="line">        TbItemDesc itemDesc = new TbItemDesc();</span><br><span class="line">        itemDesc.setItemId(itemId);</span><br><span class="line">        itemDesc.setItemDesc(desc);</span><br><span class="line">        itemDesc.setCreated(new Date());</span><br><span class="line">        itemDesc.setUpdated(new Date());</span><br><span class="line"></span><br><span class="line">        //向商品描述表插入数据</span><br><span class="line">        tbItemDescMapper.insert(itemDesc);</span><br><span class="line"></span><br><span class="line">        //发送商品添加消息,需要注入jmsTemple</span><br><span class="line">        jmsTemplate.send(topDestination, new MessageCreator() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public Message createMessage(Session session) throws JMSException &#123;</span><br><span class="line">                session.createTextMessage(itemId+&quot;&quot;);</span><br><span class="line">                return null;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        //返回成功</span><br><span class="line">	    return E3Result.ok();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="四-商品详情页面展示"><a href="#四-商品详情页面展示" class="headerlink" title="四.商品详情页面展示"></a>四.商品详情页面展示</h2><p>创建一个商品详情页面展示的工程。是一个表现层工程。(参考e3_portal_web)</p>
+<h3 id="4-1-工程搭建"><a href="#4-1-工程搭建" class="headerlink" title="4.1 工程搭建"></a>4.1 工程搭建</h3><p>e3-item-web。打包方式war。可以参考e3-portal-web</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/1_131882002372057500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/2_131882002376120000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/3_131882002379713750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/4_131882002382682500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/5_131882002386432500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/6_131882002389713750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/7_131882002529401250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/8_131882002533463750.png" alt="image"></p>
+<h3 id="4-2-功能分析"><a href="#4-2-功能分析" class="headerlink" title="4.2 功能分析"></a>4.2 功能分析</h3><p>在搜索结果页面点击商品图片或者商品标题，展示商品详情页面。</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/9_131882002538307500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/10_131882002542370000.png" alt="image"></p>
+<font size="3"><br>请求的url：/item/{itemId}<br><br>参数：商品id<br><br>返回值：String 逻辑视图<br><br>业务逻辑：<br><br>1、从url中取参数，商品id<br><br>2、根据商品id查询商品信息(tb_item)得到一个TbItem对象，缺少images属性，可以创建一个pojo继承TbItem，添加一个getImages方法。在e3-item-web工程中。<br><br></font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/12_131882058544557500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/13_131882058549088750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/14_131882058551745000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/15_131882058556120000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/16_131882058559401250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/17_131882058562213750.png" alt="image"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName Item</span><br><span class="line"> * @Description</span><br><span class="line"> * @date 2018/12/2/14:08</span><br><span class="line"> */</span><br><span class="line">public class Item extends TbItem&#123;</span><br><span class="line"></span><br><span class="line">    //因为父类不能强制转换为子类，所以我们得写一个构造方法，将值复制过来</span><br><span class="line">    //因为我们查出来的是一个tbItem对象，这个对象不能直接转换为子类</span><br><span class="line">    //所以我们在构造子类的时候将这个父类对象传入，然后将其属性复制到该子类中即可</span><br><span class="line">    public Item(TbItem tbItem)&#123;</span><br><span class="line">        this.setId(tbItem.getId());</span><br><span class="line">        this.setTitle(tbItem.getTitle());</span><br><span class="line">        this.setSellPoint(tbItem.getSellPoint());</span><br><span class="line">        this.setPrice(tbItem.getPrice());</span><br><span class="line">        this.setNum(tbItem.getNum());</span><br><span class="line">        this.setBarcode(tbItem.getBarcode());</span><br><span class="line">        this.setImage(tbItem.getImage());</span><br><span class="line">        this.setCid(tbItem.getCid());</span><br><span class="line">        this.setStatus(tbItem.getStatus());</span><br><span class="line">        this.setCreated(tbItem.getCreated());</span><br><span class="line">        this.setUpdated(tbItem.getUpdated());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public String [] getImages()&#123;</span><br><span class="line">        String image = this.getImage();</span><br><span class="line">        if(image!=null &amp;&amp; !&quot;&quot;.equals(image))&#123;</span><br><span class="line">            String[] split = image.split(&quot;,&quot;);</span><br><span class="line">            return split;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/18_131882058565026250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/19_131882058568620000.png" alt="image"></p>
+<font size="3"><br>3、根据商品id查询商品描述。<br><br>4、展示到页面。<br><br></font>
+
+<h3 id="4-3-Dao层"><a href="#4-3-Dao层" class="headerlink" title="4.3 Dao层"></a>4.3 Dao层</h3><p>查询tb_item, tb_item_desc两个表，都是单表查询。可以使用逆向工程。</p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/20_131882123069401250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/21_131882123071901250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/22_131882123074088750.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/23_131882123077995000.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/24_131882123081276250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/25_131882123084870000.png" alt="image"></p>
+<h3 id="4-4-Service层"><a href="#4-4-Service层" class="headerlink" title="4.4 Service层"></a>4.4 Service层</h3><font size="3" color="red">思考一下，我们的Service应该在哪实现<br><br>我们这个项目是个分布式项目，Service为服务层，我们现在需要商品信息是不是调用商品信息的Service即可，商品信息的Service是Manager工程中的，所以我们去看manager工程<br></font>
+
+<font size="3"><br>1、根据商品id查询商品信息<br><br>参数：商品id<br><br>返回值：TbItem<br><br>2、根据商品id查询商品描述<br><br>参数：商品id<br><br>返回值：TbItemDesc<br><br></font>
+
+
+
+<h3 id="4-5-Controller层"><a href="#4-5-Controller层" class="headerlink" title="4.5 Controller层"></a>4.5 Controller层</h3><font size="3"><br>请求的url：/item/{itemId}<br><br>参数：商品id<br><br>返回值：String 逻辑视图<br><br></font>
+
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * @author RickYinPeng</span><br><span class="line"> * @ClassName ItemController</span><br><span class="line"> * @Description 商品详情页面展示Controller</span><br><span class="line"> * @date 2018/12/2/14:58</span><br><span class="line"> */</span><br><span class="line">@Controller</span><br><span class="line">public class ItemController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private ItemService itemService;</span><br><span class="line"></span><br><span class="line">    @RequestMapping(&quot;/item/&#123;itemId&#125;&quot;)</span><br><span class="line">    public String showItemInfo(@PathVariable long itemId, Model model)&#123;</span><br><span class="line">        //调用服务取商品基本信息</span><br><span class="line">        TbItem tbItem = itemService.getItemById(itemId);</span><br><span class="line">        Item item = new Item(tbItem);</span><br><span class="line"></span><br><span class="line">        //去商品描述信息</span><br><span class="line">        TbItemDesc itemDesc = itemService.getItemDescById(itemId);</span><br><span class="line"></span><br><span class="line">        //把信息传递给页面</span><br><span class="line">        model.addAttribute(&quot;item&quot;,item);</span><br><span class="line">        model.addAttribute(&quot;itemDesc&quot;,itemDesc);</span><br><span class="line"></span><br><span class="line">        //返回逻辑视图</span><br><span class="line">        return &quot;item&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/26_131882123087682500.png" alt="image"></p>
+<h3 id="4-6-向业务逻辑中添加缓存"><a href="#4-6-向业务逻辑中添加缓存" class="headerlink" title="4.6 向业务逻辑中添加缓存"></a>4.6 向业务逻辑中添加缓存</h3><p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/27_131882140259401250.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/28_131882140282682500.png" alt="image"></p>
+<h4 id="4-6-1-缓存添加分析"><a href="#4-6-1-缓存添加分析" class="headerlink" title="4.6.1 缓存添加分析"></a>4.6.1 缓存添加分析</h4><font size="3"><br>使用redis做缓存。<br><br>业务逻辑：<br><br>1、根据商品id到缓存中命中<br><br>2、查到缓存，直接返回。<br><br>3、差不到，查询数据库<br><br>4、把数据放到缓存中<br><br>5、返回数据<br><br><br>缓存中缓存热点数据，提供缓存的使用率。需要设置缓存的有效期。一般是一天的时间，可以根据实际情况跳转。<br><br>需要使用String类型来保存商品数据。<br><br>可以加前缀方法对象redis中的key进行归类。<br><br>ITEM_INFO:123456:BASE<br><br>ITEM_INFO:123456:DESC<br><br><br></font>
+
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/29_131882140296432500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/30_131882140300182500.png" alt="image"></p>
+<font size="3"><br>如果把二维表保存到redis中:<br><br>1、表名就是第一层<br><br>2、主键是第二层<br><br>3、字段名第三次<br><br>三层使用“:”分隔作为key，value就是字段中的内容。<br><br></font>
+
+<h4 id="4-6-2-把redis相关的jar包添加到工程"><a href="#4-6-2-把redis相关的jar包添加到工程" class="headerlink" title="4.6.2 把redis相关的jar包添加到工程"></a>4.6.2 把redis相关的jar包添加到工程</h4><h4 id="4-6-3-添加缓存"><a href="#4-6-3-添加缓存" class="headerlink" title="4.6.3 添加缓存"></a>4.6.3 添加缓存</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    public TbItem getItemById(long itemId) &#123;</span><br><span class="line">	    //查询缓存</span><br><span class="line">        try &#123;</span><br><span class="line">            String json = jedisClient.get(REDIS_ITEM_PRE + &quot;:&quot; + itemId + &quot;:BASE&quot;);</span><br><span class="line">            if(StringUtils.isNotBlank(json))&#123;</span><br><span class="line">                TbItem tbItem = JsonUtils.jsonToPojo(json, TbItem.class);</span><br><span class="line">                return tbItem;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        //缓存中没有，查询数据库</span><br><span class="line"></span><br><span class="line">        TbItem tbItem = tbItemMapper.selectByPrimaryKey(itemId);</span><br><span class="line">        if(tbItem!=null)&#123;</span><br><span class="line">            //将结果添加到缓存</span><br><span class="line">            try &#123;</span><br><span class="line">                jedisClient.set(REDIS_ITEM_PRE+&quot;:&quot;+itemId+&quot;:BASE&quot;, JsonUtils.objectToJson(tbItem));</span><br><span class="line">                //设置过期时间</span><br><span class="line">                jedisClient.expire(REDIS_ITEM_PRE+&quot;:&quot;+itemId+&quot;:BASE&quot;,ITEM_CACHE_EXPIRE);</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            return tbItem;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public TbItemDesc getItemDescById(long itemId) &#123;</span><br><span class="line">        //查询缓存</span><br><span class="line">        try &#123;</span><br><span class="line">            String json = jedisClient.get(REDIS_ITEM_PRE+&quot;:&quot;+itemId+&quot;:DESC&quot;);</span><br><span class="line">            if(StringUtils.isNotBlank(json))&#123;</span><br><span class="line">                TbItemDesc itemDesc = JsonUtils.jsonToPojo(json, TbItemDesc.class);</span><br><span class="line">                return itemDesc;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;catch (Exception e)&#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        //缓存中没有，查询数据库</span><br><span class="line"></span><br><span class="line">        TbItemDesc itemDesc = tbItemDescMapper.selectByPrimaryKey(itemId);</span><br><span class="line">        if(itemDesc!=null)&#123;</span><br><span class="line">            //将结果添加到缓存</span><br><span class="line">            try &#123;</span><br><span class="line">                jedisClient.set(REDIS_ITEM_PRE+&quot;:&quot;+itemId+&quot;:DESC&quot;, JsonUtils.objectToJson(itemDesc));</span><br><span class="line">                //设置过期时间</span><br><span class="line">                jedisClient.expire(REDIS_ITEM_PRE+&quot;:&quot;+itemId+&quot;:DESC&quot;,ITEM_CACHE_EXPIRE);</span><br><span class="line">            &#125;catch (Exception e)&#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            return itemDesc;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/32_131882218905807500.png" alt="image"></p>
+<p><img src="http://img.027cgb.com/606599/%E5%AE%9C%E7%AB%8B%E6%96%B9%E5%95%86%E5%9F%8E/31_131882218901901250.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/宜立方商城项目/" rel="tag"># 宜立方商城项目</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/05/十四、HTTP协议：看个新闻原来这么麻烦/" rel="next" title="十四、HTTP协议：看个新闻原来这么麻烦">
+                <i class="fa fa-chevron-left"></i> 十四、HTTP协议：看个新闻原来这么麻烦
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/05/7.宜立方商城——Solr服务搭建/" rel="prev" title="七.宜立方商城——Solr服务搭建">
+                七.宜立方商城——Solr服务搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一-课程计划"><span class="nav-number">1.</span> <span class="nav-text">一.课程计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二-Activemq整合spring"><span class="nav-number">2.</span> <span class="nav-text">二.Activemq整合spring</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-使用方法"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 使用方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-代码测试"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 代码测试</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-发送消息"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.2.1 发送消息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-接收消息"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2.2 接收消息</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三-添加商品同步索引库"><span class="nav-number">3.</span> <span class="nav-text">三.添加商品同步索引库</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-Consumer-我们先来写接受者代码"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 Consumer(我们先来写接受者代码)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-1-功能分析"><span class="nav-number">3.1.1.</span> <span class="nav-text">3.1.1 功能分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-2-Dao层"><span class="nav-number">3.1.2.</span> <span class="nav-text">3.1.2 Dao层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-3-监听器-Service"><span class="nav-number">3.1.3.</span> <span class="nav-text">3.1.3 监听器(Service)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-4-Spring配置监听"><span class="nav-number">3.1.4.</span> <span class="nav-text">3.1.4 Spring配置监听</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-Producer"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 Producer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四-商品详情页面展示"><span class="nav-number">4.</span> <span class="nav-text">四.商品详情页面展示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-工程搭建"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 工程搭建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-功能分析"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 功能分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-Dao层"><span class="nav-number">4.3.</span> <span class="nav-text">4.3 Dao层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-Service层"><span class="nav-number">4.4.</span> <span class="nav-text">4.4 Service层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-5-Controller层"><span class="nav-number">4.5.</span> <span class="nav-text">4.5 Controller层</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-6-向业务逻辑中添加缓存"><span class="nav-number">4.6.</span> <span class="nav-text">4.6 向业务逻辑中添加缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-1-缓存添加分析"><span class="nav-number">4.6.1.</span> <span class="nav-text">4.6.1 缓存添加分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-2-把redis相关的jar包添加到工程"><span class="nav-number">4.6.2.</span> <span class="nav-text">4.6.2 把redis相关的jar包添加到工程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-6-3-添加缓存"><span class="nav-number">4.6.3.</span> <span class="nav-text">4.6.3 添加缓存</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
