@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五、Redis-整数集合/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -282,7 +282,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/" itemprop="url">四.整型变量、常量、浮点类型变量、字符型类型、转义字符</a></h1>
+                <a class="post-title-link" href="/2019/07/05/五、Redis-整数集合/" itemprop="url">五、Redis-整数集合</a></h1>
         
 
         <div class="post-meta">
@@ -334,13 +334,12 @@
       
         
           
-          整型变量、常量整型用于表示没有小数部分的数值，它允许是负数。整型的范围与运行Java代码的机器无关，这正是Java程序具有很强移植能力的原因之一。与此相反，C和C++程序需要针对不同的处理器选择最有效的整型。
-
-注意：int类型和其他类型比如long类型所占的字节数，是一个考点其次明白为什么参数范围
+          前言在 Redis 中，当集合只包含整数值元素，并且集合的元素数量不多时，Redis 就会使用整数集合作为集合键的底层实现。
+整数集合的实现整数集合是 Redis 中用于保存整数数值的集合抽象数据结构，它可以保存类型为 int16_t, int32_t 或者 int_64t 的整数值，并且保证集合中
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/五、Redis-整数集合/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -391,7 +390,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/3.0控制语句/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十五.final关键字，数组/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -410,7 +409,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/3.0控制语句/" itemprop="url">七.控制语句</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十五.final关键字，数组/" itemprop="url">十五.final关键字、数组</a></h1>
         
 
         <div class="post-meta">
@@ -462,13 +461,16 @@
       
         
           
-          本章开始我们需要学习流程控制语句，流程控制语句是用来控制程序中各语句执行顺序的语句，可以把语句组合成能完成一定功能的小逻辑模块。控制语句分为三类：顺序、选择和循环。
-“顺序结构”代表“先执行a，再执行b”的逻辑。比如，先找个女朋友，再给女朋友打电话；先订婚，再结婚；
-“选择结构”代表“如果…，则…”
+          一.final关键字的作用
+修饰变量：被他修饰的变量不可以被改变。一旦赋了初值，就不能再被重新赋值
+修饰方法：该方法不能被子类重写。但是可以被重载
+修饰类：修饰的类不能被继承。比如：Math，String等
+
+二.数组2.1 数组的定义数组是相同类型数据的有序集合。数组描述的是相同类型的若干个数据，
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/3.0控制语句/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十五.final关键字，数组/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -519,7 +521,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.面向过程和面向对象/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十九.集合(容器)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -538,7 +540,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/4.面向过程和面向对象/" itemprop="url">十.面向过程和面向对象</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十九.集合(容器)/" itemprop="url">十九.集合(容器)</a></h1>
         
 
         <div class="post-meta">
@@ -590,11 +592,13 @@
       
         
           
-          4.1面向过程和面向对象面向过程(Procedure Oriented)和面向对象(Object Oriented,OO)都是对软件分析、设计和开发的一种思想,它指导着人们以不同的方式去分析、设计和开发软件。早期先有面向过程思想，随着软件规模的扩大，问题复杂性的提高，面向过程的弊端越来越明显的显示出
+          集合总接口层次图容器是什么呢？就是容纳物体的东西，如我们之前学的数组就是一种容器。
+数组的优势：是一种简单的线性序列，可以快速地访问数组元素，效率高。如果从效率和类型检查的角度讲，数组是最好的。
+数组的劣势：不灵活。容量需要事先定义好，不能随着需求的变化而扩容。比如：我们在一个用户管理系统中，要把今
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/4.面向过程和面向对象/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十九.集合(容器)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -645,7 +649,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/四、Redis-跳跃表/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -664,7 +668,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/" itemprop="url">四.宜立方商城——图片服务器&副文本编辑框&商品添加功能</a></h1>
+                <a class="post-title-link" href="/2019/07/05/四、Redis-跳跃表/" itemprop="url">四、Redis-跳跃表</a></h1>
         
 
         <div class="post-meta">
@@ -716,13 +720,14 @@
       
         
           
-          唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！
-一.课程计划：123451、图片上传    a)图片服务器FastDFS(分布式文件系统)    b)图片上传功能实现2、富文本编辑器的使用KindEditor3、商品添加功能完成
-二.图片服务器安装须知：1、存储空间可扩展
+          前言自己一直秉持这样一句话，”过程是扎实的，结果肯定是必然的”
+静心学习，沉淀。。。
+跳跃表介绍跳跃表(skiplist)是一种有序的数据结构，它通过在每个结点中维持多个指向其他节点的指针，从而达到快速访问节点的目的。其支持平均O(logN)、最坏O(N)复杂度的节点查找。
+Redis使用跳跃表作为
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/四、Redis-跳跃表/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -773,7 +778,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/一、为什么要学习网络协议？/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.LayUI学习/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -792,7 +797,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/一、为什么要学习网络协议？/" itemprop="url">一.为什么要学习网络协议</a></h1>
+                <a class="post-title-link" href="/2019/07/05/1.LayUI学习/" itemprop="url">LayUI学习</a></h1>
         
 
         <div class="post-meta">
@@ -844,13 +849,15 @@
       
         
           
-          只有通过网络协议，才能使一大片机器互相协作、共同完成一件事。
-我们常用的网络协议有哪些？这里，我们用一个下单过程，看看互联网世界运行过程中，都使用了哪些网络协议
-你先在浏览器中输入 https://www.kaola.com ,这是一个URL。浏览器在这里只知道是”www.laola.com&quo
+          LayUI开始使用
+国人开发的前端框架，好看，又好用
+
+
+官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─layd
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/一、为什么要学习网络协议？/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/1.LayUI学习/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -901,7 +908,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/九.浅析Java中的参数传值机制/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -920,7 +927,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/九.浅析Java中的参数传值机制/" itemprop="url">九.浅析Java中的参数传值机制（面试题）</a></h1>
+                <a class="post-title-link" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/" itemprop="url">十.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页</a></h1>
         
 
         <div class="post-meta">
@@ -972,13 +979,13 @@
       
         
           
-          前言关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导
-一.面试题在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法
-二.常规思路（仅仅是思路）我们需要通过一个中间
+          一.计划121、使用freemarker实现网页静态化2、ActiveMq同步生成静态网页
+二.网页静态化可以使用Freemarker实现网页静态化。
+2.1 什么是freemarkerFreeMarker是一个用Java语言编写的模板引擎，它基于模板来生成文本输出。FreeMarker与Web容器
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/九.浅析Java中的参数传值机制/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1029,7 +1036,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/13.宜立方商城——订单系统/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1048,7 +1055,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/" itemprop="url">三.StringBuffer和StringBuilder可变的源码分析</a></h1>
+                <a class="post-title-link" href="/2019/07/05/13.宜立方商城——订单系统/" itemprop="url">十三.宜立方商城——订单系统</a></h1>
         
 
         <div class="post-meta">
@@ -1100,13 +1107,25 @@
       
         
           
-          目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。
-分析方法测试代码
-1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&quot;hello&quot
+          一.项目计划
+订单系统实现
+订单生成
+数据库读写分离
+
+二.订单系统
+
+2.1 功能分析1、在购物车页面点击“去结算”按钮跳转到订单确认页面。
+
+必须要求用户登录
+使用拦截器实现
+如果用户未登录就跳转到登录界面
+如果用户已经登录，放行。展示购物车页面
+判断Cookie中是否有购物车数据
+如果有同步到
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/13.宜立方商城——订单系统/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1157,7 +1176,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1176,7 +1195,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/" itemprop="url">五.HashMap底层实现和源码解析(阿里面试题)</a></h1>
+                <a class="post-title-link" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/" itemprop="url">二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装</a></h1>
         
 
         <div class="post-meta">
@@ -1228,13 +1247,12 @@
       
         
           
-          什么事HashMapHashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1)
-HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8之后含1.8:数组+链表+红黑树
-进一步细腻的认知：数
+          今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈；
+Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&nbsp;&nbsp;&nbsp;&nbsp;转发：&gt; 根据前面学习，我们知道S
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1285,7 +1303,7 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/3.宜立方商城——nginx搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1304,7 +1322,7 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/" itemprop="url">五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？</a></h1>
+                <a class="post-title-link" href="/2019/07/05/3.宜立方商城——nginx搭建/" itemprop="url">三.宜立方商城——nginx搭建</a></h1>
         
 
         <div class="post-meta">
@@ -1356,14 +1374,16 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
       
         
           
-          之前我们见证了IP的诞生，一旦机器有了IP，就可以在网络的环境里和其他机器展开沟通了
-宿舍六个人，两个人买了电脑，那两台电脑能不能连接起来呢？不会说，当然啊，买个路由器不就行了吗
-现在一台家用路由器非常便宜，一百多块的事情。但是在早期的时候绝对是奢侈品
-第一层（物理层）使用路由器是第三层的事，我们先
+          一.课程计划：1234567第三天：1、商品类目选择2、图片上传a)图片服务器FastDFSb)图片上传功能实现3、富文本编辑器的使用KindEditor4、商品添加功能完成
+
+主讲nginx
+
+二.商品类目选择：&emsp;&emsp;2.1 原型页面分析：
+&emsp;&emsp;2.2 前端代
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/3.宜立方商城——nginx搭建/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1414,7 +1434,7 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.宜立方商城搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1433,7 +1453,7 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/" itemprop="url">六、交换机与VLAN：办公室太复杂，我要回学校</a></h1>
+                <a class="post-title-link" href="/2019/07/05/1.宜立方商城搭建/" itemprop="url">一.宜立方商城——校园易商城搭建和介绍</a></h1>
         
 
         <div class="post-meta">
@@ -1485,12 +1505,12 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
       
         
           
-          上一次，我们在宿舍组件了一个本地的局域网，可以愉快的玩游戏了。当然这是一个简单的场景，因为只有一台交换机，电脑数目很少。今天，我们来看看办公室的网络
-拓扑结构是怎么形成的？我们常见到的办公室大多是一排排的桌子，每个桌子都有网口，一排十几个座位就有十几个网口，一个楼层就会有几十个甚至上百个网口。如果算
+          一.易商城计划：二.宜立方商城架构&emsp;&emsp; 2.1    功能列表
+123456后台管理系统：管理商品、订单、类目、商品规格属性、用户管理以及内容发布等功能。前台系统：用户可以在前台系统中进行注册、登录、浏览商品、首页、下单等操作。会员系统：用户可以在该系统中查询已下的订单、收藏的商
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/1.宜立方商城搭建/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1582,7 +1602,7 @@ HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">94</span>
+                  <span class="site-state-item-count">95</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
