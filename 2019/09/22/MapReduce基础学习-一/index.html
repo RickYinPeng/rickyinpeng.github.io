@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MapReduce概述MapReduce定义 MapReduce优缺点优点 缺点 MapReduce核心思想  1）分布式的运算程序往往需要分成至少2个阶段。 2）第一个阶段的MapTask并发实例，完全并行运行，互不相干。 3）第二个阶段的ReduceTask并发实例互不相干，但是他们的数据依赖于上一个阶段的所有MapTask并发实例的输出。 4）MapReduce编程模型只能包含一个Map阶段">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce基础学习-一">
+<meta property="og:url" content="http://yoursite.com/2019/09/22/MapReduce基础学习-一/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="MapReduce概述MapReduce定义 MapReduce优缺点优点 缺点 MapReduce核心思想  1）分布式的运算程序往往需要分成至少2个阶段。 2）第一个阶段的MapTask并发实例，完全并行运行，互不相干。 3）第二个阶段的ReduceTask并发实例互不相干，但是他们的数据依赖于上一个阶段的所有MapTask并发实例的输出。 4）MapReduce编程模型只能包含一个Map阶段">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132134579405520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132135276616926250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132135276618488750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132135279155676250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132135297869270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5_132135300773645000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6_132135319797551250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7_132135319799113750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8_132135319800832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9_132135319801926250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10_132135339968176250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11_132135339970832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12_132135382702238750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13_132135941008801250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14_132136209088020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15_132136232160520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16_132136232161770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17_132136232162863750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18_132136248398332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19_132136248399582500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20_132136248400676250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21_132136248401613750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22_132136289762395000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23_132136289763488750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/24_132136289765363750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25_132136289766457500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26_132136289767395000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/27_132136289768332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28_132136289769582500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29_132136289770832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30_132136289771926250.png">
+<meta property="og:updated_time" content="2019-09-22T12:34:20.546Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MapReduce基础学习-一">
+<meta name="twitter:description" content="MapReduce概述MapReduce定义 MapReduce优缺点优点 缺点 MapReduce核心思想  1）分布式的运算程序往往需要分成至少2个阶段。 2）第一个阶段的MapTask并发实例，完全并行运行，互不相干。 3）第二个阶段的ReduceTask并发实例互不相干，但是他们的数据依赖于上一个阶段的所有MapTask并发实例的输出。 4）MapReduce编程模型只能包含一个Map阶段">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132134579405520000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/22/MapReduce基础学习-一/"/>
+
+
+
+
+
+  <title>MapReduce基础学习-一 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/MapReduce基础学习-一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MapReduce基础学习-一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-22T20:33:34+08:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="MapReduce概述"><a href="#MapReduce概述" class="headerlink" title="MapReduce概述"></a>MapReduce概述</h3><h4 id="MapReduce定义"><a href="#MapReduce定义" class="headerlink" title="MapReduce定义"></a>MapReduce定义</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132134579405520000.png" alt="image"></p>
+<h4 id="MapReduce优缺点"><a href="#MapReduce优缺点" class="headerlink" title="MapReduce优缺点"></a>MapReduce优缺点</h4><h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/1_132135276616926250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132135276618488750.png" alt="image"></p>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132135279155676250.png" alt="image"></p>
+<h4 id="MapReduce核心思想"><a href="#MapReduce核心思想" class="headerlink" title="MapReduce核心思想"></a>MapReduce核心思想</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132135297869270000.png" alt="image"></p>
+<ul>
+<li>1）分布式的运算程序往往需要分成至少2个阶段。</li>
+<li>2）第一个阶段的MapTask并发实例，完全并行运行，互不相干。</li>
+<li>3）第二个阶段的ReduceTask并发实例互不相干，但是他们的数据依赖于上一个阶段的所有MapTask并发实例的输出。</li>
+<li>4）MapReduce编程模型只能包含一个Map阶段和一个Reduce阶段，如果用户的业务逻辑非常复杂，那就只能多个MapReduce程序，串行运行。</li>
+<li>总结：分析WordCount数据流走向深入理解MapReduce核心思想。</li>
+</ul>
+<h4 id="MapReduce进程"><a href="#MapReduce进程" class="headerlink" title="MapReduce进程"></a>MapReduce进程</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5_132135300773645000.png" alt="image"></p>
+<h4 id="官方WordCount源码"><a href="#官方WordCount源码" class="headerlink" title="官方WordCount源码"></a>官方WordCount源码</h4><p>用反编译工具反编译源码，发现WordCount案例有Map类、Reduce类和驱动类。且数据的类型是Hadoop自身封装的序列化类型。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6_132135319797551250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7_132135319799113750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8_132135319800832500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9_132135319801926250.png" alt="image"></p>
+<h4 id="常用数据序列化类型"><a href="#常用数据序列化类型" class="headerlink" title="常用数据序列化类型"></a>常用数据序列化类型</h4><font size="3" color="red">常用的数据类型对应的Hadoop数据序列化类型</font>
+
+
+<table>
+<thead>
+<tr>
+<th>Java类型</th>
+<th>Hadoop Writable类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boolean</td>
+<td>BooleanWritable</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>ByteWritable</td>
+</tr>
+<tr>
+<td>int</td>
+<td>IntWritable</td>
+</tr>
+<tr>
+<td>float</td>
+<td>FloatWritable</td>
+</tr>
+<tr>
+<td>long</td>
+<td>LongWritable</td>
+</tr>
+<tr>
+<td>double</td>
+<td>DoubleWritable</td>
+</tr>
+<tr>
+<td><font size="3" color="red">String</font></td>
+<td><font size="3" color="red">Text</font></td>
+</tr>
+<tr>
+<td>map</td>
+<td>MapWritable</td>
+</tr>
+<tr>
+<td>array</td>
+<td>ArrayWritable</td>
+</tr>
+</tbody>
+</table>
+<h4 id="MapReduce编程规范"><a href="#MapReduce编程规范" class="headerlink" title="MapReduce编程规范"></a>MapReduce编程规范</h4><p>用户编写的程序分成三个部分：Mapper、Reducer和Driver。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10_132135339968176250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11_132135339970832500.png" alt="image"></p>
+<h4 id="WordCount案列实操"><a href="#WordCount案列实操" class="headerlink" title="WordCount案列实操"></a>WordCount案列实操</h4><h5 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h5><p>在给定的文本文件中统计输出每一个单词出现的总次数</p>
+<ol>
+<li>输入数据（hello.txt）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">atyp atyp</span><br><span class="line">ss ss</span><br><span class="line">cls cls</span><br><span class="line">jiao</span><br><span class="line">banzhang</span><br><span class="line">xue</span><br><span class="line">hadoop</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>期望输出数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">atyp        2</span><br><span class="line">ss          2</span><br><span class="line">cls         2</span><br><span class="line">jiao        1</span><br><span class="line">banzhang    1</span><br><span class="line">xue         1</span><br><span class="line">hadoop      1</span><br></pre></td></tr></table></figure>
+<h5 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h5><p>按照MapReduce编程规范，分别编写Mapper，Reducer，Driver<br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12_132135382702238750.png" alt="image"></p>
+<h5 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h5><ol>
+<li>创建maven工程(mr-0529)</li>
+<li>在pom.xml文件中添加如下依赖</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;junit&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;junit&lt;/artifactId&gt;</span><br><span class="line">			&lt;version&gt;RELEASE&lt;/version&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.logging.log4j&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;log4j-core&lt;/artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.8.2&lt;/version&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;hadoop-common&lt;/artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.7.2&lt;/version&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;hadoop-client&lt;/artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.7.2&lt;/version&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">		&lt;dependency&gt;</span><br><span class="line">			&lt;groupId&gt;org.apache.hadoop&lt;/groupId&gt;</span><br><span class="line">			&lt;artifactId&gt;hadoop-hdfs&lt;/artifactId&gt;</span><br><span class="line">			&lt;version&gt;2.7.2&lt;/version&gt;</span><br><span class="line">		&lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>在项目的src/main/resources目录下，新建一个文件，命名为“log4j.properties”，在文件中填入。</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">log4j.rootLogger=INFO, stdout</span><br><span class="line">log4j.appender.stdout=org.apache.log4j.ConsoleAppender</span><br><span class="line">log4j.appender.stdout.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n</span><br><span class="line">log4j.appender.logfile=org.apache.log4j.FileAppender</span><br><span class="line">log4j.appender.logfile.File=target/spring.log</span><br><span class="line">log4j.appender.logfile.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.logfile.layout.ConversionPattern=%d %p [%c] - %m%n</span><br></pre></td></tr></table></figure>
+<h5 id="编写程序"><a href="#编写程序" class="headerlink" title="编写程序"></a>编写程序</h5><ol>
+<li>编写Mapper类</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.LongWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">// map阶段</span></span><br><span class="line"><span class="comment">// KEYIN    输入数据的key(偏移量)</span></span><br><span class="line"><span class="comment">// VALUEIN  输入数据的value(Text)</span></span><br><span class="line"><span class="comment">// KEYOUT   输出数据的key的类型(数据格式：atyp,1   ss,1)前面是key后面是value</span></span><br><span class="line"><span class="comment">// VALUEOUT 输出数据的value的类型</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">LongWritable</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    Text k = <span class="keyword">new</span> Text();</span><br><span class="line">    IntWritable v = <span class="keyword">new</span> IntWritable(<span class="number">1</span>);</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(LongWritable key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">// atyp atyp</span></span><br><span class="line">        <span class="comment">// 1.获取一行</span></span><br><span class="line">        String line = value.toString();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.切割单词</span></span><br><span class="line">        String[] words = line.split(<span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.循环写出</span></span><br><span class="line">        <span class="keyword">for</span> (String word : words) &#123;</span><br><span class="line">            <span class="comment">// atyp</span></span><br><span class="line">            <span class="comment">//Text k = new Text();</span></span><br><span class="line">            k.set(word);</span><br><span class="line">            <span class="comment">// 1</span></span><br><span class="line">            <span class="comment">//IntWritable v = new IntWritable();</span></span><br><span class="line">            <span class="comment">//v.set(1);</span></span><br><span class="line">            context.write(k, v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13_132135941008801250.png" alt="image"></p>
+<ol start="2">
+<li>编写Reducer类</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">// Reducer阶段</span><br><span class="line">// Reducer&lt;KEYIN,VALUEIN,KEYOUT,VALUEOUT&gt;</span><br><span class="line">// KEYIN,VALUEIN    map阶段输出的key和value(注意：是manp阶段的输出的k和v)</span><br><span class="line">// KEYOUT,VALUEOUT  输出的格式是 atyp,2 所以是 Text, IntWritable</span><br><span class="line">public class WordCountReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; &#123;</span><br><span class="line">    IntWritable v = new IntWritable();</span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        // atyp,1</span><br><span class="line">        // atyp,1</span><br><span class="line"></span><br><span class="line">        int sum = 0;</span><br><span class="line">        // 1.累加求和</span><br><span class="line">        for (IntWritable value : values) &#123;</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        v.set(sum);</span><br><span class="line"></span><br><span class="line">        // 2.写出 atyp 2</span><br><span class="line">        context.write(key,v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<font size="3" color="red">注意：这里reducer阶段的前两个泛型是map阶段输出的k和v</font>
+</blockquote>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14_132136209088020000.png" alt="image"></p>
+<ol start="3">
+<li>编写Driver驱动类</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapred.JobConf;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WordCountDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置jar存储位置</span><br><span class="line">        job.setJarByClass(WordCountDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联Map和Reduce类</span><br><span class="line">        job.setMapperClass(WordCountMapper.class);</span><br><span class="line">        job.setReducerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置Mapper阶段数据输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终数据输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入路径和输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        //job.submit();</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15_132136232160520000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16_132136232161770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17_132136232162863750.png" alt="image"></p>
+<h5 id="本地测试"><a href="#本地测试" class="headerlink" title="本地测试"></a>本地测试</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18_132136248398332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19_132136248399582500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20_132136248400676250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21_132136248401613750.png" alt="image"></p>
+<h5 id="集群上测试"><a href="#集群上测试" class="headerlink" title="集群上测试"></a>集群上测试</h5><ol>
+<li>用maven打jar包，需要添加的打包插件依赖</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">&lt;build&gt;</span><br><span class="line">        &lt;plugins&gt;</span><br><span class="line">            &lt;plugin&gt;</span><br><span class="line">                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">                &lt;version&gt;2.3.2&lt;/version&gt;</span><br><span class="line">                &lt;configuration&gt;</span><br><span class="line">                    &lt;source&gt;1.8&lt;/source&gt;</span><br><span class="line">                    &lt;target&gt;1.8&lt;/target&gt;</span><br><span class="line">                &lt;/configuration&gt;</span><br><span class="line">            &lt;/plugin&gt;</span><br><span class="line">            &lt;plugin&gt;</span><br><span class="line">                &lt;artifactId&gt;maven-assembly-plugin &lt;/artifactId&gt;</span><br><span class="line">                &lt;configuration&gt;</span><br><span class="line">                    &lt;descriptorRefs&gt;</span><br><span class="line">                        &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;</span><br><span class="line">                    &lt;/descriptorRefs&gt;</span><br><span class="line">                    &lt;archive&gt;</span><br><span class="line">                        &lt;manifest&gt;</span><br><span class="line">                            &lt;mainClass&gt;com.atyp.mr.wordcount.WordCountDriver&lt;/mainClass&gt;</span><br><span class="line">                        &lt;/manifest&gt;</span><br><span class="line">                    &lt;/archive&gt;</span><br><span class="line">                &lt;/configuration&gt;</span><br><span class="line">                &lt;executions&gt;</span><br><span class="line">                    &lt;execution&gt;</span><br><span class="line">                        &lt;id&gt;make-assembly&lt;/id&gt;</span><br><span class="line">                        &lt;phase&gt;package&lt;/phase&gt;</span><br><span class="line">                        &lt;goals&gt;</span><br><span class="line">                            &lt;goal&gt;single&lt;/goal&gt;</span><br><span class="line">                        &lt;/goals&gt;</span><br><span class="line">                    &lt;/execution&gt;</span><br><span class="line">                &lt;/executions&gt;</span><br><span class="line">            &lt;/plugin&gt;</span><br><span class="line">        &lt;/plugins&gt;</span><br><span class="line">    &lt;/build&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：全类名</p>
+</blockquote>
+<ol start="2">
+<li>将程序打成jar包，然后拷贝到Hadoop集群中</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22_132136289762395000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23_132136289763488750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/24_132136289765363750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25_132136289766457500.png" alt="image"></p>
+<ol start="3">
+<li>启动Hadoop集群</li>
+<li>执行WordCount程序</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26_132136289767395000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/27_132136289768332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28_132136289769582500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29_132136289770832500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30_132136289771926250.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/20/HDFS基础学习-五/" rel="next" title="HDFS基础学习-五">
+                <i class="fa fa-chevron-left"></i> HDFS基础学习-五
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce概述"><span class="nav-number">1.</span> <span class="nav-text">MapReduce概述</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce定义"><span class="nav-number">1.1.</span> <span class="nav-text">MapReduce定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce优缺点"><span class="nav-number">1.2.</span> <span class="nav-text">MapReduce优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#优点"><span class="nav-number">1.2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#缺点"><span class="nav-number">1.2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce核心思想"><span class="nav-number">1.3.</span> <span class="nav-text">MapReduce核心思想</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce进程"><span class="nav-number">1.4.</span> <span class="nav-text">MapReduce进程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#官方WordCount源码"><span class="nav-number">1.5.</span> <span class="nav-text">官方WordCount源码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常用数据序列化类型"><span class="nav-number">1.6.</span> <span class="nav-text">常用数据序列化类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MapReduce编程规范"><span class="nav-number">1.7.</span> <span class="nav-text">MapReduce编程规范</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WordCount案列实操"><span class="nav-number">1.8.</span> <span class="nav-text">WordCount案列实操</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#需求"><span class="nav-number">1.8.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#需求分析"><span class="nav-number">1.8.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#环境准备"><span class="nav-number">1.8.3.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写程序"><span class="nav-number">1.8.4.</span> <span class="nav-text">编写程序</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#本地测试"><span class="nav-number">1.8.5.</span> <span class="nav-text">本地测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#集群上测试"><span class="nav-number">1.8.6.</span> <span class="nav-text">集群上测试</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
