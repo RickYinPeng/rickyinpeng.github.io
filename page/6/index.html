@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五、Redis-整数集合/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -282,7 +282,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/五、Redis-整数集合/" itemprop="url">五、Redis-整数集合</a></h1>
+                <a class="post-title-link" href="/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/" itemprop="url">四.整型变量、常量、浮点类型变量、字符型类型、转义字符</a></h1>
         
 
         <div class="post-meta">
@@ -334,12 +334,13 @@
       
         
           
-          前言在 Redis 中，当集合只包含整数值元素，并且集合的元素数量不多时，Redis 就会使用整数集合作为集合键的底层实现。
-整数集合的实现整数集合是 Redis 中用于保存整数数值的集合抽象数据结构，它可以保存类型为 int16_t, int32_t 或者 int_64t 的整数值，并且保证集合中
+          整型变量、常量整型用于表示没有小数部分的数值，它允许是负数。整型的范围与运行Java代码的机器无关，这正是Java程序具有很强移植能力的原因之一。与此相反，C和C++程序需要针对不同的处理器选择最有效的整型。
+
+注意：int类型和其他类型比如long类型所占的字节数，是一个考点其次明白为什么参数范围
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/五、Redis-整数集合/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/2.3整型变量、常量、浮点类型变量、字符型类型_转义字符/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -390,7 +391,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/六.BufferedInputSream/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/3.0控制语句/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -409,7 +410,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/六.BufferedInputSream/" itemprop="url">六.BufferedInputStream源码解析</a></h1>
+                <a class="post-title-link" href="/2019/07/05/3.0控制语句/" itemprop="url">七.控制语句</a></h1>
         
 
         <div class="post-meta">
@@ -461,12 +462,13 @@
       
         
           
-          BufferedInputStream源码解析
-
-          
+          本章开始我们需要学习流程控制语句，流程控制语句是用来控制程序中各语句执行顺序的语句，可以把语句组合成能完成一定功能的小逻辑模块。控制语句分为三类：顺序、选择和循环。
+“顺序结构”代表“先执行a，再执行b”的逻辑。比如，先找个女朋友，再给女朋友打电话；先订婚，再结婚；
+“选择结构”代表“如果…，则…”
+          ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/六.BufferedInputSream/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/3.0控制语句/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -517,7 +519,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/八.浅redis分布式锁/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -536,7 +538,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/八.浅redis分布式锁/" itemprop="url">八.浅谈redis分布式锁</a></h1>
+                <a class="post-title-link" href="/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/" itemprop="url">四.宜立方商城——图片服务器&副文本编辑框&商品添加功能</a></h1>
         
 
         <div class="post-meta">
@@ -588,12 +590,13 @@
       
         
           
-          基础部分这一节都是自己瞎了解，反正自己觉得总得先知道这是个怎么回事，最后自己再研究的时候，也不至于瞎搞
-JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373839404142434445464
+          唉，昨天是花了时间花了钱，还没有回家，这国庆怕是回不去了，唉，学习吧！！！
+一.课程计划：123451、图片上传    a)图片服务器FastDFS(分布式文件系统)    b)图片上传功能实现2、富文本编辑器的使用KindEditor3、商品添加功能完成
+二.图片服务器安装须知：1、存储空间可扩展
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/八.浅redis分布式锁/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/4.宜立方商城——图片服务器&副文本编辑框&商品添加功能/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -644,7 +647,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十九.集合(容器)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.面向过程和面向对象/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -663,7 +666,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/十九.集合(容器)/" itemprop="url">十九.集合(容器)</a></h1>
+                <a class="post-title-link" href="/2019/07/05/4.面向过程和面向对象/" itemprop="url">十.面向过程和面向对象</a></h1>
         
 
         <div class="post-meta">
@@ -715,13 +718,11 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
       
         
           
-          集合总接口层次图容器是什么呢？就是容纳物体的东西，如我们之前学的数组就是一种容器。
-数组的优势：是一种简单的线性序列，可以快速地访问数组元素，效率高。如果从效率和类型检查的角度讲，数组是最好的。
-数组的劣势：不灵活。容量需要事先定义好，不能随着需求的变化而扩容。比如：我们在一个用户管理系统中，要把今
+          4.1面向过程和面向对象面向过程(Procedure Oriented)和面向对象(Object Oriented,OO)都是对软件分析、设计和开发的一种思想,它指导着人们以不同的方式去分析、设计和开发软件。早期先有面向过程思想，随着软件规模的扩大，问题复杂性的提高，面向过程的弊端越来越明显的显示出
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/十九.集合(容器)/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/4.面向过程和面向对象/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -772,7 +773,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十五.final关键字，数组/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.宜立方商城搭建/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -791,7 +792,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/十五.final关键字，数组/" itemprop="url">十五.final关键字、数组</a></h1>
+                <a class="post-title-link" href="/2019/07/05/1.宜立方商城搭建/" itemprop="url">一.宜立方商城——校园易商城搭建和介绍</a></h1>
         
 
         <div class="post-meta">
@@ -843,16 +844,12 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
       
         
           
-          一.final关键字的作用
-修饰变量：被他修饰的变量不可以被改变。一旦赋了初值，就不能再被重新赋值
-修饰方法：该方法不能被子类重写。但是可以被重载
-修饰类：修饰的类不能被继承。比如：Math，String等
-
-二.数组2.1 数组的定义数组是相同类型数据的有序集合。数组描述的是相同类型的若干个数据，
+          一.易商城计划：二.宜立方商城架构&emsp;&emsp; 2.1    功能列表
+123456后台管理系统：管理商品、订单、类目、商品规格属性、用户管理以及内容发布等功能。前台系统：用户可以在前台系统中进行注册、登录、浏览商品、首页、下单等操作。会员系统：用户可以在该系统中查询已下的订单、收藏的商
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/十五.final关键字，数组/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/1.宜立方商城搭建/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -903,7 +900,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/四、Redis-跳跃表/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.删除链表的倒数第N个节点/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -922,7 +919,7 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/四、Redis-跳跃表/" itemprop="url">四、Redis-跳跃表</a></h1>
+                <a class="post-title-link" href="/2019/07/05/1.删除链表的倒数第N个节点/" itemprop="url">LeetCode-18：删除链表的倒数第N个节点</a></h1>
         
 
         <div class="post-meta">
@@ -974,14 +971,19 @@ JedisPoolUtils123456789101112131415161718192021222324252627282930313233343536373
       
         
           
-          前言自己一直秉持这样一句话，”过程是扎实的，结果肯定是必然的”
-静心学习，沉淀。。。
-跳跃表介绍跳跃表(skiplist)是一种有序的数据结构，它通过在每个结点中维持多个指向其他节点的指针，从而达到快速访问节点的目的。其支持平均O(logN)、最坏O(N)复杂度的节点查找。
-Redis使用跳跃表作为
+          
+本题为LeetCode中第18道题
+
+
+如果是之前没做过之类的题型的话可能一下子会蒙住，尤其是用Java语言来写的时候，所以我们要尽可能的多做这类题，多刷才能有质的飞跃
+
+删除链表的倒数第N个节点给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+示例：
+123给定一个链表: 1-
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/四、Redis-跳跃表/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/1.删除链表的倒数第N个节点/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1032,7 +1034,7 @@ Redis使用跳跃表作为
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.LayUI学习/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/10.有效的数独/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1051,7 +1053,7 @@ Redis使用跳跃表作为
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/1.LayUI学习/" itemprop="url">LayUI学习</a></h1>
+                <a class="post-title-link" href="/2019/07/05/10.有效的数独/" itemprop="url">LeetCode-36：有效的数独</a></h1>
         
 
         <div class="post-meta">
@@ -1103,15 +1105,21 @@ Redis使用跳跃表作为
       
         
           
-          LayUI开始使用
-国人开发的前端框架，好看，又好用
+          
+本题为LeetCode第36道题，为中等题
+
+判断一个 9x9 的数独是否有效。只需要根据以下规则，验证已经填入的数字是否有效即可。
 
 
-官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─layd
+数字 1-9 在每一行只能出现一次。
+数字 1-9 在每一列只能出现一次。
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+
+上图是一个部分填
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/1.LayUI学习/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/10.有效的数独/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1162,7 +1170,7 @@ Redis使用跳跃表作为
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/一、为什么要学习网络协议？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1181,7 +1189,7 @@ Redis使用跳跃表作为
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/" itemprop="url">十.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页</a></h1>
+                <a class="post-title-link" href="/2019/07/05/一、为什么要学习网络协议？/" itemprop="url">一.为什么要学习网络协议</a></h1>
         
 
         <div class="post-meta">
@@ -1233,13 +1241,13 @@ Redis使用跳跃表作为
       
         
           
-          一.计划121、使用freemarker实现网页静态化2、ActiveMq同步生成静态网页
-二.网页静态化可以使用Freemarker实现网页静态化。
-2.1 什么是freemarkerFreeMarker是一个用Java语言编写的模板引擎，它基于模板来生成文本输出。FreeMarker与Web容器
+          只有通过网络协议，才能使一大片机器互相协作、共同完成一件事。
+我们常用的网络协议有哪些？这里，我们用一个下单过程，看看互联网世界运行过程中，都使用了哪些网络协议
+你先在浏览器中输入 https://www.kaola.com ,这是一个URL。浏览器在这里只知道是”www.laola.com&quo
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/一、为什么要学习网络协议？/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1290,7 +1298,7 @@ Redis使用跳跃表作为
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/13.宜立方商城——订单系统/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1309,7 +1317,7 @@ Redis使用跳跃表作为
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/13.宜立方商城——订单系统/" itemprop="url">十三.宜立方商城——订单系统</a></h1>
+                <a class="post-title-link" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/" itemprop="url">三.StringBuffer和StringBuilder可变的源码分析</a></h1>
         
 
         <div class="post-meta">
@@ -1361,25 +1369,13 @@ Redis使用跳跃表作为
       
         
           
-          一.项目计划
-订单系统实现
-订单生成
-数据库读写分离
-
-二.订单系统
-
-2.1 功能分析1、在购物车页面点击“去结算”按钮跳转到订单确认页面。
-
-必须要求用户登录
-使用拦截器实现
-如果用户未登录就跳转到登录界面
-如果用户已经登录，放行。展示购物车页面
-判断Cookie中是否有购物车数据
-如果有同步到
+          目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。
+分析方法测试代码
+1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&quot;hello&quot
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/13.宜立方商城——订单系统/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1430,7 +1426,7 @@ Redis使用跳跃表作为
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/九.浅析Java中的参数传值机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1449,7 +1445,7 @@ Redis使用跳跃表作为
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/" itemprop="url">二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装</a></h1>
+                <a class="post-title-link" href="/2019/07/05/九.浅析Java中的参数传值机制/" itemprop="url">九.浅析Java中的参数传值机制（面试题）</a></h1>
         
 
         <div class="post-meta">
@@ -1501,12 +1497,13 @@ Redis使用跳跃表作为
       
         
           
-          今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈；
-Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&nbsp;&nbsp;&nbsp;&nbsp;转发：&gt; 根据前面学习，我们知道S
+          前言关于传值机制，之前自己再Java基础中了解过，但是昨天晚上却有了一些新的认知，所以记录一下，以便后期复习，今天我们以一道面试题作为开头来引导
+一.面试题在main中定义了两个Integer a和b ，通过swap方法，交换两个值，请写出swap方法
+二.常规思路（仅仅是思路）我们需要通过一个中间
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/九.浅析Java中的参数传值机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1598,7 +1595,7 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">96</span>
+                  <span class="site-state-item-count">97</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
