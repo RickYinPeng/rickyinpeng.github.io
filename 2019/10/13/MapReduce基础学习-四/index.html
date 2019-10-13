@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Shuffle机制Shuffle机制机制Map方法之后，Reduce方法之前的数据处理过程称之为Shuffle。  Partition分区 分区源码分析 Partition分区案例实操需求将统计结果按照手机归属地不同省份输出到不同文件中（分区）  输入数据  123456789101112131415161718192021221	13736230513	192.196.100.1	www.atg">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce基础学习-四">
+<meta property="og:url" content="http://yoursite.com/2019/10/13/MapReduce基础学习-四/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="Shuffle机制Shuffle机制机制Map方法之后，Reduce方法之前的数据处理过程称之为Shuffle。  Partition分区 分区源码分析 Partition分区案例实操需求将统计结果按照手机归属地不同省份输出到不同文件中（分区）  输入数据  123456789101112131415161718192021221	13736230513	192.196.100.1	www.atg">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132149750058945000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/19_132149945238476250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/20.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132149944549726250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132149944551601250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132149944553163750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132149944554570000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132149944555976250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9_132149944557382500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132149944558788750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11_132149944661913750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12_132149944663632500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13_132149944665038750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14_132149944666288750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15_132149944667538750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/16_132149944668945000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/17_132149944670195000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/21.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/22.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/23.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/24.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/25.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/26.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/27.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132150822758163750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132150855659882500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132152606769570000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132152611548788750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132152612948788750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132152616695351250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132153604647382500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132153608074726250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132153608663632500.png">
+<meta property="og:updated_time" content="2019-10-13T01:53:52.589Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MapReduce基础学习-四">
+<meta name="twitter:description" content="Shuffle机制Shuffle机制机制Map方法之后，Reduce方法之前的数据处理过程称之为Shuffle。  Partition分区 分区源码分析 Partition分区案例实操需求将统计结果按照手机归属地不同省份输出到不同文件中（分区）  输入数据  123456789101112131415161718192021221	13736230513	192.196.100.1	www.atg">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132149750058945000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/13/MapReduce基础学习-四/"/>
+
+
+
+
+
+  <title>MapReduce基础学习-四 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/13/MapReduce基础学习-四/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MapReduce基础学习-四</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-13T09:53:04+08:00">
+                2019-10-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Shuffle机制"><a href="#Shuffle机制" class="headerlink" title="Shuffle机制"></a>Shuffle机制</h2><h3 id="Shuffle机制机制"><a href="#Shuffle机制机制" class="headerlink" title="Shuffle机制机制"></a>Shuffle机制机制</h3><p>Map方法之后，Reduce方法之前的数据处理过程称之为Shuffle。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132149750058945000.png" alt="image"></p>
+<h3 id="Partition分区"><a href="#Partition分区" class="headerlink" title="Partition分区"></a>Partition分区</h3><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/19_132149945238476250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/20.png" alt="image"></p>
+<h4 id="分区源码分析"><a href="#分区源码分析" class="headerlink" title="分区源码分析"></a>分区源码分析</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132149944549726250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132149944551601250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132149944553163750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132149944554570000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132149944555976250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9_132149944557382500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132149944558788750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11_132149944661913750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12_132149944663632500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13_132149944665038750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14_132149944666288750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15_132149944667538750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/16_132149944668945000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/17_132149944670195000.png" alt="image"></p>
+<h3 id="Partition分区案例实操"><a href="#Partition分区案例实操" class="headerlink" title="Partition分区案例实操"></a>Partition分区案例实操</h3><h4 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h4><p>将统计结果按照手机归属地不同省份输出到不同文件中（分区）</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1	13736230513	192.196.100.1	www.atguigu.com	2481	24681	200</span><br><span class="line">2	13846544121	192.196.100.2			        264	    0	    200</span><br><span class="line">3 	13956435636	192.196.100.3			        132	    1512	200</span><br><span class="line">4 	13966251146	192.168.100.1		        	240	    0	    404</span><br><span class="line">5 	18271575951	192.168.100.2	www.atguigu.com	1527	2106	200</span><br><span class="line">6 	84188413	192.168.100.3	www.atguigu.com	4116	1432	200</span><br><span class="line">7 	13590439668	192.168.100.4		        	1116	954	    200</span><br><span class="line">8 	15910133277	192.168.100.5	www.hao123.com	3156	2936	200</span><br><span class="line">9 	13729199489	192.168.100.6		        	240	    0	    200</span><br><span class="line">10 	13630577991	192.168.100.7	www.shouhu.com	6960	690	    200</span><br><span class="line">11 	15043685818	192.168.100.8	www.baidu.com	3659	3538	200</span><br><span class="line">12 	15959002129	192.168.100.9	www.atguigu.com	1938	180	    500</span><br><span class="line">13 	13560439638	192.168.100.10			        918	    4938	200</span><br><span class="line">14 	13470253144	192.168.100.11			        180	    180	    200</span><br><span class="line">15 	13682846555	192.168.100.12	www.qq.com	    1938	2910	200</span><br><span class="line">16 	13992314666	192.168.100.13	www.gaga.com	3008	3720	200</span><br><span class="line">17 	13509468723	192.168.100.14	www.qinghua.com	7335	110349	404</span><br><span class="line">18 	18390173782	192.168.100.15	www.sogou.com	9531	2412	200</span><br><span class="line">19 	13975057813	192.168.100.16	www.baidu.com	11058	48243	200</span><br><span class="line">20 	13768778790	192.168.100.17			        120	    120	    200</span><br><span class="line">21 	13568436656	192.168.100.18	www.alibaba.com	2481	24681	200</span><br><span class="line">22 	13568436656	192.168.100.19			        1116	954	    200</span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出数据</li>
+</ul>
+<p>手机号136、137、138、139开头都分别放到一个独立的4个文件中，其他开头的放到一个文件中。</p>
+<h4 id="需求分析"><a href="#需求分析" class="headerlink" title="需求分析"></a>需求分析</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/21.png" alt="image"></p>
+<h4 id="在案例2-4的基础上，增加一个分区类"><a href="#在案例2-4的基础上，增加一个分区类" class="headerlink" title="在案例2.4的基础上，增加一个分区类"></a>在案例2.4的基础上，增加一个分区类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.flowsum;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Partitioner;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Partitioner&lt;Text, FlowBean&gt;</span></span><br><span class="line"><span class="comment"> * 这两个泛型时map阶段的输出</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProvincePartitioner</span> <span class="keyword">extends</span> <span class="title">Partitioner</span>&lt;<span class="title">Text</span>, <span class="title">FlowBean</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getPartition</span><span class="params">(Text key, FlowBean value, <span class="keyword">int</span> numPartitions)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// key 是手机号</span></span><br><span class="line">        <span class="comment">// value 是流量信息</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 获取手机号前三位</span></span><br><span class="line">        String prePhoneNum = key.toString().substring(<span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> partition = <span class="number">4</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">"136"</span>.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"137"</span>.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"138"</span>.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = <span class="number">2</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="string">"139"</span>.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = <span class="number">3</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            partition = <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> partition;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="在驱动函数中增加自定义数据分区设置和ReduceTask设置"><a href="#在驱动函数中增加自定义数据分区设置和ReduceTask设置" class="headerlink" title="在驱动函数中增加自定义数据分区设置和ReduceTask设置"></a>在驱动函数中增加自定义数据分区设置和ReduceTask设置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.flowsum;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class FlowSumDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_02&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_02&quot;&#125;;</span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置jar的路径</span><br><span class="line">        job.setJarByClass(FlowSumDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联Mapper和Reducer</span><br><span class="line">        job.setMapperClass(FlowCountMapper.class);</span><br><span class="line">        job.setReducerClass(FlowCountReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置mapper输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(FlowBean.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(FlowBean.class);</span><br><span class="line">        </span><br><span class="line">        // 8.指定自定义数据分区</span><br><span class="line">        job.setPartitionerClass(ProvincePartitioner.class);</span><br><span class="line">        // 9.同时指定相应数量的reduce task</span><br><span class="line">        job.setNumReduceTasks(5);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/22.png" alt="image"></p>
+<h4 id="分区总结"><a href="#分区总结" class="headerlink" title="分区总结"></a>分区总结</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/23.png" alt="image"></p>
+<h3 id="WritableComparable排序"><a href="#WritableComparable排序" class="headerlink" title="WritableComparable排序"></a>WritableComparable排序</h3><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/24.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/25.png" alt="image"></p>
+<h4 id="排序的分类"><a href="#排序的分类" class="headerlink" title="排序的分类"></a>排序的分类</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/26.png" alt="image"></p>
+<h4 id="自定义排序WritableComparable"><a href="#自定义排序WritableComparable" class="headerlink" title="自定义排序WritableComparable"></a>自定义排序WritableComparable</h4><p>bean对象做为key传输，需要实现<font size="3" color="red">WritableComparable</font>接口重写compareTo方法，就可以实现排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(FlowBean o)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> result;</span><br><span class="line">		</span><br><span class="line">	<span class="comment">// 按照总流量大小，倒序排列</span></span><br><span class="line">	<span class="keyword">if</span> (sumFlow &gt; bean.getSumFlow()) &#123;</span><br><span class="line">		result = -<span class="number">1</span>;</span><br><span class="line">	&#125;<span class="keyword">else</span> <span class="keyword">if</span> (sumFlow &lt; bean.getSumFlow()) &#123;</span><br><span class="line">		result = <span class="number">1</span>;</span><br><span class="line">	&#125;<span class="keyword">else</span> &#123;</span><br><span class="line">		result = <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="WritableComparable排序案例实操（全排序）"><a href="#WritableComparable排序案例实操（全排序）" class="headerlink" title="WritableComparable排序案例实操（全排序）"></a>WritableComparable排序案例实操（全排序）</h3><h4 id="需求-1"><a href="#需求-1" class="headerlink" title="需求"></a>需求</h4><p>根据案例2.3产生的结果再次对总流量进行排序。</p>
+<ul>
+<li>（1）输入数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">1	13736230513	192.196.100.1	www.atguigu.com	2481	24681	200</span><br><span class="line">2	13846544121	192.196.100.2			        264	    0	    200</span><br><span class="line">3 	13956435636	192.196.100.3			        132	    1512	200</span><br><span class="line">4 	13966251146	192.168.100.1			        240	    0	    404</span><br><span class="line">5 	18271575951	192.168.100.2	www.atguigu.com	1527	2106	200</span><br><span class="line">6 	84188413	192.168.100.3	www.atguigu.com	4116	1432	200</span><br><span class="line">7 	13590439668	192.168.100.4			        1116	954	    200</span><br><span class="line">8 	15910133277	192.168.100.5	www.hao123.com	3156	2936	200</span><br><span class="line">9 	13729199489	192.168.100.6			        240	    0	    200</span><br><span class="line">10 	13630577991	192.168.100.7	www.shouhu.com	6960	690	    200</span><br><span class="line">11 	15043685818	192.168.100.8	www.baidu.com	3659	3538	200</span><br><span class="line">12 	15959002129	192.168.100.9	www.atguigu.com	1938	180	    500</span><br><span class="line">13 	13560439638	192.168.100.10			        918	    4938	200</span><br><span class="line">14 	13470253144	192.168.100.11			        180	    180	    200</span><br><span class="line">15 	13682846555	192.168.100.12	www.qq.com	    1938	2910	200</span><br><span class="line">16 	13992314666	192.168.100.13	www.gaga.com	3008	3720	200</span><br><span class="line">17 	13509468723	192.168.100.14	www.qinghua.com	7335	110349	404</span><br><span class="line">18 	18390173782	192.168.100.15	www.sogou.com	9531	2412	200</span><br><span class="line">19 	13975057813	192.168.100.16	www.baidu.com	11058	48243	200</span><br><span class="line">20 	13768778790	192.168.100.17			        120	    120	    200</span><br><span class="line">21 	13568436656	192.168.100.18	www.alibaba.com	2481	24681	200</span><br><span class="line">22 	13568436656	192.168.100.19			        1116	954	    200</span><br></pre></td></tr></table></figure>
+<ul>
+<li>（2）期望输出数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">13509468723	7335	110349	117684</span><br><span class="line">13736230513	2481	24681	27162</span><br><span class="line">13956435636	132		1512	1644</span><br><span class="line">13846544121	264		0		264</span><br><span class="line">。。。 。。。</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>按照总流量倒序排序的</p>
+</blockquote>
+<h4 id="需求分析-1"><a href="#需求分析-1" class="headerlink" title="需求分析"></a>需求分析</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/27.png" alt="image"></p>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><h5 id="FlowBean对象在在需求1基础上增加了比较功能"><a href="#FlowBean对象在在需求1基础上增加了比较功能" class="headerlink" title="FlowBean对象在在需求1基础上增加了比较功能"></a>FlowBean对象在在需求1基础上增加了比较功能</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.WritableComparable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.DataInput;</span><br><span class="line"><span class="keyword">import</span> java.io.DataOutput;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowBean</span> <span class="keyword">implements</span> <span class="title">WritableComparable</span>&lt;<span class="title">FlowBean</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> upFlow;    <span class="comment">//上行流量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> downFlow;  <span class="comment">//下行流量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> sumFlow;   <span class="comment">//总流量</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FlowBean</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">FlowBean</span><span class="params">(<span class="keyword">long</span> upFlow, <span class="keyword">long</span> downFlow)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.upFlow = upFlow;</span><br><span class="line">        <span class="keyword">this</span>.downFlow = downFlow;</span><br><span class="line">        <span class="keyword">this</span>.sumFlow = upFlow + downFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 比较</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compareTo</span><span class="params">(FlowBean bean)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 核心比较条件判断</span></span><br><span class="line">        <span class="keyword">int</span> result;</span><br><span class="line">        <span class="keyword">if</span> (sumFlow &gt; bean.getSumFlow()) &#123;</span><br><span class="line">            <span class="comment">//需要 倒序 ，所以这里是 -1</span></span><br><span class="line">            result = -<span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (sumFlow &lt; bean.getSumFlow()) &#123;</span><br><span class="line">            result = <span class="number">1</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//相等</span></span><br><span class="line">            result = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 序列化</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        out.writeLong(upFlow);</span><br><span class="line">        out.writeLong(downFlow);</span><br><span class="line">        out.writeLong(sumFlow);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 反序列化</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        upFlow = in.readLong();</span><br><span class="line">        downFlow = in.readLong();</span><br><span class="line">        sumFlow = in.readLong();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getUpFlow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> upFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUpFlow</span><span class="params">(<span class="keyword">long</span> upFlow)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.upFlow = upFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getDownFlow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> downFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDownFlow</span><span class="params">(<span class="keyword">long</span> downFlow)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.downFlow = downFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">getSumFlow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sumFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSumFlow</span><span class="params">(<span class="keyword">long</span> sumFlow)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sumFlow = sumFlow;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> upFlow + <span class="string">"\t"</span> + downFlow + <span class="string">"\t"</span> + sumFlow;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写Mapper类"><a href="#编写Mapper类" class="headerlink" title="编写Mapper类"></a>编写Mapper类</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.LongWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FlowCountSortMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">LongWritable</span>, <span class="title">Text</span>, <span class="title">FlowBean</span>, <span class="title">Text</span>&gt; </span>&#123;</span><br><span class="line">    FlowBean k = <span class="keyword">new</span> FlowBean();</span><br><span class="line">    Text v = <span class="keyword">new</span> Text();</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(LongWritable key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">// 13736230513	2481	24681	27162</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.获取一行</span></span><br><span class="line">        String line = value.toString();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.切割</span></span><br><span class="line">        String[] fields = line.split(<span class="string">"\t"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.封装对象</span></span><br><span class="line">        String phoneNum = fields[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">long</span> upFlow = Long.parseLong(fields[<span class="number">1</span>]);</span><br><span class="line">        <span class="keyword">long</span> downFlow = Long.parseLong(fields[<span class="number">2</span>]);</span><br><span class="line">        <span class="keyword">long</span> sumFlow = Long.parseLong(fields[<span class="number">3</span>]);</span><br><span class="line"></span><br><span class="line">        k.setDownFlow(downFlow);</span><br><span class="line">        k.setUpFlow(upFlow);</span><br><span class="line">        k.setSumFlow(sumFlow);</span><br><span class="line"></span><br><span class="line">        v.set(phoneNum);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.写出</span></span><br><span class="line">        context.write(k,v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写Reducer类"><a href="#编写Reducer类" class="headerlink" title="编写Reducer类"></a>编写Reducer类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class FlowCountSortReducer extends Reducer&lt;FlowBean, Text, Text, FlowBean&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(FlowBean key, Iterable&lt;Text&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //循环输出，避免总流量相同情况</span><br><span class="line">        for (Text value : values) &#123;</span><br><span class="line">            context.write(value, key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写Driver类"><a href="#编写Driver类" class="headerlink" title="编写Driver类"></a>编写Driver类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line">import jdk.nashorn.internal.scripts.JO;</span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class FlowCountSortDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line">        //输入输出路径</span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_06_FlowCountSort&quot;, &quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_06_FlowCountSort&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        // 1.获取配置信息，或者job对象实例</span><br><span class="line">        Configuration configuration = new Configuration();</span><br><span class="line">        Job job = Job.getInstance();</span><br><span class="line"></span><br><span class="line">        // 6.指定本程序的jar包所在的本地路径</span><br><span class="line">        job.setJarByClass(FlowCountSortDriver.class);</span><br><span class="line"></span><br><span class="line">        // 2.指定本业务job要使用的mapper/Reducer业务类</span><br><span class="line">        job.setMapperClass(FlowCountSortMapper.class);</span><br><span class="line">        job.setReducerClass(FlowCountSortReducer.class);</span><br><span class="line"></span><br><span class="line">        // 3.指定mapper输出数据的kv类型</span><br><span class="line">        job.setMapOutputKeyClass(FlowBean.class);</span><br><span class="line">        job.setMapOutputValueClass(Text.class);</span><br><span class="line"></span><br><span class="line">        // 4.指定最终输出的数据的kv类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(FlowBean.class);</span><br><span class="line"></span><br><span class="line">        // 5.指定job的输入原始文件所在目录</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.将Job中配置的相关参数，以及job所用的java类所在的jar包，提交给yarn运行</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="WritableComparable排序案例实操（区内排序）"><a href="#WritableComparable排序案例实操（区内排序）" class="headerlink" title="WritableComparable排序案例实操（区内排序）"></a>WritableComparable排序案例实操（区内排序）</h3><h4 id="需求-2"><a href="#需求-2" class="headerlink" title="需求"></a>需求</h4><p>要求每个省份手机号输出的文件中按照总流量内部排序。</p>
+<h4 id="要求分析"><a href="#要求分析" class="headerlink" title="要求分析"></a>要求分析</h4><p>基于前一个需求，增加自定义分区类，分区按照省份手机号设置。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132150822758163750.png" alt="image"></p>
+<h4 id="案列实操"><a href="#案列实操" class="headerlink" title="案列实操"></a>案列实操</h4><h5 id="增加自定义分区类"><a href="#增加自定义分区类" class="headerlink" title="增加自定义分区类"></a>增加自定义分区类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Partitioner;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">public class ProvincePartitioner extends Partitioner&lt;FlowBean, Text&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int getPartition(FlowBean key, Text value, int numPartitions) &#123;</span><br><span class="line"></span><br><span class="line">        // 按照手机号的前三位分区</span><br><span class="line">        String prePhoneNum = value.toString().substring(0, 3);</span><br><span class="line"></span><br><span class="line">        int partition = 4;</span><br><span class="line">        if (&quot;136&quot;.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = 0;</span><br><span class="line">        &#125; else if (&quot;137&quot;.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = 1;</span><br><span class="line">        &#125; else if (&quot;138&quot;.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = 2;</span><br><span class="line">        &#125; else if (&quot;139&quot;.equals(prePhoneNum)) &#123;</span><br><span class="line">            partition = 3;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            partition = 4;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return partition;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在驱动类中添加分区类"><a href="#在驱动类中添加分区类" class="headerlink" title="在驱动类中添加分区类"></a>在驱动类中添加分区类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.sort;</span><br><span class="line"></span><br><span class="line">import jdk.nashorn.internal.scripts.JO;</span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class FlowCountSortDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line">        //输入输出路径</span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_06_FlowCountSort&quot;, &quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_06_FlowCountSort_quSort&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        // 1.获取配置信息，或者job对象实例</span><br><span class="line">        Configuration configuration = new Configuration();</span><br><span class="line">        Job job = Job.getInstance();</span><br><span class="line"></span><br><span class="line">        // 6.指定本程序的jar包所在的本地路径</span><br><span class="line">        job.setJarByClass(FlowCountSortDriver.class);</span><br><span class="line"></span><br><span class="line">        // 2.指定本业务job要使用的mapper/Reducer业务类</span><br><span class="line">        job.setMapperClass(FlowCountSortMapper.class);</span><br><span class="line">        job.setReducerClass(FlowCountSortReducer.class);</span><br><span class="line"></span><br><span class="line">        // 3.指定mapper输出数据的kv类型</span><br><span class="line">        job.setMapOutputKeyClass(FlowBean.class);</span><br><span class="line">        job.setMapOutputValueClass(Text.class);</span><br><span class="line"></span><br><span class="line">        // 4.指定最终输出的数据的kv类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(FlowBean.class);</span><br><span class="line"></span><br><span class="line">        job.setPartitionerClass(ProvincePartitioner.class);</span><br><span class="line">        job.setNumReduceTasks(5);</span><br><span class="line"></span><br><span class="line">        // 5.指定job的输入原始文件所在目录</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.将Job中配置的相关参数，以及job所用的java类所在的jar包，提交给yarn运行</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Combiner合并"><a href="#Combiner合并" class="headerlink" title="Combiner合并"></a>Combiner合并</h3><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132150855659882500.png" alt="image"><br>（6）自定义Combiner实现步骤</p>
+<ul>
+<li>自定义一个Combiner继承Reducer，重写Reduce方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class WordcountCombiner extends Reducer&lt;Text, IntWritable, Text,IntWritable&gt;&#123;</span><br><span class="line"></span><br><span class="line">	@Override</span><br><span class="line">	protected void reduce(Text key, Iterable&lt;IntWritable&gt; values,Context context) throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        // 1 汇总操作</span><br><span class="line">		int count = 0;</span><br><span class="line">		for(IntWritable v :values)&#123;</span><br><span class="line">			count += v.get();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">        // 2 写出</span><br><span class="line">		context.write(key, new IntWritable(count));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在Job驱动类中设置：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">job.setCombinerClass(WordcountCombiner.class);</span><br></pre></td></tr></table></figure>
+<h3 id="Combiner合并案例实操"><a href="#Combiner合并案例实操" class="headerlink" title="Combiner合并案例实操"></a>Combiner合并案例实操</h3><h4 id="需求-3"><a href="#需求-3" class="headerlink" title="需求"></a>需求</h4><p>统计过程中对每一个MapTask的输出进行局部汇总，以减小网络传输量即采用Combiner功能。</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br></pre></td></tr></table></figure>
+<ul>
+<li>期望输出数据</li>
+</ul>
+<p>期望：Combine输入数据多，输出时经过合并，输出数据降低。</p>
+<h4 id="需求分析-2"><a href="#需求分析-2" class="headerlink" title="需求分析"></a>需求分析</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132152606769570000.png" alt="image"></p>
+<h4 id="案例实操-方案一"><a href="#案例实操-方案一" class="headerlink" title="案例实操-方案一"></a>案例实操-方案一</h4><h5 id="增加一个WordcountCombiner类继承Reducer"><a href="#增加一个WordcountCombiner类继承Reducer" class="headerlink" title="增加一个WordcountCombiner类继承Reducer"></a>增加一个WordcountCombiner类继承Reducer</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Reducer&lt;Text, IntWritable, Text, IntWritable&gt;</span><br><span class="line"> * 此合并案例中Reucer的参数是：前两个是map阶段的输出参数，后两个是最终要输出的参数类型</span><br><span class="line"> */</span><br><span class="line">public class WordCountCombiner extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; &#123;</span><br><span class="line">    IntWritable v = new IntWritable();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        // 1.累加求和</span><br><span class="line">        int sum = 0;</span><br><span class="line">        for (IntWritable value : values) &#123;</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        v.set(sum);</span><br><span class="line"></span><br><span class="line">        // 2.写出</span><br><span class="line">        context.write(key, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="在WordcountDriver驱动类中指定Combiner"><a href="#在WordcountDriver驱动类中指定Combiner" class="headerlink" title="在WordcountDriver驱动类中指定Combiner"></a>在WordcountDriver驱动类中指定Combiner</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapred.JobConf;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WordCountDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_01&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_01&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置jar存储位置</span><br><span class="line">        job.setJarByClass(WordCountDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联Map和Reduce类</span><br><span class="line">        job.setMapperClass(WordCountMapper.class);</span><br><span class="line">        job.setReducerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置Mapper阶段数据输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终数据输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 如果不设置InputFormat，它默认用的是TextInputFormat.class</span><br><span class="line">        //job.setInputFormatClass(CombineTextInputFormat.class);</span><br><span class="line">        // 虚拟存储切片最大值设置为 4M</span><br><span class="line">        //CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</span><br><span class="line"></span><br><span class="line">        //如果 NumReduceTasks 的个数你不设置，那默认是1(任何数%1=0)，那么分区就没有任何意义</span><br><span class="line">        //job.setNumReduceTasks(2);</span><br><span class="line">        </span><br><span class="line">        // 指定需要使用 combiner ，以及用哪个类作为 combiner 的逻辑</span><br><span class="line">        job.setCombinerClass(WordCountCombiner.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入路径和输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        //job.submit();</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="案例实操-方案二"><a href="#案例实操-方案二" class="headerlink" title="案例实操-方案二"></a>案例实操-方案二</h4><h5 id="将WordcountReducer作为Combiner在WordcountDriver驱动类中指定"><a href="#将WordcountReducer作为Combiner在WordcountDriver驱动类中指定" class="headerlink" title="将WordcountReducer作为Combiner在WordcountDriver驱动类中指定"></a>将WordcountReducer作为Combiner在WordcountDriver驱动类中指定</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapred.JobConf;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WordCountDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_01&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_01&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置jar存储位置</span><br><span class="line">        job.setJarByClass(WordCountDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联Map和Reduce类</span><br><span class="line">        job.setMapperClass(WordCountMapper.class);</span><br><span class="line">        job.setReducerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置Mapper阶段数据输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终数据输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 如果不设置InputFormat，它默认用的是TextInputFormat.class</span><br><span class="line">        //job.setInputFormatClass(CombineTextInputFormat.class);</span><br><span class="line">        // 虚拟存储切片最大值设置为 4M</span><br><span class="line">        //CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</span><br><span class="line"></span><br><span class="line">        //如果 NumReduceTasks 的个数你不设置，那默认是1(任何数%1=0)，那么分区就没有任何意义</span><br><span class="line">        //job.setNumReduceTasks(2);</span><br><span class="line"></span><br><span class="line">        // 指定需要使用 combiner ，以及用哪个类作为 combiner 的逻辑</span><br><span class="line">        //job.setCombinerClass(WordCountCombiner.class);</span><br><span class="line"></span><br><span class="line">        //关联合并类</span><br><span class="line">        job.setCombinerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入路径和输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        //job.submit();</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="GroupingComparator分组（辅助排序）"><a href="#GroupingComparator分组（辅助排序）" class="headerlink" title="GroupingComparator分组（辅助排序）"></a>GroupingComparator分组（辅助排序）</h3><p>对Reduce阶段的数据根据某一个或几个字段进行分组。</p>
+<p>分组排序步骤：</p>
+<ul>
+<li>自定义类继承WritableComparator</li>
+<li>重写compare()方法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">public int compare(WritableComparable a, WritableComparable b) &#123;</span><br><span class="line">		// 比较的业务逻辑</span><br><span class="line">		return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>创建一个构造将比较对象的类传给父类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">protected OrderGroupingComparator() &#123;</span><br><span class="line">		super(OrderBean.class, true);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="GroupingComparator分组案例实操"><a href="#GroupingComparator分组案例实操" class="headerlink" title="GroupingComparator分组案例实操"></a>GroupingComparator分组案例实操</h3><h4 id="需求-4"><a href="#需求-4" class="headerlink" title="需求"></a>需求</h4><p>如下订单<br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132152611548788750.png" alt="image"><br>现在需要求出每一个订单中最贵的商品。</p>
+<ul>
+<li>输入数据(GroupingComparator.txt)</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0000001	Pdt_01	222.8</span><br><span class="line">0000002	Pdt_05	722.4</span><br><span class="line">0000001	Pdt_02	33.8</span><br><span class="line">0000003	Pdt_06	232.8</span><br><span class="line">0000003	Pdt_02	33.8</span><br><span class="line">0000002	Pdt_03	522.8</span><br><span class="line">0000002	Pdt_04	122.4</span><br></pre></td></tr></table></figure>
+<ul>
+<li>输出数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1	222.8</span><br><span class="line">2	722.4</span><br><span class="line">3	232.8</span><br></pre></td></tr></table></figure>
+<h4 id="需求分析-3"><a href="#需求分析-3" class="headerlink" title="需求分析"></a>需求分析</h4><ol>
+<li>利用“订单id和成交金额”作为key，可以将Map阶段读取到的所有订单数据按照id升序排序，如果id相同再按照金额降序排序，发送到Reduce。</li>
+<li>在Reduce端利用groupingComparator将订单id相同的kv聚合成组，然后取第一个即是该订单中最贵商品</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132152612948788750.png" alt="image"></p>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><h5 id="定义订单信息OrderBean类"><a href="#定义订单信息OrderBean类" class="headerlink" title="定义订单信息OrderBean类"></a>定义订单信息OrderBean类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.order;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.WritableComparable;</span><br><span class="line"></span><br><span class="line">import java.io.DataInput;</span><br><span class="line">import java.io.DataOutput;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class OrderBean implements WritableComparable&lt;OrderBean&gt; &#123;</span><br><span class="line"></span><br><span class="line">    // 订单id</span><br><span class="line">    private int order_id;</span><br><span class="line">    // 订单价格</span><br><span class="line">    private double price;</span><br><span class="line"></span><br><span class="line">    public OrderBean() &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public OrderBean(int order_id, double price) &#123;</span><br><span class="line">        this.order_id = order_id;</span><br><span class="line">        this.price = price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compareTo(OrderBean o) &#123;</span><br><span class="line">        // 先按照订单id排序，如果相同按照价格降序排序</span><br><span class="line">        int result = 0;</span><br><span class="line">        if (order_id &gt; o.getOrder_id()) &#123;</span><br><span class="line">            result = 1;</span><br><span class="line">        &#125; else if (order_id &lt; o.getOrder_id()) &#123;</span><br><span class="line">            result = -1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            result = price &gt; o.getPrice() ? -1 : 1;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void write(DataOutput out) throws IOException &#123;</span><br><span class="line">        out.writeInt(order_id);</span><br><span class="line">        out.writeDouble(price);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void readFields(DataInput in) throws IOException &#123;</span><br><span class="line">        order_id = in.readInt();</span><br><span class="line">        price = in.readDouble();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getOrder_id() &#123;</span><br><span class="line">        return order_id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setOrder_id(int order_id) &#123;</span><br><span class="line">        this.order_id = order_id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public double getPrice() &#123;</span><br><span class="line">        return price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPrice(double price) &#123;</span><br><span class="line">        this.price = price;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return order_id + &quot;\t&quot; + price;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写OrderMapper类"><a href="#编写OrderMapper类" class="headerlink" title="编写OrderMapper类"></a>编写OrderMapper类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.order;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.LongWritable;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class OrderMapper extends Mapper&lt;LongWritable, Text, OrderBean, NullWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    OrderBean k = new OrderBean();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //000000001 222.8</span><br><span class="line">        // 1.获取一行数据</span><br><span class="line">        String line = value.toString();</span><br><span class="line"></span><br><span class="line">        // 2.切割</span><br><span class="line">        String[] fields = line.split(&quot;\t&quot;);</span><br><span class="line"></span><br><span class="line">        // 3.封装对象</span><br><span class="line">        k.setOrder_id(Integer.parseInt(fields[0]));</span><br><span class="line">        k.setPrice(Double.parseDouble(fields[2]));</span><br><span class="line"></span><br><span class="line">        // 4.写出</span><br><span class="line">        context.write(k,NullWritable.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写OrderReducer类"><a href="#编写OrderReducer类" class="headerlink" title="编写OrderReducer类"></a>编写OrderReducer类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.order;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class OrderReducer extends Reducer&lt;OrderBean, NullWritable, OrderBean, NullWritable&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(OrderBean key, Iterable&lt;NullWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        context.write(key, NullWritable.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写OrderGroupingComparator类"><a href="#编写OrderGroupingComparator类" class="headerlink" title="编写OrderGroupingComparator类"></a>编写OrderGroupingComparator类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.order;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.WritableComparable;</span><br><span class="line">import org.apache.hadoop.io.WritableComparator;</span><br><span class="line"></span><br><span class="line">public class OrderGroupingComparator extends WritableComparator &#123;</span><br><span class="line"></span><br><span class="line">    // 需要写一个构造</span><br><span class="line">    public OrderGroupingComparator() &#123;</span><br><span class="line">        // 第二个参数为true，如果不是true，就会报空指针异常，可以看源码</span><br><span class="line">        super(OrderBean.class, true);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public int compare(WritableComparable a, WritableComparable b) &#123;</span><br><span class="line">        // 要求只要id相同，就认为是相同的key</span><br><span class="line">        OrderBean aBean = (OrderBean) a;</span><br><span class="line">        OrderBean bBean = (OrderBean) b;</span><br><span class="line">        int result;</span><br><span class="line">        if (aBean.getOrder_id() &gt; bBean.getOrder_id()) &#123;</span><br><span class="line">            result = 1;</span><br><span class="line">        &#125; else if (aBean.getOrder_id() &lt; bBean.getOrder_id()) &#123;</span><br><span class="line">            result = -1;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            // 如果是id相等，那么就会将相等的数据传入同一个reduce中</span><br><span class="line">            result = 0;</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="编写OrderDriver类"><a href="#编写OrderDriver类" class="headerlink" title="编写OrderDriver类"></a>编写OrderDriver类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.order;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class OrderDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_07_order&quot;, &quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_07_order&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        // 1.获取配置信息</span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置Jar包加载路径</span><br><span class="line">        job.setJarByClass(OrderDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.加载map/reduce类</span><br><span class="line">        job.setMapperClass(OrderMapper.class);</span><br><span class="line">        job.setReducerClass(OrderReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.加载map输出数据key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(OrderBean.class);</span><br><span class="line">        job.setMapOutputValueClass(NullWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终输出数据的key和value类型</span><br><span class="line">        job.setOutputKeyClass(OrderBean.class);</span><br><span class="line">        job.setOutputValueClass(NullWritable.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 8.设置reducer端的分组</span><br><span class="line">        job.setGroupingComparatorClass(OrderGroupingComparator.class);</span><br><span class="line"></span><br><span class="line">        // 7.提交</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="MapTask工作机制"><a href="#MapTask工作机制" class="headerlink" title="MapTask工作机制"></a>MapTask工作机制</h2><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132152616695351250.png" alt="image"></p>
+<ol>
+<li>Read阶段：MapTask通过用户编写的RecordReader，从输入InputSplit中解析出一个个key/value。</li>
+<li>Map阶段：该节点主要是将解析出的key/value交给用户编写map()函数处理，并产生一系列新的key/value。</li>
+<li>Collect收集阶段：在用户编写map()函数中，当数据处理完成后，一般会调用OutputCollector.collect()输出结果。在该函数内部，它会将生成的key/value分区（调用Partitioner），并写入一个环形内存缓冲区中。</li>
+<li>Spill阶段：即“溢写”，当环形缓冲区满后，MapReduce会将数据写到本地磁盘上，生成一个临时文件。需要注意的是，将数据写入本地磁盘之前，先要对数据进行一次本地排序，并在必要时对数据进行合并、压缩等操作。</li>
+</ol>
+<p>溢写阶段详情：</p>
+<ul>
+<li>步骤1：利用快速排序算法对缓存区内的数据进行排序，排序方式是，先按照分区编号Partition进行排序，然后按照key进行排序。这样，经过排序后，数据以分区为单位聚集在一起，且同一分区内所有数据按照key有序。</li>
+<li>步骤2：按照分区编号由小到大依次将每个分区中的数据写入任务工作目录下的临时文件output/spillN.out（N表示当前溢写次数）中。如果用户设置了Combiner，则写入文件之前，对每个分区中的数据进行一次聚集操作。</li>
+<li>步骤3：将分区数据的元信息写到内存索引数据结构SpillRecord中，其中每个分区的元信息包括在临时文件中的偏移量、压缩前数据大小和压缩后数据大小。如果当前内存索引大小超过1MB，则将内存索引写到文件output/spillN.out.index中。</li>
+</ul>
+<ol start="5">
+<li>Combine阶段：当所有数据处理完成后，MapTask对所有临时文件进行一次合并，以确保最终只会生成一个数据文件。当所有数据处理完后，MapTask会将所有临时文件合并成一个大文件，并保存到文件output/file.out中，同时生成相应的索引文件output/file.out.index。在进行文件合并过程中，MapTask以分区为单位进行合并。对于某个分区，它将采用多轮递归合并的方式。每轮合并io.sort.factor（默认10）个文件，并将产生的文件重新加入待合并列表中，对文件排序后，重复以上过程，直到最终得到一个大文件。让每个MapTask最终只生成一个数据文件，可避免同时打开大量文件和同时读取大量小文件产生的随机读取带来的开销。</li>
+</ol>
+<h2 id="ReduceTask工作机制"><a href="#ReduceTask工作机制" class="headerlink" title="ReduceTask工作机制"></a>ReduceTask工作机制</h2><h3 id="ReduceTask工作机制-1"><a href="#ReduceTask工作机制-1" class="headerlink" title="ReduceTask工作机制"></a>ReduceTask工作机制</h3><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132153604647382500.png" alt="image"></p>
+<ol>
+<li>Copy阶段：ReduceTask从各个MapTask上远程拷贝一片数据，并针对某一片数据，如果其大小超过一定阈值，则写到磁盘上，否则直接放到内存中。</li>
+<li>Merge阶段：在远程拷贝数据的同时，ReduceTask启动了两个后台线程对内存和磁盘上的文件进行合并，以防止内存使用过多或磁盘上文件过多。</li>
+<li>Sort阶段：按照MapReduce语义，用户编写reduce()函数输入数据是按key进行聚集的一组数据。为了将key相同的数据聚在一起，Hadoop采用了基于排序的策略。由于各个MapTask已经实现对自己的处理结果进行了局部排序，因此，ReduceTask只需对所有数据进行一次归并排序即可。</li>
+<li>Reduce阶段：reduce()函数将计算结果写到HDFS上。</li>
+</ol>
+<h3 id="设置ReduceTask并行度（个数）"><a href="#设置ReduceTask并行度（个数）" class="headerlink" title="设置ReduceTask并行度（个数）"></a>设置ReduceTask并行度（个数）</h3><p>ReduceTask的并行度同样影响整个Job的执行并发度和执行效率，但与MapTask的并发数由切片数决定不同，ReduceTask数量的决定是可以直接手动设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 默认值是1，手动设置为4</span><br><span class="line">job.setNumReduceTasks(4);</span><br></pre></td></tr></table></figure>
+<h3 id="实验：测试ReduceTask多少合适"><a href="#实验：测试ReduceTask多少合适" class="headerlink" title="实验：测试ReduceTask多少合适"></a>实验：测试ReduceTask多少合适</h3><ol>
+<li>实验环境：1个Master节点，16个Slave节点：CPU:8GHZ，内存: 2G</li>
+<li>实验结论：</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132153608074726250.png" alt="image"></p>
+<ol start="3">
+<li>注意事项<br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132153608663632500.png" alt="image"></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/23/MapReduce基础学习-二/" rel="next" title="MapReduce基础学习-二">
+                <i class="fa fa-chevron-left"></i> MapReduce基础学习-二
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">98</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Shuffle机制"><span class="nav-number">1.</span> <span class="nav-text">Shuffle机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shuffle机制机制"><span class="nav-number">1.1.</span> <span class="nav-text">Shuffle机制机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition分区"><span class="nav-number">1.2.</span> <span class="nav-text">Partition分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#分区源码分析"><span class="nav-number">1.2.1.</span> <span class="nav-text">分区源码分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Partition分区案例实操"><span class="nav-number">1.3.</span> <span class="nav-text">Partition分区案例实操</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求"><span class="nav-number">1.3.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需求分析"><span class="nav-number">1.3.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在案例2-4的基础上，增加一个分区类"><span class="nav-number">1.3.3.</span> <span class="nav-text">在案例2.4的基础上，增加一个分区类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在驱动函数中增加自定义数据分区设置和ReduceTask设置"><span class="nav-number">1.3.4.</span> <span class="nav-text">在驱动函数中增加自定义数据分区设置和ReduceTask设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结果"><span class="nav-number">1.3.5.</span> <span class="nav-text">结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#分区总结"><span class="nav-number">1.3.6.</span> <span class="nav-text">分区总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WritableComparable排序"><span class="nav-number">1.4.</span> <span class="nav-text">WritableComparable排序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#排序的分类"><span class="nav-number">1.4.1.</span> <span class="nav-text">排序的分类</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义排序WritableComparable"><span class="nav-number">1.4.2.</span> <span class="nav-text">自定义排序WritableComparable</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WritableComparable排序案例实操（全排序）"><span class="nav-number">1.5.</span> <span class="nav-text">WritableComparable排序案例实操（全排序）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求-1"><span class="nav-number">1.5.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需求分析-1"><span class="nav-number">1.5.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码实现"><span class="nav-number">1.5.3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FlowBean对象在在需求1基础上增加了比较功能"><span class="nav-number">1.5.3.1.</span> <span class="nav-text">FlowBean对象在在需求1基础上增加了比较功能</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写Mapper类"><span class="nav-number">1.5.3.2.</span> <span class="nav-text">编写Mapper类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写Reducer类"><span class="nav-number">1.5.3.3.</span> <span class="nav-text">编写Reducer类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写Driver类"><span class="nav-number">1.5.3.4.</span> <span class="nav-text">编写Driver类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WritableComparable排序案例实操（区内排序）"><span class="nav-number">1.6.</span> <span class="nav-text">WritableComparable排序案例实操（区内排序）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求-2"><span class="nav-number">1.6.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#要求分析"><span class="nav-number">1.6.2.</span> <span class="nav-text">要求分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案列实操"><span class="nav-number">1.6.3.</span> <span class="nav-text">案列实操</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#增加自定义分区类"><span class="nav-number">1.6.3.1.</span> <span class="nav-text">增加自定义分区类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在驱动类中添加分区类"><span class="nav-number">1.6.3.2.</span> <span class="nav-text">在驱动类中添加分区类</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner合并"><span class="nav-number">1.7.</span> <span class="nav-text">Combiner合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Combiner合并案例实操"><span class="nav-number">1.8.</span> <span class="nav-text">Combiner合并案例实操</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求-3"><span class="nav-number">1.8.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需求分析-2"><span class="nav-number">1.8.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例实操-方案一"><span class="nav-number">1.8.3.</span> <span class="nav-text">案例实操-方案一</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#增加一个WordcountCombiner类继承Reducer"><span class="nav-number">1.8.3.1.</span> <span class="nav-text">增加一个WordcountCombiner类继承Reducer</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#在WordcountDriver驱动类中指定Combiner"><span class="nav-number">1.8.3.2.</span> <span class="nav-text">在WordcountDriver驱动类中指定Combiner</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例实操-方案二"><span class="nav-number">1.8.4.</span> <span class="nav-text">案例实操-方案二</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#将WordcountReducer作为Combiner在WordcountDriver驱动类中指定"><span class="nav-number">1.8.4.1.</span> <span class="nav-text">将WordcountReducer作为Combiner在WordcountDriver驱动类中指定</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GroupingComparator分组（辅助排序）"><span class="nav-number">1.9.</span> <span class="nav-text">GroupingComparator分组（辅助排序）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GroupingComparator分组案例实操"><span class="nav-number">1.10.</span> <span class="nav-text">GroupingComparator分组案例实操</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#需求-4"><span class="nav-number">1.10.1.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#需求分析-3"><span class="nav-number">1.10.2.</span> <span class="nav-text">需求分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码实现-1"><span class="nav-number">1.10.3.</span> <span class="nav-text">代码实现</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#定义订单信息OrderBean类"><span class="nav-number">1.10.3.1.</span> <span class="nav-text">定义订单信息OrderBean类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写OrderMapper类"><span class="nav-number">1.10.3.2.</span> <span class="nav-text">编写OrderMapper类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写OrderReducer类"><span class="nav-number">1.10.3.3.</span> <span class="nav-text">编写OrderReducer类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写OrderGroupingComparator类"><span class="nav-number">1.10.3.4.</span> <span class="nav-text">编写OrderGroupingComparator类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#编写OrderDriver类"><span class="nav-number">1.10.3.5.</span> <span class="nav-text">编写OrderDriver类</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapTask工作机制"><span class="nav-number">2.</span> <span class="nav-text">MapTask工作机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReduceTask工作机制"><span class="nav-number">3.</span> <span class="nav-text">ReduceTask工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ReduceTask工作机制-1"><span class="nav-number">3.1.</span> <span class="nav-text">ReduceTask工作机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置ReduceTask并行度（个数）"><span class="nav-number">3.2.</span> <span class="nav-text">设置ReduceTask并行度（个数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实验：测试ReduceTask多少合适"><span class="nav-number">3.3.</span> <span class="nav-text">实验：测试ReduceTask多少合适</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
