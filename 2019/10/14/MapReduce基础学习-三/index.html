@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MapReduce框架原理InputFormat数据输入切片与MapTask并行度决定机制 问题引出  MapTask的并行度决定Map阶段的任务处理并发度，进而影响到整个Job的处理速度。 思考：1G的数据，启动8个MapTask，可以提高集群的并发处理能力。那么1K的数据，也启动8个MapTask，会提高集群性能吗？MapTask并行任务是否越多越好呢？哪些因素影响了MapTask并行度？">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce基础学习-三">
+<meta property="og:url" content="http://yoursite.com/2019/10/14/MapReduce基础学习-三/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="MapReduce框架原理InputFormat数据输入切片与MapTask并行度决定机制 问题引出  MapTask的并行度决定Map阶段的任务处理并发度，进而影响到整个Job的处理速度。 思考：1G的数据，启动8个MapTask，可以提高集群的并发处理能力。那么1K的数据，也启动8个MapTask，会提高集群性能吗？MapTask并行任务是否越多越好呢？哪些因素影响了MapTask并行度？">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132137028752707500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132137180946926250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132137180948020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5_132137180949113750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6_132137180950363750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7_132137180954270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8_132137180955520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9_132137180956770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10_132137180958020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11_132137182295676250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12_132137182296926250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13_132137182298176250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14_132137182299270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15_132137182300520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16_132137182301770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17_132137182302863750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18_132137182304270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19_132137182305520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20_132137182306770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21_132137182308020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22_132137182309113750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23_132137182310520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/24_132137182311770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25_132137182313020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26_132137182314270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/27_132137182315832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28_132137182317082500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29_132137182318332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30_132137182319738750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/31_132137182320832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/32_132137182322238750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/33_132137182323332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/34_132137182324270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/35_132137182325363750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/36_132137182326613750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/37_132137182327863750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/38_132137182329270000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/39_132137182333332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/40_132137182334582500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/41_132137182335676250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/42_132137182336770000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/43_132137182338176250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/44_132137182339113750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/45_132137182340363750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/46_132137182341457500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/47_132137182342707500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/48_132137182343801250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/49_132137182345051250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/50_132137182346145000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/51_132137182347395000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/52_132137182348488750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/53_132137187956301250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/16.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/17.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/18.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/19.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132139423838332500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132139423839738750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132139599393645000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132139613050832500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132139623332238750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132139700046613750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132139708927395000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132139743814738750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132140546113020000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132141425220520000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132141426828176250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132149746804101250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132149746805976250.png">
+<meta property="og:updated_time" content="2019-10-14T04:00:43.531Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MapReduce基础学习-三">
+<meta name="twitter:description" content="MapReduce框架原理InputFormat数据输入切片与MapTask并行度决定机制 问题引出  MapTask的并行度决定Map阶段的任务处理并发度，进而影响到整个Job的处理速度。 思考：1G的数据，启动8个MapTask，可以提高集群的并发处理能力。那么1K的数据，也启动8个MapTask，会提高集群性能吗？MapTask并行任务是否越多越好呢？哪些因素影响了MapTask并行度？">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132137028752707500.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/14/MapReduce基础学习-三/"/>
+
+
+
+
+
+  <title>MapReduce基础学习-三 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/14/MapReduce基础学习-三/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MapReduce基础学习-三</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-14T11:59:51+08:00">
+                2019-10-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="MapReduce框架原理"><a href="#MapReduce框架原理" class="headerlink" title="MapReduce框架原理"></a>MapReduce框架原理</h2><h3 id="InputFormat数据输入"><a href="#InputFormat数据输入" class="headerlink" title="InputFormat数据输入"></a>InputFormat数据输入</h3><h4 id="切片与MapTask并行度决定机制"><a href="#切片与MapTask并行度决定机制" class="headerlink" title="切片与MapTask并行度决定机制"></a>切片与MapTask并行度决定机制</h4><ol>
+<li>问题引出</li>
+</ol>
+<p>MapTask的并行度决定Map阶段的任务处理并发度，进而影响到整个Job的处理速度。<br></p>
+<font size="3" color="red">思考：1G的数据，启动8个MapTask，可以提高集群的并发处理能力。那么1K的数据，也启动8个MapTask，会提高集群性能吗？MapTask并行任务是否越多越好呢？哪些因素影响了MapTask并行度？</font>
+
+<ol start="2">
+<li>MapTask并行度决定机制</li>
+</ol>
+<ul>
+<li>数据块：Block是HDFS物理上把数据分成一块一块。</li>
+<li>数据切片：数据切片只是在逻辑上对输入进行分片，并不会在磁盘上将其切分成片进行存储。</li>
+</ul>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/2_132137028752707500.png" alt="image"></p>
+<h4 id="Job提交流程源码和切片源码详解"><a href="#Job提交流程源码和切片源码详解" class="headerlink" title="Job提交流程源码和切片源码详解"></a>Job提交流程源码和切片源码详解</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/3_132137180946926250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/4_132137180948020000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/5_132137180949113750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/6_132137180950363750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/7_132137180954270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/8_132137180955520000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/9_132137180956770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/10_132137180958020000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/11_132137182295676250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/12_132137182296926250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/13_132137182298176250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/14_132137182299270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/15_132137182300520000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/16_132137182301770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/17_132137182302863750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/18_132137182304270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/19_132137182305520000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/20_132137182306770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/21_132137182308020000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/22_132137182309113750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/23_132137182310520000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/24_132137182311770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/25_132137182313020000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/26_132137182314270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/27_132137182315832500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/28_132137182317082500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/29_132137182318332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/30_132137182319738750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/31_132137182320832500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/32_132137182322238750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/33_132137182323332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/34_132137182324270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/35_132137182325363750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/36_132137182326613750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/37_132137182327863750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/38_132137182329270000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/39_132137182333332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/40_132137182334582500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/41_132137182335676250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/42_132137182336770000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/43_132137182338176250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/44_132137182339113750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/45_132137182340363750.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/46_132137182341457500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/47_132137182342707500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/48_132137182343801250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/49_132137182345051250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/50_132137182346145000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/51_132137182347395000.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/52_132137182348488750.png" alt="image"></p>
+<h5 id="Job提交流程源码总结"><a href="#Job提交流程源码总结" class="headerlink" title="Job提交流程源码总结"></a>Job提交流程源码总结</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Hadoop/53_132137187956301250.png" alt="image"></p>
+<h4 id="FileInputFormat切片源码解析-input-getSplits-job"><a href="#FileInputFormat切片源码解析-input-getSplits-job" class="headerlink" title="FileInputFormat切片源码解析(input.getSplits(job))"></a>FileInputFormat切片源码解析(input.getSplits(job))</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/16.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/17.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/18.png" alt="image"></p>
+<h5 id="FileInputFormat切片源码解析总结"><a href="#FileInputFormat切片源码解析总结" class="headerlink" title="FileInputFormat切片源码解析总结"></a>FileInputFormat切片源码解析总结</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/19.png" alt="image"></p>
+<h4 id="FileInputFormat切片机制"><a href="#FileInputFormat切片机制" class="headerlink" title="FileInputFormat切片机制"></a>FileInputFormat切片机制</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132139423838332500.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132139423839738750.png" alt="image"></p>
+<h4 id="CombineTextInputFormat切片机制"><a href="#CombineTextInputFormat切片机制" class="headerlink" title="CombineTextInputFormat切片机制"></a>CombineTextInputFormat切片机制</h4><p>框架默认的TextInputFormat切片机制是对任务按文件规划切片，<font size="3" color="red">不管文件多小，都会是一个单独的切片</font>，都会交给一个MapTask，这样如果有大量小文件，就<font size="3" color="red">会产生大量的MapTask，处理效率极其低下。</font></p>
+<ol>
+<li>应用场景：</li>
+</ol>
+<p>CombineTextInputFormat用于小文件过多的场景，它可以将多个小文件从逻辑上规划到一个切片中，这样，多个小文件就可以交给一个MapTask处理。</p>
+<ol start="2">
+<li>虚拟存储切片最大值设置</li>
+</ol>
+<p>CombineTextInputFormat.setMaxInputSplitSize(job, <font size="3" color="red">4194304</font>);// 4m</p>
+<p>注意：虚拟存储切片最大值设置最好根据实际的小文件大小情况来设置具体的值。</p>
+<ol start="3">
+<li>切片机制</li>
+</ol>
+<p>生成切片过程包括：虚拟存储过程和切片过程二部分。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132139599393645000.png" alt="image"></p>
+<p>（1）虚拟存储过程：<br><br>将输入目录下所有文件大小，依次和设置的setMaxInputSplitSize值比较，如果不大于设置的最大值，逻辑上划分一个块。如果输入文件大于设置的最大值且大于两倍，那么以最大值切割一块；当剩余数据大小超过设置的最大值且不大于最大值2倍，此时将文件均分成2个虚拟存储块（防止出现太小切片）。<br>例如setMaxInputSplitSize值为4M，输入文件大小为8.02M，则先逻辑上分成一个4M。剩余的大小为4.02M，如果按照4M逻辑划分，就会出现0.02M的小的虚拟存储文件，所以将剩余的4.02M文件切分成（2.01M和2.01M）两个文件。</p>
+<p>（2）切片过程：<br><br>（a）判断虚拟存储的文件大小是否大于setMaxInputSplitSize值，大于等于则单独形成一个切片。<br><br>（b）如果不大于则跟下一个虚拟存储文件进行合并，共同形成一个切片。<br><br>（c）测试举例：有4个小文件大小分别为1.7M、5.1M、3.4M以及6.8M这四个小文件，则虚拟存储之后形成6个文件块，大小分别为：<br><br>1.7M，（2.55M、2.55M），3.4M以及（3.4M、3.4M）<br><br>最终会形成3个切片，大小分别为：<br><br>（1.7+2.55）M，（2.55+3.4）M，（3.4+3.4）M</p>
+<h4 id="CombineTextInputFormat案例实操"><a href="#CombineTextInputFormat案例实操" class="headerlink" title="CombineTextInputFormat案例实操"></a>CombineTextInputFormat案例实操</h4><ol>
+<li>需求</li>
+</ol>
+<p>将输入的大量小文件合并成一个切片统一处理。</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<p>准备4个小文件</p>
+<ul>
+<li>期望</li>
+</ul>
+<p>期望一个切片处理4个文件</p>
+<ol start="2">
+<li>实现过程</li>
+</ol>
+<ul>
+<li><p>不做任何处理，运行1.6节的WordCount案例程序，观察切片个数为4。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">number of splits:4（程序中会打印）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在WordcountDriver中增加如下代码，运行程序，并观察运行的切片个数为3。</p>
+</li>
+</ul>
+<p>（a）驱动类中添加代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 如果不设置InputFormat，它默认用的是TextInputFormat.class</span><br><span class="line">job.setInputFormatClass(CombineTextInputFormat.class);</span><br><span class="line"></span><br><span class="line">//虚拟存储切片最大值设置4m</span><br><span class="line">CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</span><br></pre></td></tr></table></figure></p>
+<p>（b）运行如果为3个切片。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">number of splits:3</span><br></pre></td></tr></table></figure></p>
+<ol start="3">
+<li>在WordcountDriver中增加如下代码，运行程序，并观察运行的切片个数为1。</li>
+</ol>
+<p>（a）驱动中添加代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 如果不设置InputFormat，它默认用的是TextInputFormat.class</span><br><span class="line">job.setInputFormatClass(CombineTextInputFormat.class);</span><br><span class="line"></span><br><span class="line">//虚拟存储切片最大值设置20m</span><br><span class="line">CombineTextInputFormat.setMaxInputSplitSize(job, 20971520);</span><br></pre></td></tr></table></figure></p>
+<p>（b）运行如果为1个切片。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">number of splits:1</span><br></pre></td></tr></table></figure></p>
+<h4 id="FileInputFormat实现类"><a href="#FileInputFormat实现类" class="headerlink" title="FileInputFormat实现类"></a>FileInputFormat实现类</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132139613050832500.png" alt="image"></p>
+<h5 id="TextInputFormat"><a href="#TextInputFormat" class="headerlink" title="TextInputFormat"></a>TextInputFormat</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132139623332238750.png" alt="image"></p>
+<h5 id="KeyValueTextInputFormat"><a href="#KeyValueTextInputFormat" class="headerlink" title="KeyValueTextInputFormat"></a>KeyValueTextInputFormat</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132139700046613750.png" alt="image"></p>
+<h5 id="KeyValueTextInputFormat使用案例"><a href="#KeyValueTextInputFormat使用案例" class="headerlink" title="KeyValueTextInputFormat使用案例"></a>KeyValueTextInputFormat使用案例</h5><ol>
+<li>需求</li>
+</ol>
+<p>统计输入文件中每一行的第一个单词相同的行数。</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br></pre></td></tr></table></figure>
+<ul>
+<li>期望结果数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">banzhang	2</span><br><span class="line">xihuan	2</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>需求分析</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132139708927395000.png" alt="image"></p>
+<ol start="3">
+<li>代码实现</li>
+</ol>
+<ul>
+<li>编写Mapper类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.kv;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">//banzhang ni hao</span><br><span class="line">//bangzhang 1</span><br><span class="line">public class KVTextMapper extends Mapper&lt;Text, Text, Text, IntWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    IntWritable v = new IntWritable(1);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void map(Text key, Text value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        // 1.封装对象</span><br><span class="line"></span><br><span class="line">        // 2.写出</span><br><span class="line">        context.write(key, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写Reducer类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.kv;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class KVTextReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; &#123;</span><br><span class="line">    IntWritable v = new IntWritable();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //bangzhang,1</span><br><span class="line">        // 1.累加求和</span><br><span class="line">        int sum = 0;</span><br><span class="line">        for (IntWritable value : values) &#123;</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line">        v.set(sum);</span><br><span class="line">        // 2.写出</span><br><span class="line">        context.write(key, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写Driver类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.kv;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.KeyValueLineRecordReader;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.KeyValueTextInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class KVTextDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_03_kv&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_03_kv&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line">        conf.set(KeyValueLineRecordReader.KEY_VALUE_SEPERATOR, &quot; &quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置jar路径</span><br><span class="line">        job.setJarByClass(KVTextDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联mapper和reducer类</span><br><span class="line">        job.setMapperClass(KVTextMapper.class);</span><br><span class="line">        job.setReducerClass(KVTextReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置mapper输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        job.setInputFormatClass(KeyValueTextInputFormat.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="NLineInputFormat"><a href="#NLineInputFormat" class="headerlink" title="NLineInputFormat"></a>NLineInputFormat</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132139743814738750.png" alt="image"></p>
+<h5 id="NLineInputFormat使用案例"><a href="#NLineInputFormat使用案例" class="headerlink" title="NLineInputFormat使用案例"></a>NLineInputFormat使用案例</h5><ol>
+<li>需求</li>
+</ol>
+<p>对每个单词进行个数统计，要求根据每个输入文件的行数来规定输出多少个切片。此案例要求每三行放入一个切片中</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br><span class="line">banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang banzhang ni hao</span><br><span class="line">xihuan hadoop banzhang</span><br></pre></td></tr></table></figure>
+<ul>
+<li>期望输出数据</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Number of splits:4</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>需求分析</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132140546113020000.png" alt="image"></p>
+<ol start="3">
+<li>代码实现</li>
+</ol>
+<ul>
+<li>编写Mapper类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.nline;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.LongWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class NLineMapper extends Mapper&lt;LongWritable, Text, Text, IntWritable&gt; &#123;</span><br><span class="line">    Text k = new Text();</span><br><span class="line">    IntWritable v = new IntWritable(1);</span><br><span class="line">    @Override</span><br><span class="line">    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //banzhang ni hao</span><br><span class="line">        // 1.获取一行</span><br><span class="line">        String line = value.toString();</span><br><span class="line"></span><br><span class="line">        // 2.切割</span><br><span class="line">        String[] words = line.split(&quot; &quot;);</span><br><span class="line"></span><br><span class="line">        // 3.循环写出</span><br><span class="line">        for (String word : words) &#123;</span><br><span class="line">            k.set(word);</span><br><span class="line">            context.write(k, v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写Reducer类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.nline;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class NLineReducer extends Reducer&lt;Text, IntWritable, Text, IntWritable&gt; &#123;</span><br><span class="line">    IntWritable v = new IntWritable();</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;IntWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        int sum = 0;</span><br><span class="line">        // 1.累加求和</span><br><span class="line">        for (IntWritable value : values) &#123;</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line">        v.set(sum);</span><br><span class="line">        // 2.写出</span><br><span class="line">        context.write(key, v);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写Driver类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.nline;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.IntWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.NLineInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class NLineDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_04_nline&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_04_nline&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line"></span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 8.设置每个切片 InputSplit 中划分三条记录</span><br><span class="line">        NLineInputFormat.setNumLinesPerSplit(job,3);</span><br><span class="line"></span><br><span class="line">        // 9.使用 NLineInputFormat 处理记录数</span><br><span class="line">        job.setInputFormatClass(NLineInputFormat.class);</span><br><span class="line"></span><br><span class="line">        // 2.设置Jar路径</span><br><span class="line">        job.setJarByClass(NLineDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联mapper和reducer类</span><br><span class="line">        job.setMapperClass(NLineMapper.class);</span><br><span class="line">        job.setReducerClass(NLineReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置mapper输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="自定义InputFormat"><a href="#自定义InputFormat" class="headerlink" title="自定义InputFormat"></a>自定义InputFormat</h5><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132141425220520000.png" alt="image"></p>
+<h5 id="自定义InputFormat案例实操"><a href="#自定义InputFormat案例实操" class="headerlink" title="自定义InputFormat案例实操"></a>自定义InputFormat案例实操</h5><p>无论HDFS还是MapReduce，在处理小文件时效率都非常低，但又难免面临处理大量小文件的场景，此时，就需要有相应解决方案。可以自定义InputFormat实现小文件的合并。</p>
+<ol>
+<li>需求</li>
+</ol>
+<p>将多个小文件合并成一个SequenceFile文件（SequenceFile文件是Hadoop用来存储二进制形式的key-value对的文件格式），SequenceFile里面存储着多个文件，存储的形式为文件路径+名称为key，文件内容为value。</p>
+<ul>
+<li>输入数据</li>
+</ul>
+<p>one.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yongpeng weidong weinan</span><br><span class="line">sanfeng luozong xiaoming</span><br></pre></td></tr></table></figure></p>
+<p>two.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">longlong fanfan</span><br><span class="line">mazong kailun yuhang yixin</span><br><span class="line">longlong fanfan</span><br><span class="line">mazong kailun yuhang yixin</span><br></pre></td></tr></table></figure></p>
+<p>three.txt<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shuaige changmo zhenqiang </span><br><span class="line">dongli lingu xuanxuan</span><br></pre></td></tr></table></figure></p>
+<ol start="2">
+<li>需求分析</li>
+</ol>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132141426828176250.png" alt="image"></p>
+<ol start="3">
+<li>程序实现</li>
+</ol>
+<ul>
+<li>自定义InputFromat</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.inputformat;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.BytesWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.InputSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.RecordReader;</span><br><span class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * FileInputFormat&lt;Text, BytesWritable&gt;</span><br><span class="line"> *     Text: 读取的是整个文件，所以Text是文件的路径+文件名字</span><br><span class="line"> *     BytesWritable: 文件的的内容</span><br><span class="line"> */</span><br><span class="line">public class WholeFileInputFormat extends FileInputFormat&lt;Text, BytesWritable&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public RecordReader&lt;Text, BytesWritable&gt; createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException &#123;</span><br><span class="line">        WholeRecordReader recordReader = new WholeRecordReader();</span><br><span class="line">        recordReader.initialize(split,context);</span><br><span class="line">        return recordReader;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自定义RecordReader类</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.inputformat;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.FSDataInputStream;</span><br><span class="line">import org.apache.hadoop.fs.FileSystem;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.ByteWritable;</span><br><span class="line">import org.apache.hadoop.io.BytesWritable;</span><br><span class="line">import org.apache.hadoop.io.IOUtils;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.InputSplit;</span><br><span class="line">import org.apache.hadoop.mapreduce.RecordReader;</span><br><span class="line">import org.apache.hadoop.mapreduce.TaskAttemptContext;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileSplit;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class WholeRecordReader extends RecordReader&lt;Text, BytesWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    FileSplit split;</span><br><span class="line">    Configuration configuration;</span><br><span class="line">    Text k = new Text();</span><br><span class="line">    BytesWritable v = new BytesWritable();</span><br><span class="line">    boolean isProgress = true;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //初始化</span><br><span class="line">        this.split = (FileSplit) split;</span><br><span class="line">        this.configuration = context.getConfiguration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean nextKeyValue() throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        if(isProgress)&#123;</span><br><span class="line">            // 核心业务逻辑处理</span><br><span class="line">            byte[] buf = new byte[(int) split.getLength()];</span><br><span class="line"></span><br><span class="line">            // 1.获取 fs 对象</span><br><span class="line">            Path path = split.getPath();</span><br><span class="line">            FileSystem fs = path.getFileSystem(configuration);</span><br><span class="line">            // 2.获取输入流</span><br><span class="line">            FSDataInputStream fis = fs.open(path);</span><br><span class="line"></span><br><span class="line">            // 3.拷贝</span><br><span class="line">            IOUtils.readFully(fis, buf, 0, buf.length);</span><br><span class="line"></span><br><span class="line">            // 4.封装v</span><br><span class="line">            v.set(buf, 0, buf.length);</span><br><span class="line"></span><br><span class="line">            // 5.封装k</span><br><span class="line">            k.set(path.toString());</span><br><span class="line"></span><br><span class="line">            // 6.关闭资源</span><br><span class="line">            IOUtils.closeStream(fis);</span><br><span class="line"></span><br><span class="line">            isProgress = false;</span><br><span class="line"></span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        return false;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Text getCurrentKey() throws IOException, InterruptedException &#123;</span><br><span class="line">        return k;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public BytesWritable getCurrentValue() throws IOException, InterruptedException &#123;</span><br><span class="line">        return v;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public float getProgress() throws IOException, InterruptedException &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void close() throws IOException &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写SequenceFileMapper类处理流程</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.inputformat;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.BytesWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class SequenceFileMapper extends Mapper&lt;Text, BytesWritable, Text, BytesWritable&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        context.write(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写SequenceFileReducer类处理流程</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.inputformat;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.BytesWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class SequenceFileReducer extends Reducer&lt;Text, BytesWritable, Text, BytesWritable&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;BytesWritable&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        // 循环写出</span><br><span class="line">        for (BytesWritable value : values) &#123;</span><br><span class="line">            context.write(key,value);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编写SequenceFileDriver类处理流程</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">package com.atyp.mr.inputformat;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.io.BytesWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class SequenceFileDriver &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        args = new String[]&#123;&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_05_fileinputFormat&quot;,&quot;D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_05_fileinputFormat&quot;&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = new Configuration();</span><br><span class="line"></span><br><span class="line">        // 1.获取Job对象</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        // 2.设置Jar路径</span><br><span class="line">        job.setJarByClass(SequenceFileDriver.class);</span><br><span class="line"></span><br><span class="line">        // 3.关联mapper和reducer类</span><br><span class="line">        job.setMapperClass(SequenceFileMapper.class);</span><br><span class="line">        job.setReducerClass(SequenceFileReducer.class);</span><br><span class="line"></span><br><span class="line">        // 4.设置mapper输出的key和value类型</span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(BytesWritable.class);</span><br><span class="line"></span><br><span class="line">        // 7.设置输入的InputFormat</span><br><span class="line">        job.setInputFormatClass(WholeFileInputFormat.class);</span><br><span class="line"></span><br><span class="line">        // 8.设置输出的outputFormat</span><br><span class="line">        job.setOutputFormatClass(SequenceFileOutputFormat.class);</span><br><span class="line"></span><br><span class="line">        // 5.设置最终输出的key和value类型</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(BytesWritable.class);</span><br><span class="line"></span><br><span class="line">        // 6.设置输入输出路径</span><br><span class="line">        FileInputFormat.setInputPaths(job, new Path(args[0]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, new Path(args[1]));</span><br><span class="line"></span><br><span class="line">        // 7.提交Job</span><br><span class="line">        boolean result = job.waitForCompletion(true);</span><br><span class="line">        System.exit(result ? 0 : 1);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="MapReduce工作流程"><a href="#MapReduce工作流程" class="headerlink" title="MapReduce工作流程"></a>MapReduce工作流程</h3><h4 id="流程示意图"><a href="#流程示意图" class="headerlink" title="流程示意图"></a>流程示意图</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132149746804101250.png" alt="image"><br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132149746805976250.png" alt="image"></p>
+<h4 id="流程详解"><a href="#流程详解" class="headerlink" title="流程详解"></a>流程详解</h4><p>上面的流程是整个MapReduce最全工作流程，但是Shuffle过程只是从第7步开始到第16步结束，具体Shuffle过程详解，如下：</p>
+<ul>
+<li>1）MapTask收集我们的map()方法输出的kv对，放到内存缓冲区中</li>
+<li>2）从内存缓冲区不断溢出本地磁盘文件，可能会溢出多个文件</li>
+<li>3）多个溢出文件会被合并成大的溢出文件</li>
+<li>4）在溢出过程及合并的过程中，都要调用Partitioner进行分区和针对key进行排序</li>
+<li>5）ReduceTask根据自己的分区号，去各个MapTask机器上取相应的结果分区数据</li>
+<li>6）ReduceTask会取到同一个分区的来自不同MapTask的结果文件，ReduceTask会将这些文件再进行合并（归并排序）</li>
+<li>7）合并成大文件后，Shuffle的过程也就结束了，后面进入ReduceTask的逻辑运算过程（从文件中取出一个一个的键值对Group，调用用户自定义的reduce()方法）</li>
+</ul>
+<h4 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h4><p>Shuffle中的缓冲区大小会影响到MapReduce程序的执行效率，原则上说，缓冲区越大，磁盘io的次数越少，执行速度就越快。<br><br>缓冲区的大小可以通过参数调整，参数：io.sort.mb默认100M。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/13/MapReduce基础学习-四/" rel="next" title="MapReduce基础学习-四">
+                <i class="fa fa-chevron-left"></i> MapReduce基础学习-四
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">99</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MapReduce框架原理"><span class="nav-number">1.</span> <span class="nav-text">MapReduce框架原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InputFormat数据输入"><span class="nav-number">1.1.</span> <span class="nav-text">InputFormat数据输入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#切片与MapTask并行度决定机制"><span class="nav-number">1.1.1.</span> <span class="nav-text">切片与MapTask并行度决定机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Job提交流程源码和切片源码详解"><span class="nav-number">1.1.2.</span> <span class="nav-text">Job提交流程源码和切片源码详解</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Job提交流程源码总结"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">Job提交流程源码总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FileInputFormat切片源码解析-input-getSplits-job"><span class="nav-number">1.1.3.</span> <span class="nav-text">FileInputFormat切片源码解析(input.getSplits(job))</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#FileInputFormat切片源码解析总结"><span class="nav-number">1.1.3.1.</span> <span class="nav-text">FileInputFormat切片源码解析总结</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FileInputFormat切片机制"><span class="nav-number">1.1.4.</span> <span class="nav-text">FileInputFormat切片机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CombineTextInputFormat切片机制"><span class="nav-number">1.1.5.</span> <span class="nav-text">CombineTextInputFormat切片机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CombineTextInputFormat案例实操"><span class="nav-number">1.1.6.</span> <span class="nav-text">CombineTextInputFormat案例实操</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FileInputFormat实现类"><span class="nav-number">1.1.7.</span> <span class="nav-text">FileInputFormat实现类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#TextInputFormat"><span class="nav-number">1.1.7.1.</span> <span class="nav-text">TextInputFormat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#KeyValueTextInputFormat"><span class="nav-number">1.1.7.2.</span> <span class="nav-text">KeyValueTextInputFormat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#KeyValueTextInputFormat使用案例"><span class="nav-number">1.1.7.3.</span> <span class="nav-text">KeyValueTextInputFormat使用案例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NLineInputFormat"><span class="nav-number">1.1.7.4.</span> <span class="nav-text">NLineInputFormat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#NLineInputFormat使用案例"><span class="nav-number">1.1.7.5.</span> <span class="nav-text">NLineInputFormat使用案例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自定义InputFormat"><span class="nav-number">1.1.7.6.</span> <span class="nav-text">自定义InputFormat</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#自定义InputFormat案例实操"><span class="nav-number">1.1.7.7.</span> <span class="nav-text">自定义InputFormat案例实操</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MapReduce工作流程"><span class="nav-number">1.2.</span> <span class="nav-text">MapReduce工作流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#流程示意图"><span class="nav-number">1.2.1.</span> <span class="nav-text">流程示意图</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#流程详解"><span class="nav-number">1.2.2.</span> <span class="nav-text">流程详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意"><span class="nav-number">1.2.3.</span> <span class="nav-text">注意</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
