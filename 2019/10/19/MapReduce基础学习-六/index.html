@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Hadoop数据压缩概述  MR支持的压缩编码   压缩格式 hadoop自带 算法 文件扩展名 是否可切分 换成压缩格式后，原来的程序是否需要修改     DEFLATE 是，直接使用 DEFLATE .deflate 否 和文本处理一样，不需要修改   Gzip 是，直接使用 DEFLATE .gz 否 和文本处理一样，不需要修改   bzip2 是，直接使用 bzip2 .bz2 是 和文本">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce基础学习-六">
+<meta property="og:url" content="http://yoursite.com/2019/10/19/MapReduce基础学习-六/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="Hadoop数据压缩概述  MR支持的压缩编码   压缩格式 hadoop自带 算法 文件扩展名 是否可切分 换成压缩格式后，原来的程序是否需要修改     DEFLATE 是，直接使用 DEFLATE .deflate 否 和文本处理一样，不需要修改   Gzip 是，直接使用 DEFLATE .gz 否 和文本处理一样，不需要修改   bzip2 是，直接使用 bzip2 .bz2 是 和文本">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132158420336288750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132158420342382500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132158427903163750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132158428953320000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132158428954882500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132158428955976250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132158429916601250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132158655209726250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9_132159250483476250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132159252450820000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132159252450820000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11_132159262648163750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12_132159264362538750.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13_132159264365351250.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14_132159264367695000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15_132159267558163750.png">
+<meta property="og:updated_time" content="2019-10-19T02:49:29.999Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MapReduce基础学习-六">
+<meta name="twitter:description" content="Hadoop数据压缩概述  MR支持的压缩编码   压缩格式 hadoop自带 算法 文件扩展名 是否可切分 换成压缩格式后，原来的程序是否需要修改     DEFLATE 是，直接使用 DEFLATE .deflate 否 和文本处理一样，不需要修改   Gzip 是，直接使用 DEFLATE .gz 否 和文本处理一样，不需要修改   bzip2 是，直接使用 bzip2 .bz2 是 和文本">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132158420336288750.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/19/MapReduce基础学习-六/"/>
+
+
+
+
+
+  <title>MapReduce基础学习-六 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/MapReduce基础学习-六/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MapReduce基础学习-六</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-19T10:49:05+08:00">
+                2019-10-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Hadoop数据压缩"><a href="#Hadoop数据压缩" class="headerlink" title="Hadoop数据压缩"></a>Hadoop数据压缩</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/1_132158420336288750.png" alt="image"></p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/2_132158420342382500.png" alt="image"></p>
+<h3 id="MR支持的压缩编码"><a href="#MR支持的压缩编码" class="headerlink" title="MR支持的压缩编码"></a>MR支持的压缩编码</h3><table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>hadoop自带</th>
+<th>算法</th>
+<th>文件扩展名</th>
+<th>是否可切分</th>
+<th>换成压缩格式后，原来的程序是否需要修改</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFLATE</td>
+<td>是，直接使用</td>
+<td>DEFLATE</td>
+<td>.deflate</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>Gzip</td>
+<td>是，直接使用</td>
+<td>DEFLATE</td>
+<td>.gz</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>是，直接使用</td>
+<td>bzip2</td>
+<td>.bz2</td>
+<td>是</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>否，需要安装</td>
+<td>LZO</td>
+<td>.lzo</td>
+<td>是</td>
+<td>需要建索引，还需要指定输入格式</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>否，需要安装</td>
+<td>Snappy</td>
+<td>.snappy</td>
+<td>否</td>
+<td>和文本处理一样，不需要修改</td>
+</tr>
+</tbody>
+</table>
+<p>为了支持多种压缩/解压缩算法，Hadoop引入了编码/解码器，如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>对应的编码/解码器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFLATE</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+</tr>
+<tr>
+<td>gzip</td>
+<td>org.apache.hadoop.io.compress.GzipCodec</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>org.apache.hadoop.io.compress.BZip2Codec</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>com.hadoop.compression.lzo.LzopCodec</td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>org.apache.hadoop.io.compress.SnappyCodec</td>
+</tr>
+</tbody>
+</table>
+<p>压缩性能的比较</p>
+<table>
+<thead>
+<tr>
+<th>压缩算法</th>
+<th>原始文件大小</th>
+<th>压缩文件大小</th>
+<th>压缩速度</th>
+<th>解压速度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gzip</td>
+<td>8.3G</td>
+<td>1.8G</td>
+<td>17.5 MB/s</td>
+<td>58 MB/s</td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>8.3G</td>
+<td>1.1G</td>
+<td>2.4 MB/s</td>
+<td>9.5 MB/s</td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>8.3G</td>
+<td>2.9G</td>
+<td>49.3 MB/s</td>
+<td>74.6 MB/s</td>
+</tr>
+</tbody>
+</table>
+<p>On a single core of a Core i7 processor in 64-bit mode, <font size="3" color="red">Snappy</font> compresses at about 250 MB/sec or more and decompresses at about 500 MB/sec or more.</p>
+<h3 id="压缩方式选择"><a href="#压缩方式选择" class="headerlink" title="压缩方式选择"></a>压缩方式选择</h3><h4 id="Gzip压缩"><a href="#Gzip压缩" class="headerlink" title="Gzip压缩"></a>Gzip压缩</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/3_132158427903163750.png" alt="image"></p>
+<h4 id="Bzip2压缩"><a href="#Bzip2压缩" class="headerlink" title="Bzip2压缩"></a>Bzip2压缩</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/4_132158428953320000.png" alt="image"></p>
+<h4 id="LZO压缩"><a href="#LZO压缩" class="headerlink" title="LZO压缩"></a>LZO压缩</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/5_132158428954882500.png" alt="image"></p>
+<h4 id="Snappy压缩"><a href="#Snappy压缩" class="headerlink" title="Snappy压缩"></a>Snappy压缩</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/6_132158428955976250.png" alt="image"></p>
+<h3 id="压缩位置的选择"><a href="#压缩位置的选择" class="headerlink" title="压缩位置的选择"></a>压缩位置的选择</h3><p>压缩可以在MapReduce作用的任意阶段启用</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/7_132158429916601250.png" alt="image"></p>
+<h3 id="压缩参数配置"><a href="#压缩参数配置" class="headerlink" title="压缩参数配置"></a>压缩参数配置</h3><p>要在Hadoop中启用压缩，可以配置如下参数：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>阶段</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>io.compression.codecs(在core-site.xml中配置)</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec<br>org.apache.hadoop.io.compress.GzipCodec<br>org.apache.hadoop.io.compress.BZip2Codec</td>
+<td>输入压缩</td>
+<td>Hadoop使用文件扩展名判断是否支持某种编解码器</td>
+<td></td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress（在mapred-site.xml中配置）</td>
+<td>false</td>
+<td>mapper输出</td>
+<td>这个参数设为true启用压缩</td>
+<td></td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress.codec（在mapred-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+<td>mapper输出</td>
+<td>企业多使用LZO或Snappy编解码器在此阶段压缩数据</td>
+<td></td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress（在mapred-site.xml中配置）</td>
+<td>false</td>
+<td>reducer输出</td>
+<td>这个参数设为true启用压缩</td>
+<td></td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.codec（在mapred-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress. DefaultCodec</td>
+<td>reducer输出</td>
+<td>使用标准工具或者编解码器，如gzip和bzip2</td>
+<td></td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.type（在mapred-site.xml中配置）</td>
+<td>RECORD</td>
+<td>reducer输出</td>
+<td>SequenceFile输出使用的压缩类型：NONE和BLOCK</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="压缩实操案列"><a href="#压缩实操案列" class="headerlink" title="压缩实操案列"></a>压缩实操案列</h3><h4 id="数据流的压缩和解压缩"><a href="#数据流的压缩和解压缩" class="headerlink" title="数据流的压缩和解压缩"></a>数据流的压缩和解压缩</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/8_132158655209726250.png" alt="image"></p>
+<p>测试一下如下压缩方式</p>
+<p>DEFLATE、gzip、bzip2</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.compress;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IOUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodec;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodecFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionInputStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionOutputStream;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.ReflectionUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCompress</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">// 压缩</span></span><br><span class="line">        <span class="comment">// BZip2</span></span><br><span class="line">        <span class="comment">//compress("D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\compress\\hello.txt", "org.apache.hadoop.io.compress.BZip2Codec");</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//Gzip</span></span><br><span class="line">        <span class="comment">//compress("D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\compress\\hello.txt", "org.apache.hadoop.io.compress.GzipCodec");</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//DEFLATE</span></span><br><span class="line">        <span class="comment">//compress("D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\compress\\hello.txt", "org.apache.hadoop.io.compress.DefaultCodec");</span></span><br><span class="line"></span><br><span class="line">        decompress(<span class="string">"D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\compress\\hello.txt.bz2"</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解压</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> fileName</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">decompress</span><span class="params">(String fileName)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">// 1.压缩方式检查</span></span><br><span class="line">        CompressionCodecFactory factory = <span class="keyword">new</span> CompressionCodecFactory(<span class="keyword">new</span> Configuration());</span><br><span class="line">        CompressionCodec codec = factory.getCodec(<span class="keyword">new</span> Path(fileName));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (codec == <span class="keyword">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">"can not process"</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.获取输入流</span></span><br><span class="line">        FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(fileName));</span><br><span class="line">        CompressionInputStream cis = codec.createInputStream(fis);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.获取输出流</span></span><br><span class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(fileName + <span class="string">".decode"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.流的对拷</span></span><br><span class="line">        IOUtils.copyBytes(cis, fos, <span class="number">1024</span> * <span class="number">1024</span>, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5.关闭资源</span></span><br><span class="line">        IOUtils.closeStream(fos);</span><br><span class="line">        IOUtils.closeStream(cis);</span><br><span class="line">        IOUtils.closeStream(fis);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 压缩</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> fileName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> method</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> ClassNotFoundException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">compress</span><span class="params">(String fileName, String method)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line">        <span class="comment">// 1.获取输入流</span></span><br><span class="line">        FileInputStream fis = <span class="keyword">new</span> FileInputStream(<span class="keyword">new</span> File(fileName));</span><br><span class="line"></span><br><span class="line">        Class&lt;?&gt; classCodec = Class.forName(method);</span><br><span class="line">        CompressionCodec codec = (CompressionCodec) ReflectionUtils.newInstance(classCodec, <span class="keyword">new</span> Configuration());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.获取输出流</span></span><br><span class="line">        FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(<span class="keyword">new</span> File(fileName + codec.getDefaultExtension()));</span><br><span class="line">        CompressionOutputStream cos = codec.createOutputStream(fos);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.流的对拷</span></span><br><span class="line">        IOUtils.copyBytes(fis, cos, <span class="number">1024</span> * <span class="number">1024</span>, <span class="keyword">false</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.关闭资源(先关离你最近的)</span></span><br><span class="line">        IOUtils.closeStream(cos);</span><br><span class="line">        IOUtils.closeStream(fos);</span><br><span class="line">        IOUtils.closeStream(fis);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Map输出端采用压缩"><a href="#Map输出端采用压缩" class="headerlink" title="Map输出端采用压缩"></a>Map输出端采用压缩</h4><p>即使你的MapReduce的输入输出文件都是未压缩的文件，你仍然可以对Map任务的中间结果输出做压缩，因为它要写在硬盘并且通过网络传输到Reduce节点，对其压缩可以提高很多性能，这些工作只要设置两个属性即可，我们来看下代码怎么设置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.BZip2Codec;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodec;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapred.JobConf;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountDriver</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException, InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        args = <span class="keyword">new</span> String[]&#123;<span class="string">"D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_01"</span>, <span class="string">"D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_01_02"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        <span class="comment">// 开启map端输出压缩</span></span><br><span class="line">        conf.setBoolean(<span class="string">"mapreduce.map.output"</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">// 设置map端输出压缩方式</span></span><br><span class="line">        conf.setClass(<span class="string">"mapreduce.map.output.compress.codec"</span>, BZip2Codec.class, CompressionCodec.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.获取Job对象</span></span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.设置jar存储位置</span></span><br><span class="line">        job.setJarByClass(WordCountDriver.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.关联Map和Reduce类</span></span><br><span class="line">        job.setMapperClass(WordCountMapper.class);</span><br><span class="line">        job.setReducerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.设置Mapper阶段数据输出的key和value类型</span></span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5.设置最终数据输出的key和value类型</span></span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果不设置InputFormat，它默认用的是TextInputFormat.class</span></span><br><span class="line">        <span class="comment">//job.setInputFormatClass(CombineTextInputFormat.class);</span></span><br><span class="line">        <span class="comment">// 虚拟存储切片最大值设置为 4M</span></span><br><span class="line">        <span class="comment">//CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果 NumReduceTasks 的个数你不设置，那默认是1(任何数%1=0)，那么分区就没有任何意义</span></span><br><span class="line">        <span class="comment">//job.setNumReduceTasks(2);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指定需要使用 combiner ，以及用哪个类作为 combiner 的逻辑</span></span><br><span class="line">        <span class="comment">//job.setCombinerClass(WordCountCombiner.class);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//关联合并类</span></span><br><span class="line">        <span class="comment">//job.setCombinerClass(WordCountReducer.class);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6.设置输入路径和输出路径</span></span><br><span class="line">        FileInputFormat.setInputPaths(job, <span class="keyword">new</span> Path(args[<span class="number">0</span>]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(args[<span class="number">1</span>]));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7.提交Job</span></span><br><span class="line">        <span class="comment">//job.submit();</span></span><br><span class="line">        <span class="keyword">boolean</span> result = job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Reduce输出端采用压缩"><a href="#Reduce输出端采用压缩" class="headerlink" title="Reduce输出端采用压缩"></a>Reduce输出端采用压缩</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.atyp.mr.wordcount;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.BZip2Codec;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.compress.CompressionCodec;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapred.JobConf;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.CombineTextInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WordCountDriver</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException, InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        args = <span class="keyword">new</span> String[]&#123;<span class="string">"D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\input_01"</span>, <span class="string">"D:\\WorkSpace\\IdeaWorpace\\hadoop_input_output\\output_01_02"</span>&#125;;</span><br><span class="line"></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        <span class="comment">// 开启map端输出压缩</span></span><br><span class="line">        conf.setBoolean(<span class="string">"mapreduce.map.output"</span>, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">// 设置map端输出压缩方式</span></span><br><span class="line">        conf.setClass(<span class="string">"mapreduce.map.output.compress.codec"</span>, BZip2Codec.class, CompressionCodec.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 1.获取Job对象</span></span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 2.设置jar存储位置</span></span><br><span class="line">        job.setJarByClass(WordCountDriver.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3.关联Map和Reduce类</span></span><br><span class="line">        job.setMapperClass(WordCountMapper.class);</span><br><span class="line">        job.setReducerClass(WordCountReducer.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4.设置Mapper阶段数据输出的key和value类型</span></span><br><span class="line">        job.setMapOutputKeyClass(Text.class);</span><br><span class="line">        job.setMapOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 5.设置最终数据输出的key和value类型</span></span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(IntWritable.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果不设置InputFormat，它默认用的是TextInputFormat.class</span></span><br><span class="line">        <span class="comment">//job.setInputFormatClass(CombineTextInputFormat.class);</span></span><br><span class="line">        <span class="comment">// 虚拟存储切片最大值设置为 4M</span></span><br><span class="line">        <span class="comment">//CombineTextInputFormat.setMaxInputSplitSize(job, 4194304);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//如果 NumReduceTasks 的个数你不设置，那默认是1(任何数%1=0)，那么分区就没有任何意义</span></span><br><span class="line">        <span class="comment">//job.setNumReduceTasks(2);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 指定需要使用 combiner ，以及用哪个类作为 combiner 的逻辑</span></span><br><span class="line">        <span class="comment">//job.setCombinerClass(WordCountCombiner.class);</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//关联合并类</span></span><br><span class="line">        <span class="comment">//job.setCombinerClass(WordCountReducer.class);</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置reduce端输出压缩开启</span></span><br><span class="line">        FileOutputFormat.setCompressOutput(job, <span class="keyword">true</span>);</span><br><span class="line">        <span class="comment">// 设置压缩的方式</span></span><br><span class="line">        FileOutputFormat.setOutputCompressorClass(job, BZip2Codec.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 6.设置输入路径和输出路径</span></span><br><span class="line">        FileInputFormat.setInputPaths(job, <span class="keyword">new</span> Path(args[<span class="number">0</span>]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(args[<span class="number">1</span>]));</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 7.提交Job</span></span><br><span class="line">        <span class="comment">//job.submit();</span></span><br><span class="line">        <span class="keyword">boolean</span> result = job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        System.exit(result ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Yarn资源调度器"><a href="#Yarn资源调度器" class="headerlink" title="Yarn资源调度器"></a>Yarn资源调度器</h2><p>Yarn是一个资源调度平台，负责为运算程序提供服务器运算资源，相当于一个分布式的操作系统平台，而MapReduce等运算程序则相当于运行于操作系统之上的应用程序。</p>
+<h3 id="Yarn基本架构"><a href="#Yarn基本架构" class="headerlink" title="Yarn基本架构"></a>Yarn基本架构</h3><p>YARN主要由ResourceManager、NodeManager、ApplicationMaster和Container等组件构成</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/9_132159250483476250.png" alt="image"></p>
+<h3 id="Yarn工作机制"><a href="#Yarn工作机制" class="headerlink" title="Yarn工作机制"></a>Yarn工作机制</h3><h4 id="Yarn运行机制"><a href="#Yarn运行机制" class="headerlink" title="Yarn运行机制"></a>Yarn运行机制</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132159252450820000.png" alt="image"></p>
+<h4 id="工作机制详解"><a href="#工作机制详解" class="headerlink" title="工作机制详解"></a>工作机制详解</h4><ol>
+<li>MR程序提交到客户端所在的节点。</li>
+<li>YarnRunner向ResourceManager申请一个Application。</li>
+<li>RM将该应用程序的资源路径返回给YarnRunner。</li>
+<li>该程序将运行所需资源提交到HDFS上。</li>
+<li>程序资源提交完毕后，申请运行mrAppMaster。</li>
+<li>RM将用户的请求初始化成一个Task。</li>
+<li>其中一个NodeManager领取到Task任务。</li>
+<li>该NodeManager创建容器Container，并产生MRAppmaster。</li>
+<li>Container从HDFS上拷贝资源到本地。</li>
+<li>MRAppmaster向RM 申请运行MapTask资源。</li>
+<li>RM将运行MapTask任务分配给另外两个NodeManager，另两个NodeManager分别领取任务并创建容器。</li>
+<li>MR向两个接收到任务的NodeManager发送程序启动脚本，这两个NodeManager分别启动MapTask，MapTask对数据分区排序。</li>
+<li>MrAppMaster等待所有MapTask运行完毕后，向RM申请容器，运行ReduceTask。</li>
+<li>ReduceTask向MapTask获取相应分区的数据。</li>
+<li>程序运行完毕后，MR会向RM申请注销自己。</li>
+</ol>
+<h3 id="作业提交全过程"><a href="#作业提交全过程" class="headerlink" title="作业提交全过程"></a>作业提交全过程</h3><h4 id="作业提交过程之YARN"><a href="#作业提交过程之YARN" class="headerlink" title="作业提交过程之YARN"></a>作业提交过程之YARN</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/10_132159252450820000.png" alt="image"></p>
+<p>作业提交全过程详解</p>
+<ul>
+<li>作业提交</li>
+</ul>
+<ol>
+<li>第1步：Client调用job.waitForCompletion方法，向整个集群提交MapReduce作业。</li>
+<li>第2步：Client向RM申请一个作业id。</li>
+<li>第3步：RM给Client返回该job资源的提交路径和作业id。</li>
+<li>第4步：Client提交jar包、切片信息和配置文件到指定的资源提交路径。</li>
+<li>第5步：Client提交完资源后，向RM申请运行MrAppMaster。</li>
+</ol>
+<ul>
+<li>作业初始化</li>
+</ul>
+<ol>
+<li>第6步：当RM收到Client的请求后，将该job添加到容量调度器中。</li>
+<li>第7步：某一个空闲的NM领取到该Job。</li>
+<li>第8步：该NM创建Container，并产生MRAppmaster。</li>
+<li>第9步：下载Client提交的资源到本地。</li>
+</ol>
+<ul>
+<li>任务分配</li>
+</ul>
+<ol>
+<li>第10步：MrAppMaster向RM申请运行多个MapTask任务资源。</li>
+<li>第11步：RM将运行MapTask任务分配给另外两个NodeManager，另两个NodeManager分别领取任务并创建容器。</li>
+<li>任务运行</li>
+</ol>
+<ul>
+<li>任务运行</li>
+</ul>
+<ol>
+<li>第12步：MR向两个接收到任务的NodeManager发送程序启动脚本，这两个NodeManager分别启动MapTask，MapTask对数据分区排序。</li>
+<li>第13步：MrAppMaster等待所有MapTask运行完毕后，向RM申请容器，运行ReduceTask。</li>
+<li>第14步：ReduceTask向MapTask获取相应分区的数据。</li>
+<li>第15步：程序运行完毕后，MR会向RM申请注销自己。</li>
+</ol>
+<ul>
+<li>进度和状态更新</li>
+</ul>
+<ol>
+<li>YARN中的任务将其进度和状态(包括counter)返回给应用管理器, 客户端每秒(通过mapreduce.client.progressmonitor.pollinterval设置)向应用管理器请求进度更新, 展示给用户。</li>
+</ol>
+<ul>
+<li>作业完成</li>
+</ul>
+<ol>
+<li>除了向应用管理器请求作业进度外, 客户端每5秒都会通过调用waitForCompletion()来检查作业是否完成。时间间隔可以通过mapreduce.client.completion.pollinterval来设置。作业完成之后, 应用管理器和Container会清理工作状态。作业的信息会被作业历史服务器存储以备之后用户核查。</li>
+</ol>
+<h4 id="作业提交过程之MapReduce"><a href="#作业提交过程之MapReduce" class="headerlink" title="作业提交过程之MapReduce"></a>作业提交过程之MapReduce</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/11_132159262648163750.png" alt="image"></p>
+<h3 id="资源调度器"><a href="#资源调度器" class="headerlink" title="资源调度器"></a>资源调度器</h3><p>目前，Hadoop作业调度器主要有三种：FIFO、Capacity Scheduler和Fair Scheduler。Hadoop2.7.2默认的资源调度器是Capacity Scheduler。</p>
+<p>具体设置详见：yarn-default.xml文件</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">description</span>&gt;</span>The class to use as the resource scheduler.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.scheduler.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="先进先出调度器（FIFO）"><a href="#先进先出调度器（FIFO）" class="headerlink" title="先进先出调度器（FIFO）"></a>先进先出调度器（FIFO）</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/12_132159264362538750.png" alt="image"></p>
+<h4 id="容量调度器（Capacity-Scheduler）"><a href="#容量调度器（Capacity-Scheduler）" class="headerlink" title="容量调度器（Capacity Scheduler）"></a>容量调度器（Capacity Scheduler）</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/13_132159264365351250.png" alt="image"></p>
+<h4 id="公平调度器（Fair-Scheduler）"><a href="#公平调度器（Fair-Scheduler）" class="headerlink" title="公平调度器（Fair Scheduler）"></a>公平调度器（Fair Scheduler）</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/14_132159264367695000.png" alt="image"></p>
+<h3 id="任务的推测执行"><a href="#任务的推测执行" class="headerlink" title="任务的推测执行"></a>任务的推测执行</h3><h4 id="作业完成时间取决于最慢的任务完成时间"><a href="#作业完成时间取决于最慢的任务完成时间" class="headerlink" title="作业完成时间取决于最慢的任务完成时间"></a>作业完成时间取决于最慢的任务完成时间</h4><p>一个作业由若干个Map任务和Reduce任务构成。因硬件老化、软件Bug等，某些任务可能运行非常慢。</p>
+<p>思考：系统中有99%的Map任务都完成了，只有少数几个Map老是进度很慢，完不成，怎么办？</p>
+<h4 id="推测执行机制"><a href="#推测执行机制" class="headerlink" title="推测执行机制"></a>推测执行机制</h4><p>发现拖后腿的任务，比如某个任务运行速度远慢于任务平均速度。为拖后腿任务启动一个备份任务，同时运行。谁先运行完，则采用谁的结果。</p>
+<h4 id="执行推测任务的前提条件"><a href="#执行推测任务的前提条件" class="headerlink" title="执行推测任务的前提条件"></a>执行推测任务的前提条件</h4><ol>
+<li>每个Task只能有一个备份任务</li>
+<li>当前Job已完成的Task必须不小于0.05（5%）</li>
+<li>开启推测执行参数设置。mapred-site.xml文件中默认是打开的。</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.map.speculative<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">description</span>&gt;</span>If true, then multiple instances of some map tasks may be executed in parallel.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.reduce.speculative<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">  	<span class="tag">&lt;<span class="name">description</span>&gt;</span>If true, then multiple instances of some reduce tasks may be executed in parallel.<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="不能启用推测执行机制情况"><a href="#不能启用推测执行机制情况" class="headerlink" title="不能启用推测执行机制情况"></a>不能启用推测执行机制情况</h4><ol>
+<li>不能启用推测执行机制情况</li>
+<li>特殊任务，比如任务向数据库中写数据。</li>
+</ol>
+<h4 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/MR/15_132159267558163750.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/17/MapReduce基础学习-五/" rel="next" title="MapReduce基础学习-五">
+                <i class="fa fa-chevron-left"></i> MapReduce基础学习-五
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">101</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Hadoop数据压缩"><span class="nav-number">1.</span> <span class="nav-text">Hadoop数据压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MR支持的压缩编码"><span class="nav-number">1.2.</span> <span class="nav-text">MR支持的压缩编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩方式选择"><span class="nav-number">1.3.</span> <span class="nav-text">压缩方式选择</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Gzip压缩"><span class="nav-number">1.3.1.</span> <span class="nav-text">Gzip压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Bzip2压缩"><span class="nav-number">1.3.2.</span> <span class="nav-text">Bzip2压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LZO压缩"><span class="nav-number">1.3.3.</span> <span class="nav-text">LZO压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Snappy压缩"><span class="nav-number">1.3.4.</span> <span class="nav-text">Snappy压缩</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩位置的选择"><span class="nav-number">1.4.</span> <span class="nav-text">压缩位置的选择</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩参数配置"><span class="nav-number">1.5.</span> <span class="nav-text">压缩参数配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩实操案列"><span class="nav-number">1.6.</span> <span class="nav-text">压缩实操案列</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据流的压缩和解压缩"><span class="nav-number">1.6.1.</span> <span class="nav-text">数据流的压缩和解压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map输出端采用压缩"><span class="nav-number">1.6.2.</span> <span class="nav-text">Map输出端采用压缩</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Reduce输出端采用压缩"><span class="nav-number">1.6.3.</span> <span class="nav-text">Reduce输出端采用压缩</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Yarn资源调度器"><span class="nav-number">2.</span> <span class="nav-text">Yarn资源调度器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn基本架构"><span class="nav-number">2.1.</span> <span class="nav-text">Yarn基本架构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Yarn工作机制"><span class="nav-number">2.2.</span> <span class="nav-text">Yarn工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Yarn运行机制"><span class="nav-number">2.2.1.</span> <span class="nav-text">Yarn运行机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#工作机制详解"><span class="nav-number">2.2.2.</span> <span class="nav-text">工作机制详解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#作业提交全过程"><span class="nav-number">2.3.</span> <span class="nav-text">作业提交全过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#作业提交过程之YARN"><span class="nav-number">2.3.1.</span> <span class="nav-text">作业提交过程之YARN</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#作业提交过程之MapReduce"><span class="nav-number">2.3.2.</span> <span class="nav-text">作业提交过程之MapReduce</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#资源调度器"><span class="nav-number">2.4.</span> <span class="nav-text">资源调度器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#先进先出调度器（FIFO）"><span class="nav-number">2.4.1.</span> <span class="nav-text">先进先出调度器（FIFO）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#容量调度器（Capacity-Scheduler）"><span class="nav-number">2.4.2.</span> <span class="nav-text">容量调度器（Capacity Scheduler）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#公平调度器（Fair-Scheduler）"><span class="nav-number">2.4.3.</span> <span class="nav-text">公平调度器（Fair Scheduler）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#任务的推测执行"><span class="nav-number">2.5.</span> <span class="nav-text">任务的推测执行</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#作业完成时间取决于最慢的任务完成时间"><span class="nav-number">2.5.1.</span> <span class="nav-text">作业完成时间取决于最慢的任务完成时间</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推测执行机制"><span class="nav-number">2.5.2.</span> <span class="nav-text">推测执行机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行推测任务的前提条件"><span class="nav-number">2.5.3.</span> <span class="nav-text">执行推测任务的前提条件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不能启用推测执行机制情况"><span class="nav-number">2.5.4.</span> <span class="nav-text">不能启用推测执行机制情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#算法原理"><span class="nav-number">2.5.5.</span> <span class="nav-text">算法原理</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
