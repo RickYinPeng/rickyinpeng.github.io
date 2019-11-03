@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/19/MapReduce基础学习-六/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/02/Hive基础学习-一之HIVE入门/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -282,7 +282,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/10/19/MapReduce基础学习-六/" itemprop="url">MapReduce基础学习-六</a></h1>
+                <a class="post-title-link" href="/2019/11/02/Hive基础学习-一之HIVE入门/" itemprop="url">Hive基础学习-一之HIVE入门</a></h1>
         
 
         <div class="post-meta">
@@ -294,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-19T10:49:05+08:00">
-                2019-10-19
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-02T17:47:24+08:00">
+                2019-11-02
               </time>
             
 
@@ -334,37 +334,17 @@
       
         
           
-          Hadoop数据压缩概述
-
-MR支持的压缩编码
-
-
-压缩格式
-hadoop自带
-算法
-文件扩展名
-是否可切分
-换成压缩格式后，原来的程序是否需要修改
+          什么是HiveHive：由Facebook开源用于解决海量结构化日志的数据统计。
+Hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张表，并提供类SQL查询功能。
+本质是：将HQL转化成MapReduce程序
 
 
-
-
-DEFLATE
-是，直接使用
-DEFLATE
-.deflate
-否
-和文本处理一样，不需要修改
-
-
-Gzip
-是，直接使用
-DEFLATE
-.
+Hive处理的数据存储在HDFS
+Hive分析数据底层的实现
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/10/19/MapReduce基础学习-六/#more" rel="contents">
+            <a class="btn" href="/2019/11/02/Hive基础学习-一之HIVE入门/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1460,7 +1440,7 @@ MapReduce核心思想
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五、Redis-整数集合/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.2.3Java内存区域——堆，栈，方法区等/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1479,7 +1459,7 @@ MapReduce核心思想
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/五、Redis-整数集合/" itemprop="url">五、Redis-整数集合</a></h1>
+                <a class="post-title-link" href="/2019/07/05/2.2.3Java内存区域——堆，栈，方法区等/" itemprop="url">2.2.3——Java内存区域--堆、栈、方法区等</a></h1>
         
 
         <div class="post-meta">
@@ -1531,12 +1511,13 @@ MapReduce核心思想
       
         
           
-          前言在 Redis 中，当集合只包含整数值元素，并且集合的元素数量不多时，Redis 就会使用整数集合作为集合键的底层实现。
-整数集合的实现整数集合是 Redis 中用于保存整数数值的集合抽象数据结构，它可以保存类型为 int16_t, int32_t 或者 int_64t 的整数值，并且保证集合中
+          运行时数据区域jdk1.7中， Java虚拟机在执行Java程序的过程中会把它所管理的内存划分为若干个不同的数据区域。
+程序计数器
+程序计数器（Program Counter Register）是一块较小的内存空间，它可以看做是当前线程所执行的字节码的行号指示器。字节码解释器工作时就是通过改变这个计
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/五、Redis-整数集合/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/2.2.3Java内存区域——堆，栈，方法区等/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
