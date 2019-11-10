@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="数据导入向表中装载数据（Load）语法1hive&amp;gt; load data [local] inpath &amp;apos;/opt/module/datas/student.txt&amp;apos; overwrite|into into table student [partition (partcol1=val1,…)];  load data:表示加载数据 local:表示从本地加载数据到hive表">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive基础学习-四之DML数据操作">
+<meta property="og:url" content="http://yoursite.com/2019/11/10/Hive基础学习-四之DML数据操作/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="数据导入向表中装载数据（Load）语法1hive&amp;gt; load data [local] inpath &amp;apos;/opt/module/datas/student.txt&amp;apos; overwrite|into into table student [partition (partcol1=val1,…)];  load data:表示加载数据 local:表示从本地加载数据到hive表">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-10T09:26:18.445Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive基础学习-四之DML数据操作">
+<meta name="twitter:description" content="数据导入向表中装载数据（Load）语法1hive&amp;gt; load data [local] inpath &amp;apos;/opt/module/datas/student.txt&amp;apos; overwrite|into into table student [partition (partcol1=val1,…)];  load data:表示加载数据 local:表示从本地加载数据到hive表">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/11/10/Hive基础学习-四之DML数据操作/"/>
+
+
+
+
+
+  <title>Hive基础学习-四之DML数据操作 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/10/Hive基础学习-四之DML数据操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hive基础学习-四之DML数据操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-10T17:25:33+08:00">
+                2019-11-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h2><h3 id="向表中装载数据（Load）"><a href="#向表中装载数据（Load）" class="headerlink" title="向表中装载数据（Load）"></a>向表中装载数据（Load）</h3><h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; load data [local] inpath &apos;/opt/module/datas/student.txt&apos; overwrite|into into table student [partition (partcol1=val1,…)];</span><br></pre></td></tr></table></figure>
+<ol>
+<li>load data:表示加载数据</li>
+<li>local:表示从本地加载数据到hive表；否则从HDFS加载数据到hive表</li>
+<li>inpath:表示加载数据的路径</li>
+<li>overwrite:表示覆盖表中已有数据，否则表示追加</li>
+<li>into table:表示加载到哪张表</li>
+<li>student:表示具体的表</li>
+<li>partition:表示上传到指定分区</li>
+</ol>
+<h4 id="实操案例"><a href="#实操案例" class="headerlink" title="实操案例"></a>实操案例</h4><ol>
+<li>创建一张表</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table student(id string, name string) row format delimited fields terminated by &apos;\t&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>加载本地文件到hive</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; load data local inpath &apos;/opt/module/datas/student.txt&apos; into table default.student;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>加载HDFS文件到hive中</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">上传文件到HDFS</span><br><span class="line">hive (default)&gt; dfs -put /opt/module/datas/student.txt /user/atguigu/hive;</span><br><span class="line">加载HDFS上数据</span><br><span class="line">hive (default)&gt; load data inpath &apos;/user/atguigu/hive/student.txt&apos; into table default.student;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>加载数据覆盖表中已有的数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">上传文件到HDFS</span><br><span class="line">hive (default)&gt; dfs -put /opt/module/datas/student.txt /user/atguigu/hive;</span><br><span class="line">加载数据覆盖表中已有的数据</span><br><span class="line">hive (default)&gt; load data inpath &apos;/user/atguigu/hive/student.txt&apos; overwrite into table default.student;</span><br></pre></td></tr></table></figure>
+<h3 id="通过查询语句向表中插入数据（Insert）"><a href="#通过查询语句向表中插入数据（Insert）" class="headerlink" title="通过查询语句向表中插入数据（Insert）"></a>通过查询语句向表中插入数据（Insert）</h3><ol>
+<li>创建一张分区表</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table student(id int, name string) partitioned by (month string) row format delimited fields terminated by &apos;\t&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>基本插入数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert into table  student partition(month=&apos;201709&apos;) values(1,&apos;wangwu&apos;);</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>基本模式插入（根据单张表查询结果）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert overwrite table student partition(month=&apos;201708&apos;)</span><br><span class="line">             select id, name from student where month=&apos;201709&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>多插入模式（根据多张表查询结果）</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; from student</span><br><span class="line">              insert overwrite table student partition(month=&apos;201707&apos;)</span><br><span class="line">              select id, name where month=&apos;201709&apos;</span><br><span class="line">              insert overwrite table student partition(month=&apos;201706&apos;)</span><br><span class="line">              select id, name where month=&apos;201709&apos;;</span><br></pre></td></tr></table></figure>
+<h3 id="查询语句中创建表并加载数据（As-Select）"><a href="#查询语句中创建表并加载数据（As-Select）" class="headerlink" title="查询语句中创建表并加载数据（As Select）"></a>查询语句中创建表并加载数据（As Select）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">根据查询结果创建表（查询的结果会添加到新创建的表中）</span><br><span class="line">create table if not exists student3</span><br><span class="line">as select id, name from student;</span><br></pre></td></tr></table></figure>
+<h3 id="创建表时通过Location指定加载数据路径"><a href="#创建表时通过Location指定加载数据路径" class="headerlink" title="创建表时通过Location指定加载数据路径"></a>创建表时通过Location指定加载数据路径</h3><ol>
+<li>创建表，并指定在hdfs上的位置</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; create table if not exists student5(</span><br><span class="line">              id int, name string</span><br><span class="line">              )</span><br><span class="line">              row format delimited fields terminated by &apos;\t&apos;</span><br><span class="line">              location &apos;/user/hive/warehouse/student5&apos;;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>上传数据到hdfs上</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; dfs -put /opt/module/datas/student.txt</span><br><span class="line">/user/hive/warehouse/student5;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>查询数据</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select * from student5;</span><br></pre></td></tr></table></figure>
+<h3 id="Import数据到指定Hive表中"><a href="#Import数据到指定Hive表中" class="headerlink" title="Import数据到指定Hive表中"></a>Import数据到指定Hive表中</h3><p><font size="3" color="red">注意：先用export导出后，再将数据导入。因为export导出的表有元数据信息</font><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; import table student2 partition(month=&apos;201709&apos;) from</span><br><span class="line"> &apos;/user/hive/warehouse/export/student&apos;;</span><br></pre></td></tr></table></figure></p>
+<h2 id="数据导出"><a href="#数据导出" class="headerlink" title="数据导出"></a>数据导出</h2><h3 id="Insert导出"><a href="#Insert导出" class="headerlink" title="Insert导出"></a>Insert导出</h3><ol>
+<li>将查询的结果导出到本地</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert overwrite local directory &apos;/opt/module/datas/export/student&apos;</span><br><span class="line">            select * from student;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>将查询的结果格式化导出到本地</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive(default)&gt;insert overwrite local directory &apos;/opt/module/datas/export/student1&apos;</span><br><span class="line">           ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;\t&apos;             select * from student;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>将查询的结果导出到HDFS上(没有local)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert overwrite directory &apos;/user/atguigu/student2&apos;</span><br><span class="line">             ROW FORMAT DELIMITED FIELDS TERMINATED BY &apos;\t&apos; </span><br><span class="line">             select * from student;</span><br></pre></td></tr></table></figure>
+<h3 id="Hadoop命令导出到本地"><a href="#Hadoop命令导出到本地" class="headerlink" title="Hadoop命令导出到本地"></a>Hadoop命令导出到本地</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; dfs -get /user/hive/warehouse/student/month=201709/000000_0</span><br><span class="line">/opt/module/datas/export/student3.txt;</span><br></pre></td></tr></table></figure>
+<h3 id="Hive-Shell-命令导出"><a href="#Hive-Shell-命令导出" class="headerlink" title="Hive Shell 命令导出"></a>Hive Shell 命令导出</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">基本语法：（hive -f/-e 执行语句或者脚本 &gt; file）</span><br><span class="line">[root@hadoop102 hive]$ bin/hive -e &apos;select * from default.student;&apos; &gt;</span><br><span class="line"> /opt/module/datas/export/student4.txt;</span><br></pre></td></tr></table></figure>
+<h3 id="Export导出到HDFS上"><a href="#Export导出到HDFS上" class="headerlink" title="Export导出到HDFS上"></a>Export导出到HDFS上</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(defahiveult)&gt; export table default.student to</span><br><span class="line"> &apos;/user/hive/warehouse/export/student&apos;;</span><br></pre></td></tr></table></figure>
+<h3 id="清除表中数据（Truncate）"><a href="#清除表中数据（Truncate）" class="headerlink" title="清除表中数据（Truncate）"></a>清除表中数据（Truncate）</h3><p><font size="3" color="red">注意：Truncate只能删除管理表，不能删除外部表中数据</font><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; truncate table student;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/10/Hive基础学习-三之Hive基本类型和DDL数据定义/" rel="next" title="Hive基础学习-三之HIVE基本类型和DDL数据定义">
+                <i class="fa fa-chevron-left"></i> Hive基础学习-三之HIVE基本类型和DDL数据定义
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据导入"><span class="nav-number">1.</span> <span class="nav-text">数据导入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#向表中装载数据（Load）"><span class="nav-number">1.1.</span> <span class="nav-text">向表中装载数据（Load）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#语法"><span class="nav-number">1.1.1.</span> <span class="nav-text">语法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实操案例"><span class="nav-number">1.1.2.</span> <span class="nav-text">实操案例</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过查询语句向表中插入数据（Insert）"><span class="nav-number">1.2.</span> <span class="nav-text">通过查询语句向表中插入数据（Insert）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询语句中创建表并加载数据（As-Select）"><span class="nav-number">1.3.</span> <span class="nav-text">查询语句中创建表并加载数据（As Select）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建表时通过Location指定加载数据路径"><span class="nav-number">1.4.</span> <span class="nav-text">创建表时通过Location指定加载数据路径</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Import数据到指定Hive表中"><span class="nav-number">1.5.</span> <span class="nav-text">Import数据到指定Hive表中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据导出"><span class="nav-number">2.</span> <span class="nav-text">数据导出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Insert导出"><span class="nav-number">2.1.</span> <span class="nav-text">Insert导出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop命令导出到本地"><span class="nav-number">2.2.</span> <span class="nav-text">Hadoop命令导出到本地</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hive-Shell-命令导出"><span class="nav-number">2.3.</span> <span class="nav-text">Hive Shell 命令导出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Export导出到HDFS上"><span class="nav-number">2.4.</span> <span class="nav-text">Export导出到HDFS上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#清除表中数据（Truncate）"><span class="nav-number">2.5.</span> <span class="nav-text">清除表中数据（Truncate）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
