@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="压缩和存储Hadoop源码编译支持Snappy压缩资源准备 CentOS联网配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的注意：采用root角色编译，减少文件夹权限出现问题 jar包准备(hadoop源码、JDK8 、maven、protobuf)   hadoop-2.7.2-src.tar.gz jdk-8u144-linux-x64.tar.gz">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive基础学习-八之压缩和存储">
+<meta property="og:url" content="http://yoursite.com/2019/12/27/Hive基础学习-八之压缩和存储/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="压缩和存储Hadoop源码编译支持Snappy压缩资源准备 CentOS联网配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的注意：采用root角色编译，减少文件夹权限出现问题 jar包准备(hadoop源码、JDK8 、maven、protobuf)   hadoop-2.7.2-src.tar.gz jdk-8u144-linux-x64.tar.gz">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/3_132207699378905000.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/4_132207701693592500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/5_132207704164217500.png">
+<meta property="og:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/6_132207705902498750.png">
+<meta property="og:updated_time" content="2019-12-27T14:47:35.819Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hive基础学习-八之压缩和存储">
+<meta name="twitter:description" content="压缩和存储Hadoop源码编译支持Snappy压缩资源准备 CentOS联网配置CentOS能连接外网。Linux虚拟机ping www.baidu.com 是畅通的注意：采用root角色编译，减少文件夹权限出现问题 jar包准备(hadoop源码、JDK8 、maven、protobuf)   hadoop-2.7.2-src.tar.gz jdk-8u144-linux-x64.tar.gz">
+<meta name="twitter:image" content="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/3_132207699378905000.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/27/Hive基础学习-八之压缩和存储/"/>
+
+
+
+
+
+  <title>Hive基础学习-八之压缩和存储 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/27/Hive基础学习-八之压缩和存储/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Hive基础学习-八之压缩和存储</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-27T22:45:41+08:00">
+                2019-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="压缩和存储"><a href="#压缩和存储" class="headerlink" title="压缩和存储"></a>压缩和存储</h2><h3 id="Hadoop源码编译支持Snappy压缩"><a href="#Hadoop源码编译支持Snappy压缩" class="headerlink" title="Hadoop源码编译支持Snappy压缩"></a>Hadoop源码编译支持Snappy压缩</h3><h4 id="资源准备"><a href="#资源准备" class="headerlink" title="资源准备"></a>资源准备</h4><ol>
+<li>CentOS联网<br>配置CentOS能连接外网。Linux虚拟机ping <a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 是畅通的<br>注意：采用root角色编译，减少文件夹权限出现问题</li>
+<li>jar包准备(hadoop源码、JDK8 、maven、protobuf)</li>
+</ol>
+<ul>
+<li>hadoop-2.7.2-src.tar.gz</li>
+<li>jdk-8u144-linux-x64.tar.gz</li>
+<li>snappy-1.1.3.tar.gz</li>
+<li>apache-maven-3.0.5-bin.tar.gz</li>
+<li>protobuf-2.5.0.tar.gz</li>
+</ul>
+<h4 id="jar包安装"><a href="#jar包安装" class="headerlink" title="jar包安装"></a>jar包安装</h4><blockquote>
+<p>注意：所有操作必须在root用户下完成</p>
+</blockquote>
+<ol>
+<li>JDK解压、配置环境变量JAVA_HOME和PATH，验证java-version(如下都需要验证是否配置成功)</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software] # tar -zxf jdk-8u144-linux-x64.tar.gz -C /opt/module/</span><br><span class="line">[root@hadoop101 software]# vi /etc/profile</span><br><span class="line"></span><br><span class="line">#JAVA_HOME</span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_144</span><br><span class="line">export PATH=$PATH:$JAVA_HOME/bin</span><br><span class="line">[root@hadoop101 software]#source /etc/profile</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>Maven解压、配置  MAVEN_HOME和PATH</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software]# tar -zxvf apache-maven-3.0.5-bin.tar.gz -C /opt/module/</span><br><span class="line">[root@hadoop101 apache-maven-3.0.5]# vi /etc/profile</span><br><span class="line">#MAVEN_HOME</span><br><span class="line">export MAVEN_HOME=/opt/module/apache-maven-3.0.5</span><br><span class="line">export PATH=$PATH:$MAVEN_HOME/bin</span><br><span class="line">[root@hadoop101 software]#source /etc/profile</span><br></pre></td></tr></table></figure>
+<h4 id="编译源码"><a href="#编译源码" class="headerlink" title="编译源码"></a>编译源码</h4><ol>
+<li>准备编译环境</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software]# yum install svn</span><br><span class="line">[root@hadoop101 software]# yum install autoconf automake libtool cmake</span><br><span class="line">[root@hadoop101 software]# yum install ncurses-devel</span><br><span class="line">[root@hadoop101 software]# yum install openssl-devel</span><br><span class="line">[root@hadoop101 software]# yum install gcc*</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>编译安装snappy</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software]# tar -zxvf snappy-1.1.3.tar.gz -C /opt/module/</span><br><span class="line">[root@hadoop101 module]# cd snappy-1.1.3/</span><br><span class="line">[root@hadoop101 snappy-1.1.3]# ./configure</span><br><span class="line">[root@hadoop101 snappy-1.1.3]# make</span><br><span class="line">[root@hadoop101 snappy-1.1.3]# make install</span><br><span class="line"># 查看snappy库文件</span><br><span class="line">[root@hadoop101 snappy-1.1.3]# ls -lh /usr/local/lib |grep snappy</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>编译安装protobuf</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software]# tar -zxvf protobuf-2.5.0.tar.gz -C /opt/module/</span><br><span class="line">[root@hadoop101 module]# cd protobuf-2.5.0/</span><br><span class="line">[root@hadoop101 protobuf-2.5.0]# ./configure </span><br><span class="line">[root@hadoop101 protobuf-2.5.0]#  make </span><br><span class="line">[root@hadoop101 protobuf-2.5.0]#  make install</span><br><span class="line"># 查看protobuf版本以测试是否安装成功</span><br><span class="line">[root@hadoop101 protobuf-2.5.0]# protoc --version</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>编译hadoop native</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 software]# tar -zxvf hadoop-2.7.2-src.tar.gz</span><br><span class="line">[root@hadoop101 software]# cd hadoop-2.7.2-src/</span><br><span class="line">[root@hadoop101 software]# mvn clean package -DskipTests -Pdist,native -Dtar -Dsnappy.lib=/usr/local/lib -Dbundle.snappy</span><br></pre></td></tr></table></figure>
+<p>执行成功后，/opt/software/hadoop-2.7.2-src/hadoop-dist/target/hadoop-2.7.2.tar.gz即为新生成的支持snappy压缩的二进制安装包。</p>
+<h3 id="Hadoop压缩配置"><a href="#Hadoop压缩配置" class="headerlink" title="Hadoop压缩配置"></a>Hadoop压缩配置</h3><h4 id="MR支持的压缩编码"><a href="#MR支持的压缩编码" class="headerlink" title="MR支持的压缩编码"></a>MR支持的压缩编码</h4><table>
+<thead>
+<tr>
+<th>压缩格式</th>
+<th>工具</th>
+<th>算法</th>
+<th>文件扩展名</th>
+<th>是否可切分</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEFAULT</td>
+<td>无</td>
+<td>DEFAULT</td>
+<td>.deflate</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>Gzip</td>
+<td>gzip</td>
+<td>DEFAULT</td>
+<td>.gz</td>
+<td>否</td>
+<td></td>
+</tr>
+<tr>
+<td>bzip2</td>
+<td>bzip2</td>
+<td>bzip2</td>
+<td>.bz2</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td>LZO</td>
+<td>lzop</td>
+<td>LZO</td>
+<td>.lzo</td>
+<td>是</td>
+<td></td>
+</tr>
+<tr>
+<td>Snappy</td>
+<td>无</td>
+<td>Snappy</td>
+<td>.snappy</td>
+<td>否</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>为了支持多种压缩/解压缩算法，Hadoop引入了编码/解码器，如下表所示：<br>压缩格式|    对应的编码/解码器<br>—|—<br>DEFLATE|    org.apache.hadoop.io.compress.DefaultCodec<br>gzip|    org.apache.hadoop.io.compress.GzipCodec<br>bzip2|    org.apache.hadoop.io.compress.BZip2Codec<br>LZO    |com.hadoop.compression.lzo.LzopCodec<br>Snappy|    org.apache.hadoop.io.compress.SnappyCodec</p>
+<p>压缩性能的比较：<br>压缩算法|    原始文件大小|    压缩文件大小|    压缩速度|    解压速度<br>—|—|—|—|—<br>gzip|    8.3GB|    1.8GB|    17.5MB/s|    58MB/s<br>bzip2|    8.3GB|    1.1GB|    2.4MB/s    |9.5MB/s<br>LZO    |8.3GB    |2.9GB    |49.3MB/s    |74.6MB/s</p>
+<p><a href="http://google.github.io/snappy/" target="_blank" rel="noopener">http://google.github.io/snappy/</a></p>
+<p>On a single core of a Core i7 processor in 64-bit mode, Snappy compresses at about 250 MB/sec or more and decompresses at about 500 MB/sec or more.</p>
+<h4 id="压缩参数配置"><a href="#压缩参数配置" class="headerlink" title="压缩参数配置"></a>压缩参数配置</h4><p>要在Hadoop中启用压缩，可以配置如下参数（mapred-site.xml文件中）：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>默认值</th>
+<th>阶段</th>
+<th>建议</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>io.compression.codecs （在core-site.xml中配置）</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec,org.apache.hadoop.io.compress.GzipCodec, org.apache.hadoop.io.compress.BZip2Codec,org.apache.hadoop.io.compress.Lz4Codec</td>
+<td>输入压缩</td>
+<td>Hadoop使用文件扩展名判断是否支持某种编解码器</td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress</td>
+<td>false</td>
+<td>mapper输出</td>
+<td>这个参数设为true启用压缩</td>
+</tr>
+<tr>
+<td>mapreduce.map.output.compress.codec</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+<td>mapper输出</td>
+<td>使用LZO、LZ4或snappy编解码器在此阶段压缩数据</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress</td>
+<td>false</td>
+<td>reducer输出</td>
+<td>这个参数设为true启用压缩</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.codec</td>
+<td>org.apache.hadoop.io.compress. DefaultCodec</td>
+<td>reducer输出</td>
+<td>使用标准工具或者编解码器，如gzip和bzip2</td>
+</tr>
+<tr>
+<td>mapreduce.output.fileoutputformat.compress.type</td>
+<td>RECORD</td>
+<td>reducer输出</td>
+<td>SequenceFile输出使用的压缩类型：NONE和BLOCK</td>
+</tr>
+</tbody>
+</table>
+<h3 id="开启Map输出阶段压缩"><a href="#开启Map输出阶段压缩" class="headerlink" title="开启Map输出阶段压缩"></a>开启Map输出阶段压缩</h3><p>开启map输出阶段压缩可以减少job中map和Reduce task间数据传输量。具体配置如下：</p>
+<ol>
+<li><p>开启hive中间传输数据压缩功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt;set hive.exec.compress.intermediate=true;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开启mapreduce中map输出压缩功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt;set mapreduce.map.output.compress=true;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置mapreduce中map输出数据的压缩方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt;set mapreduce.map.output.compress.codec=</span><br><span class="line"> org.apache.hadoop.io.compress.SnappyCodec;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行查询语句</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; select count(ename) name from emp;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="开启Reduce输出阶段压缩"><a href="#开启Reduce输出阶段压缩" class="headerlink" title="开启Reduce输出阶段压缩"></a>开启Reduce输出阶段压缩</h3><p>当Hive将输出写入到表中时，输出内容同样可以进行压缩。属性hive.exec.compress.output控制着这个功能。用户可能需要保持默认设置文件中的默认值false，这样默认的输出就是非压缩的纯文本文件了。用户可以通过在查询语句或执行脚本中设置这个值为true，来开启输出结果压缩功能。</p>
+<ol>
+<li><p>开启hive最终输出数据压缩功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt;set hive.exec.compress.output=true;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>开启mapreduce最终输出数据压缩</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt;set mapreduce.output.fileoutputformat.compress=true;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置mapreduce最终数据输出压缩方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; set mapreduce.output.fileoutputformat.compress.codec =</span><br><span class="line"> org.apache.hadoop.io.compress.SnappyCodec;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>设置mapreduce最终数据输出压缩为块压缩</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; set mapreduce.output.fileoutputformat.compress.type=BLOCK;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试一下输出结果是否是压缩文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert overwrite local directory</span><br><span class="line"> &apos;/opt/module/datas/distribute-result&apos; select * from emp distribute by deptno sort by empno desc;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="文件存储格式"><a href="#文件存储格式" class="headerlink" title="文件存储格式"></a>文件存储格式</h3><p>Hive支持的存储数的格式主要有：TEXTFILE 、SEQUENCEFILE、ORC、PARQUET。</p>
+<h4 id="列式存储和行式存储"><a href="#列式存储和行式存储" class="headerlink" title="列式存储和行式存储"></a>列式存储和行式存储</h4><p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/3_132207699378905000.png" alt="image"></p>
+<p>左边为逻辑表，右边第一个为行式存储，第二个为列式存储。</p>
+<ol>
+<li>行存储的特点<br>查询满足条件的一整行数据的时候，列存储则需要去每个聚集的字段找到对应的每个列的值，行存储只需要找到其中一个值，其余的值都在相邻地方，所以此时行存储查询的速度更快。</li>
+<li>列存储的特点<br>因为每个字段的数据聚集存储，在查询只需要少数几个字段的时候，能大大减少读取的数据量；每个字段的数据类型一定是相同的，列式存储可以针对性的设计更好的设计压缩算法。</li>
+</ol>
+<font size="3" color="red">TEXTFILE和SEQUENCEFILE的存储格式都是基于行存储的；<br>ORC和PARQUET是基于列式存储的。</font>
+
+<h4 id="TextFile格式"><a href="#TextFile格式" class="headerlink" title="TextFile格式"></a>TextFile格式</h4><p>默认格式，数据不做压缩，磁盘开销大，数据解析开销大。可结合Gzip、Bzip2使用，但使用Gzip这种方式，hive不会对数据进行切分，从而无法对数据进行并行操作。</p>
+<h4 id="Orc格式"><a href="#Orc格式" class="headerlink" title="Orc格式"></a>Orc格式</h4><p>Orc (Optimized Row Columnar)是Hive 0.11版里引入的新的存储格式。</p>
+<p>如图所示可以看到每个Orc文件由1个或多个stripe组成，每个stripe250MB大小，这个Stripe实际相当于RowGroup概念，不过大小由4MB-&gt;250MB，这样应该能提升顺序读的吞吐率。每个Stripe里有三部分组成，分别是Index Data，Row Data，Stripe Footer：</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/4_132207701693592500.png" alt="image"></p>
+<ol>
+<li>Index Data：一个轻量级的index，默认是每隔1W行做一个索引。这里做的索引应该只是记录某行的各字段在Row Data中的offset。</li>
+<li>Row Data：存的是具体的数据，先取部分行，然后对这些行按列进行存储。对每个列进行了编码，分成多个Stream来存储。</li>
+<li>Stripe Footer：存的是各个Stream的类型，长度等信息</li>
+</ol>
+<p>每个文件有一个File Footer，这里面存的是每个Stripe的行数，每个Column的数据类型信息等；每个文件的尾部是一个PostScript，这里面记录了整个文件的压缩类型以及FileFooter的长度信息等。在读取文件时，会seek到文件尾部读PostScript，从里面解析到File Footer长度，再读FileFooter，从里面解析到各个Stripe信息，再读各个Stripe，即从后往前读。</p>
+<h4 id="Parquet格式"><a href="#Parquet格式" class="headerlink" title="Parquet格式"></a>Parquet格式</h4><p>Parquet是面向分析型业务的列式存储格式，由Twitter和Cloudera合作开发，2015年5月从Apache的孵化器里毕业成为Apache顶级项目。</p>
+<p>Parquet文件是以二进制方式存储的，所以是不可以直接读取的，文件中包括该文件的数据和元数据，因此Parquet格式文件是自解析的。</p>
+<p>通常情况下，在存储Parquet数据的时候会按照Block大小设置行组的大小，由于一般情况下每一个Mapper任务处理数据的最小单位是一个Block，这样可以把每一个行组由一个Mapper任务处理，增大任务执行并行度。Parquet文件的格式如图所示。</p>
+<p><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/5_132207704164217500.png" alt="image"></p>
+<p>上图展示了一个Parquet文件的内容，一个文件中可以存储多个行组，文件的首位都是该文件的Magic Code，用于校验它是否是一个Parquet文件，Footer length记录了文件元数据的大小，通过该值和文件长度可以计算出元数据的偏移量，文件的元数据中包括每一个行组的元数据信息和该文件存储数据的Schema信息。除了文件中每一个行组的元数据，每一页的开始都会存储该页的元数据，在Parquet中，有三种类型的页：数据页、字典页和索引页。数据页用于存储当前行组中该列的值，字典页存储该列值的编码字典，每一个列块中最多包含一个字典页，索引页用来存储当前行组下该列的索引，目前Parquet中还不支持索引页。</p>
+<h4 id="主流文件存储格式对比实验"><a href="#主流文件存储格式对比实验" class="headerlink" title="主流文件存储格式对比实验"></a>主流文件存储格式对比实验</h4><p>从存储文件的压缩比和查询速度两个角度对比。</p>
+<h5 id="存储文件的压缩比测试："><a href="#存储文件的压缩比测试：" class="headerlink" title="存储文件的压缩比测试："></a>存储文件的压缩比测试：</h5><ol>
+<li>测试数据<br><img src="http://i.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/HIVE/6_132207705902498750.png" alt="image"></li>
+<li>TextFile</li>
+</ol>
+<ul>
+<li><p>创建表，存储数据格式为TEXTFILE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create table log_text (</span><br><span class="line">track_time string,</span><br><span class="line">url string,</span><br><span class="line">session_id string,</span><br><span class="line">referer string,</span><br><span class="line">ip string,</span><br><span class="line">end_user_id string,</span><br><span class="line">city_id string</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &apos;\t&apos;</span><br><span class="line">stored as textfile ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向表中加载数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; load data local inpath &apos;/opt/module/datas/log.data&apos; into table log_text ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看表中数据大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; dfs -du -h /user/hive/warehouse/log_text;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><font size="3" color="red">18.1 M</font>  /user/hive/warehouse/log_text/log.data</p>
+<ol start="3">
+<li>ORC</li>
+</ol>
+<ul>
+<li><p>创建表，存储数据格式为ORC</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create table log_orc(</span><br><span class="line">track_time string,</span><br><span class="line">url string,</span><br><span class="line">session_id string,</span><br><span class="line">referer string,</span><br><span class="line">ip string,</span><br><span class="line">end_user_id string,</span><br><span class="line">city_id string</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &apos;\t&apos;</span><br><span class="line">stored as orc ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向表中加载数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert into table log_orc select * from log_text ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看表中数据大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; dfs -du -h /user/hive/warehouse/log_orc/ ;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><font size="3" color="red">2.8 M </font> /user/hive/warehouse/log_orc/000000_0</p>
+<ol start="4">
+<li>Parquet</li>
+</ol>
+<ul>
+<li><p>创建表，存储数据格式为parquet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create table log_parquet(</span><br><span class="line">track_time string,</span><br><span class="line">url string,</span><br><span class="line">session_id string,</span><br><span class="line">referer string,</span><br><span class="line">ip string,</span><br><span class="line">end_user_id string,</span><br><span class="line">city_id string</span><br><span class="line">)</span><br><span class="line">row format delimited fields terminated by &apos;\t&apos;</span><br><span class="line">stored as parquet ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向表中加载数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; insert into table log_parquet select * from log_text ;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看表中数据大小</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hive (default)&gt; dfs -du -h /user/hive/warehouse/log_parquet/ ;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><font size="3" color="red">13.1 M</font>  /user/hive/warehouse/log_parquet/000000_0</p>
+<blockquote>
+<p>存储文件的压缩比总结： ORC &gt;  Parquet &gt;  textFile<br>存储文件的查询速度总结：查询速度相近。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">create table dept_par(</span><br><span class="line">    dname string,</span><br><span class="line">    loc int</span><br><span class="line">)partitioned by (deptno int)</span><br><span class="line">row format delimited fields terminated by &apos;\t&apos;;</span><br><span class="line"></span><br><span class="line">insert into table dept_par partition(deptno)</span><br><span class="line">select dname,loc,deptno from dept;</span><br><span class="line"></span><br><span class="line">insert into table dept_par partition(deptno)</span><br><span class="line">select deptno,dname,loc from dept;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/27/Hive基础学习-七之函数/" rel="next" title="Hive基础学习-七之函数">
+                <i class="fa fa-chevron-left"></i> Hive基础学习-七之函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">108</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩和存储"><span class="nav-number">1.</span> <span class="nav-text">压缩和存储</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop源码编译支持Snappy压缩"><span class="nav-number">1.1.</span> <span class="nav-text">Hadoop源码编译支持Snappy压缩</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#资源准备"><span class="nav-number">1.1.1.</span> <span class="nav-text">资源准备</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jar包安装"><span class="nav-number">1.1.2.</span> <span class="nav-text">jar包安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编译源码"><span class="nav-number">1.1.3.</span> <span class="nav-text">编译源码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop压缩配置"><span class="nav-number">1.2.</span> <span class="nav-text">Hadoop压缩配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MR支持的压缩编码"><span class="nav-number">1.2.1.</span> <span class="nav-text">MR支持的压缩编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#压缩参数配置"><span class="nav-number">1.2.2.</span> <span class="nav-text">压缩参数配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启Map输出阶段压缩"><span class="nav-number">1.3.</span> <span class="nav-text">开启Map输出阶段压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启Reduce输出阶段压缩"><span class="nav-number">1.4.</span> <span class="nav-text">开启Reduce输出阶段压缩</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件存储格式"><span class="nav-number">1.5.</span> <span class="nav-text">文件存储格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#列式存储和行式存储"><span class="nav-number">1.5.1.</span> <span class="nav-text">列式存储和行式存储</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TextFile格式"><span class="nav-number">1.5.2.</span> <span class="nav-text">TextFile格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Orc格式"><span class="nav-number">1.5.3.</span> <span class="nav-text">Orc格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Parquet格式"><span class="nav-number">1.5.4.</span> <span class="nav-text">Parquet格式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主流文件存储格式对比实验"><span class="nav-number">1.5.5.</span> <span class="nav-text">主流文件存储格式对比实验</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#存储文件的压缩比测试："><span class="nav-number">1.5.5.1.</span> <span class="nav-text">存储文件的压缩比测试：</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
