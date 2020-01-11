@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="概述Flume定义Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统。Flume基于流式架构，灵活简单。  Flume的优点 可以和任意存储进程集成。 输入的的数据速率大于写入目的存储的速率，flume会进行缓冲，减小hdfs的压力。 flume中的事务基于channel，使用了两个事务模型（sender + receiver），确保消息被可靠发送。F">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume基础学习-一之概述">
+<meta property="og:url" content="http://yoursite.com/2020/01/11/Flume基础学习-一之概述/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="概述Flume定义Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统。Flume基于流式架构，灵活简单。  Flume的优点 可以和任意存储进程集成。 输入的的数据速率大于写入目的存储的速率，flume会进行缓冲，减小hdfs的压力。 flume中的事务基于channel，使用了两个事务模型（sender + receiver），确保消息被可靠发送。F">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/2.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/3.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/4.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/5.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/6.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/7.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/8.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/9.png">
+<meta property="og:updated_time" content="2020-01-11T03:13:11.179Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flume基础学习-一之概述">
+<meta name="twitter:description" content="概述Flume定义Flume是Cloudera提供的一个高可用的，高可靠的，分布式的海量日志采集、聚合和传输的系统。Flume基于流式架构，灵活简单。  Flume的优点 可以和任意存储进程集成。 输入的的数据速率大于写入目的存储的速率，flume会进行缓冲，减小hdfs的压力。 flume中的事务基于channel，使用了两个事务模型（sender + receiver），确保消息被可靠发送。F">
+<meta name="twitter:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/11/Flume基础学习-一之概述/"/>
+
+
+
+
+
+  <title>Flume基础学习-一之概述 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/Flume基础学习-一之概述/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flume基础学习-一之概述</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-11T11:12:27+08:00">
+                2020-01-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="Flume定义"><a href="#Flume定义" class="headerlink" title="Flume定义"></a>Flume定义</h3><p>Flume是Cloudera提供的一个高可用的，高可靠的，<font size="3" color="red">分布式的海量日志采集、聚合和传输的系统。Flume基于流式架构，灵活简单。</font></p>
+<p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1.png" alt="image"></p>
+<h3 id="Flume的优点"><a href="#Flume的优点" class="headerlink" title="Flume的优点"></a>Flume的优点</h3><ol>
+<li>可以和任意存储进程集成。</li>
+<li>输入的的数据速率大于写入目的存储的速率，flume会进行缓冲，减小hdfs的压力。</li>
+<li>flume中的事务基于channel，使用了两个事务模型（sender + receiver），确保消息被可靠发送。<br>Flume使用两个独立的事务分别负责从soucrce到channel，以及从channel到sink的事件传递。一旦事务中所有的数据全部成功提交到channel，那么source才认为该数据读取完成。同理，只有成功被sink写出去的数据，才会从channel中移除。</li>
+</ol>
+<h3 id="Flume组成架构"><a href="#Flume组成架构" class="headerlink" title="Flume组成架构"></a>Flume组成架构</h3><p>Flume组成架构如图</p>
+<p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/2.png" alt="image"><br><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/3.png" alt="image"></p>
+<h4 id="Agent"><a href="#Agent" class="headerlink" title="Agent"></a>Agent</h4><p>Agent是一个JVM进程，它以事件的形式将数据从源头送至目的。<br>Agent主要有3个部分组成，Source、Channel、Sink。</p>
+<h4 id="Source"><a href="#Source" class="headerlink" title="Source"></a>Source</h4><p>Source是负责接收数据到Flume Agent的组件。Source组件可以处理各种类型、各种格式的日志数据，包括avro、thrift、exec、jms、spooling directory、netcat、sequence generator、syslog、http、legacy。</p>
+<h4 id="Channel"><a href="#Channel" class="headerlink" title="Channel"></a>Channel</h4><p><font size="3" color="red">Channel是位于Source和Sink之间的缓冲区</font>。因此，Channel允许Source和Sink运作在不同的速率上。Channel是线程安全的，可以同时处理几个Source的写入操作和几个Sink的读取操作。<br><br>Flume自带两种Channel：Memory Channel和File Channel。<br></p>
+<p><font size="3" color="red">Memory Channel是内存中的队列。Memory Channel在不需要关心数据丢失的情景下适用</font>。如果需要关心数据丢失，那么Memory Channel就不应该使用，因为程序死亡、机器宕机或者重启都会导致数据丢失。<br></p>
+<p><font size="3" color="red">File Channel将所有事件写到磁</font>盘。因此在程序关闭或机器宕机的情况下不会丢失数据。</p>
+<h4 id="Sink"><a href="#Sink" class="headerlink" title="Sink"></a>Sink</h4><p>Sink不断地轮询Channel中的事件且批量地移除它们，并将这些事件批量写入到存储或索引系统、或者被发送到另一个Flume Agent。<br><br>Sink是完全事务性的。在从Channel批量删除数据之前，每个Sink用Channel启动一个事务。批量事件一旦成功写出到存储系统或下一个Flume Agent，Sink就利用Channel提交事务。事务一旦被提交，该Channel从自己的内部缓冲区删除事件。<br><br>Sink组件目的地包括hdfs、logger、avro、thrift、ipc、file、null、HBase、solr、自定义。</p>
+<h4 id="Event"><a href="#Event" class="headerlink" title="Event"></a>Event</h4><p>传输单元，Flume数据传输的基本单元，以事件的形式将数据从源头送至目的地。  Event由可选的header和载有数据的一个byte array 构成。Header是容纳了key-value字符串对的HashMap。</p>
+<p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/4.png" alt="image"></p>
+<h3 id="Flume拓扑结构"><a href="#Flume拓扑结构" class="headerlink" title="Flume拓扑结构"></a>Flume拓扑结构</h3><p>Flume的拓扑结构如图</p>
+<h4 id="Flume-Agent连接"><a href="#Flume-Agent连接" class="headerlink" title="Flume Agent连接"></a>Flume Agent连接</h4><p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/5.png" alt="image"></p>
+<p>这种模式是将多个flume给顺序连接起来了，从最初的source开始到最终sink传送的目的存储系统。此模式不建议桥接过多的flume数量， flume数量过多不仅会影响传输速率，而且一旦传输过程中某个节点flume宕机，会影响整个传输系统。</p>
+<h4 id="单source，多channel、sink"><a href="#单source，多channel、sink" class="headerlink" title="单source，多channel、sink"></a>单source，多channel、sink</h4><p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/6.png" alt="image"></p>
+<p>Flume支持将事件流向一个或者多个目的地。这种模式<font size="3" color="red">将数据源复制</font>到多个channel中，每个channel都有相同的数据，sink可以选择传送的不同的目的地。</p>
+<h4 id="Flume负载均衡"><a href="#Flume负载均衡" class="headerlink" title="Flume负载均衡"></a>Flume负载均衡</h4><p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/7.png" alt="image"></p>
+<p>Flume支持使用将多个sink逻辑上分到一个sink组，flume将数据发送到不同的sink，主要解决负载均衡和故障转移问题。</p>
+<h4 id="Flume-Agent聚合"><a href="#Flume-Agent聚合" class="headerlink" title="Flume Agent聚合"></a>Flume Agent聚合</h4><p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/8.png" alt="image"></p>
+<p>这种模式是我们最常见的，也非常实用，日常web应用通常分布在上百个服务器，大者甚至上千个、上万个服务器。产生的日志，处理起来也非常麻烦。用flume的这种组合方式能很好的解决这一问题，每台服务器部署一个flume采集日志，传送到一个集中收集日志的flume，再由此flume上传到hdfs、hive、hbase、jms等，进行日志分析。</p>
+<h3 id="Flume-Agent内部原理"><a href="#Flume-Agent内部原理" class="headerlink" title="Flume Agent内部原理"></a>Flume Agent内部原理</h3><p><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/9.png" alt="image"></p>
+<h2 id="安装使用"><a href="#安装使用" class="headerlink" title="安装使用"></a>安装使用</h2><h3 id="Flume安装地址"><a href="#Flume安装地址" class="headerlink" title="Flume安装地址"></a>Flume安装地址</h3><ol>
+<li>Flume官网地址:<a href="http://flume.apache.org/" target="_blank" rel="noopener">http://flume.apache.org/</a></li>
+<li>文档查看地址:<a href="http://flume.apache.org/FlumeUserGuide.html" target="_blank" rel="noopener">http://flume.apache.org/FlumeUserGuide.html</a></li>
+<li>下载地址:<a href="http://archive.apache.org/dist/flume/" target="_blank" rel="noopener">http://archive.apache.org/dist/flume/</a></li>
+</ol>
+<h3 id="安装部署"><a href="#安装部署" class="headerlink" title="安装部署"></a>安装部署</h3><ul>
+<li>将apache-flume-1.7.0-bin.tar.gz上传到linux的/opt/software目录下</li>
+<li><p>解压apache-flume-1.7.0-bin.tar.gz到/opt/module/目录下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 software]$ tar -zxf apache-flume-1.7.0-bin.tar.gz -C /opt/module/</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改apache-flume-1.7.0-bin的名称为flume</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 module]$ mv apache-flume-1.7.0-bin flume</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将flume/conf下的flume-env.sh.template文件修改为flume-env.sh，并配置flume-env.sh文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 conf]$ mv flume-env.sh.template flume-env.sh</span><br><span class="line">[rickyin@hadoop102 conf]$ vi flume-env.sh</span><br><span class="line">export JAVA_HOME=/opt/module/jdk1.8.0_144</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/27/Hive基础学习-八之压缩和存储/" rel="next" title="Hive基础学习-八之压缩和存储">
+                <i class="fa fa-chevron-left"></i> Hive基础学习-八之压缩和存储
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">109</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume定义"><span class="nav-number">1.1.</span> <span class="nav-text">Flume定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume的优点"><span class="nav-number">1.2.</span> <span class="nav-text">Flume的优点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume组成架构"><span class="nav-number">1.3.</span> <span class="nav-text">Flume组成架构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Agent"><span class="nav-number">1.3.1.</span> <span class="nav-text">Agent</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Source"><span class="nav-number">1.3.2.</span> <span class="nav-text">Source</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Channel"><span class="nav-number">1.3.3.</span> <span class="nav-text">Channel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sink"><span class="nav-number">1.3.4.</span> <span class="nav-text">Sink</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Event"><span class="nav-number">1.3.5.</span> <span class="nav-text">Event</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume拓扑结构"><span class="nav-number">1.4.</span> <span class="nav-text">Flume拓扑结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Flume-Agent连接"><span class="nav-number">1.4.1.</span> <span class="nav-text">Flume Agent连接</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#单source，多channel、sink"><span class="nav-number">1.4.2.</span> <span class="nav-text">单source，多channel、sink</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flume负载均衡"><span class="nav-number">1.4.3.</span> <span class="nav-text">Flume负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flume-Agent聚合"><span class="nav-number">1.4.4.</span> <span class="nav-text">Flume Agent聚合</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume-Agent内部原理"><span class="nav-number">1.5.</span> <span class="nav-text">Flume Agent内部原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装使用"><span class="nav-number">2.</span> <span class="nav-text">安装使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Flume安装地址"><span class="nav-number">2.1.</span> <span class="nav-text">Flume安装地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装部署"><span class="nav-number">2.2.</span> <span class="nav-text">安装部署</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
