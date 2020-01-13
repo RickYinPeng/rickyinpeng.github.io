@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Hadoop," />
 
 
 
@@ -79,12 +79,13 @@
 
 
 
-<meta name="description" content="[toc] 开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用">
+<meta name="description" content="开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用 1[ric">
+<meta name="keywords" content="Hadoop">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RickYinPeng&#39;s blog">
+<meta property="og:title" content="Flume基础学习-二之开发案例">
 <meta property="og:url" content="http://yoursite.com/2020/01/13/Flume基础学习-二之开发案例/index.html">
 <meta property="og:site_name" content="RickYinPeng&#39;s blog">
-<meta property="og:description" content="[toc] 开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用">
+<meta property="og:description" content="开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用 1[ric">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1_132231862961028906.png">
 <meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/2_132231867429153906.png">
@@ -96,10 +97,10 @@
 <meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/8_132231887067435156.png">
 <meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1_132233786627435156.png">
 <meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/2_132233787652122656.png">
-<meta property="og:updated_time" content="2020-01-13T08:51:16.966Z">
+<meta property="og:updated_time" content="2020-01-13T09:39:15.626Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RickYinPeng&#39;s blog">
-<meta name="twitter:description" content="[toc] 开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用">
+<meta name="twitter:title" content="Flume基础学习-二之开发案例">
+<meta name="twitter:description" content="开发案例监控端口数据官方案例案例需求 首先启动Flume任务，监控本机44444端口，服务端； 然后通过netcat工具向本机44444端口发送消息，客户端； 最后Flume将监听的数据实时显示在控制台。  需求分析 实现步骤 安装netcat工具 1[rickyin@hadoop102 software]$ sudo yum install -y nc  判断44444端口是否被占用 1[ric">
 <meta name="twitter:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/1_132231862961028906.png">
 
 
@@ -136,7 +137,7 @@
 
 
 
-  <title> | RickYinPeng's blog</title>
+  <title>Flume基础学习-二之开发案例 | RickYinPeng's blog</title>
   
 
 
@@ -291,7 +292,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Flume基础学习-二之开发案例</h1>
         
 
         <div class="post-meta">
@@ -341,8 +342,7 @@
       
 
       
-        <p>[toc]</p>
-<h2 id="开发案例"><a href="#开发案例" class="headerlink" title="开发案例"></a>开发案例</h2><h3 id="监控端口数据官方案例"><a href="#监控端口数据官方案例" class="headerlink" title="监控端口数据官方案例"></a>监控端口数据官方案例</h3><h4 id="案例需求"><a href="#案例需求" class="headerlink" title="案例需求"></a>案例需求</h4><ul>
+        <h2 id="开发案例"><a href="#开发案例" class="headerlink" title="开发案例"></a>开发案例</h2><h3 id="监控端口数据官方案例"><a href="#监控端口数据官方案例" class="headerlink" title="监控端口数据官方案例"></a>监控端口数据官方案例</h3><h4 id="案例需求"><a href="#案例需求" class="headerlink" title="案例需求"></a>案例需求</h4><ul>
 <li>首先启动Flume任务，监控本机44444端口，服务端；</li>
 <li>然后通过netcat工具向本机44444端口发送消息，客户端；</li>
 <li>最后Flume将监听的数据实时显示在控制台。</li>
@@ -560,6 +560,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
 
       
       
@@ -578,6 +584,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/01/13/Flume基础学习-三之监控、自定义Source、Sink/" rel="prev" title="Flume基础学习-三之监控、自定义Source、Sink">
+                Flume基础学习-三之监控、自定义Source、Sink <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -658,7 +668,7 @@
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">110</span>
+                  <span class="site-state-item-count">111</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

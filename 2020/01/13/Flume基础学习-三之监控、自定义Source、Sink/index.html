@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Flume监控之GangliaGanglia的安装与部署 安装httpd服务与php 1[rickyin@hadoop102 flume]$ sudo yum -y install httpd php  安装其他依赖 12[rickyin@hadoop102 flume]$ sudo yum -y install rrdtool perl-rrdtool rrdtool-devel[rickyin">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flume基础学习-三之监控、自定义Source、Sink">
+<meta property="og:url" content="http://yoursite.com/2020/01/13/Flume基础学习-三之监控、自定义Source、Sink/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="Flume监控之GangliaGanglia的安装与部署 安装httpd服务与php 1[rickyin@hadoop102 flume]$ sudo yum -y install httpd php  安装其他依赖 12[rickyin@hadoop102 flume]$ sudo yum -y install rrdtool perl-rrdtool rrdtool-devel[rickyin">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/3_132233812558216406.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/4_132233812562903906.png">
+<meta property="og:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/5_132233818349935156.png">
+<meta property="og:updated_time" content="2020-01-13T09:39:40.170Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Flume基础学习-三之监控、自定义Source、Sink">
+<meta name="twitter:description" content="Flume监控之GangliaGanglia的安装与部署 安装httpd服务与php 1[rickyin@hadoop102 flume]$ sudo yum -y install httpd php  安装其他依赖 12[rickyin@hadoop102 flume]$ sudo yum -y install rrdtool perl-rrdtool rrdtool-devel[rickyin">
+<meta name="twitter:image" content="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/3_132233812558216406.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/01/13/Flume基础学习-三之监控、自定义Source、Sink/"/>
+
+
+
+
+
+  <title>Flume基础学习-三之监控、自定义Source、Sink | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/13/Flume基础学习-三之监控、自定义Source、Sink/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Flume基础学习-三之监控、自定义Source、Sink</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-13T17:38:32+08:00">
+                2020-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Flume监控之Ganglia"><a href="#Flume监控之Ganglia" class="headerlink" title="Flume监控之Ganglia"></a>Flume监控之Ganglia</h2><h3 id="Ganglia的安装与部署"><a href="#Ganglia的安装与部署" class="headerlink" title="Ganglia的安装与部署"></a>Ganglia的安装与部署</h3><ol>
+<li><p>安装httpd服务与php</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo yum -y install httpd php</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装其他依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo yum -y install rrdtool perl-rrdtool rrdtool-devel</span><br><span class="line">[rickyin@hadoop102 flume]$ sudo yum -y install apr-devel</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装ganglia</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm</span><br><span class="line">[rickyin@hadoop102 flume]$ sudo yum -y install ganglia-gmetad </span><br><span class="line">[rickyin@hadoop102 flume]$ sudo yum -y install ganglia-web</span><br><span class="line">[rickyin@hadoop102 flume]$ sudo yum install -y ganglia-gmond</span><br><span class="line"></span><br><span class="line">Ganglia由gmond、gmetad和gweb三部分组成。</span><br><span class="line">gmond（Ganglia Monitoring Daemon）是一种轻量级服务，安装在每台需要收集指标数据的节点主机上。使用gmond，你可以很容易收集很多系统指标数据，如CPU、内存、磁盘、网络和活跃进程的数据等。</span><br><span class="line">gmetad（Ganglia Meta Daemon）整合所有信息，并将其以RRD格式存储至磁盘的服务。</span><br><span class="line">gweb（Ganglia Web）Ganglia可视化工具，gweb是一种利用浏览器显示gmetad所存储数据的PHP前端。在Web界面中以图表方式展现集群的运行状态下收集的多种不同指标数据。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件/etc/httpd/conf.d/ganglia.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo vim /etc/httpd/conf.d/ganglia.conf</span><br><span class="line"></span><br><span class="line">修改为红颜色的配置：</span><br><span class="line"></span><br><span class="line"># Ganglia monitoring system php web frontend</span><br><span class="line">Alias /ganglia /usr/share/ganglia</span><br><span class="line">&lt;Location /ganglia&gt;</span><br><span class="line">  Order deny,allow</span><br><span class="line">  #Deny from all</span><br><span class="line">  Allow from all</span><br><span class="line">  # Allow from 127.0.0.1</span><br><span class="line">  # Allow from ::1</span><br><span class="line">  # Allow from .example.com</span><br><span class="line">&lt;/Location&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件/etc/ganglia/gmetad.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo vim /etc/ganglia/gmetad.conf</span><br><span class="line">修改为：</span><br><span class="line">data_source &quot;hadoop102&quot; 192.168.1.102</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件/etc/ganglia/gmond.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo vim /etc/ganglia/gmond.conf </span><br><span class="line"></span><br><span class="line">修改为：</span><br><span class="line"></span><br><span class="line">cluster &#123;</span><br><span class="line">  name = &quot;hadoop102&quot;        **</span><br><span class="line">  owner = &quot;unspecified&quot;</span><br><span class="line">  latlong = &quot;unspecified&quot;</span><br><span class="line">  url = &quot;unspecified&quot;</span><br><span class="line">&#125;</span><br><span class="line">udp_send_channel &#123;</span><br><span class="line">  #bind_hostname = yes # Highly recommended, soon to be default.</span><br><span class="line">                       # This option tells gmond to use a source address</span><br><span class="line">                       # that resolves to the machine&apos;s hostname.  Without</span><br><span class="line">                       # this, the metrics may appear to come from any</span><br><span class="line">                       # interface and the DNS names associated with</span><br><span class="line">                       # those IPs will be used to create the RRDs.</span><br><span class="line">  # mcast_join = 239.2.11.71</span><br><span class="line">  host = 192.168.1.102      **</span><br><span class="line">  port = 8649</span><br><span class="line">  ttl = 1</span><br><span class="line">&#125;</span><br><span class="line">udp_recv_channel &#123;</span><br><span class="line">  # mcast_join = 239.2.11.71</span><br><span class="line">  port = 8649</span><br><span class="line">  bind = 192.168.1.102      **</span><br><span class="line">  retry_bind = true</span><br><span class="line">  # Size of the UDP buffer. If you are handling lots of metrics you really</span><br><span class="line">  # should bump it up to e.g. 10MB or even higher.</span><br><span class="line">  # buffer = 10485760</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件/etc/selinux/config</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo vim /etc/selinux/config</span><br><span class="line">修改为：</span><br><span class="line"></span><br><span class="line"># This file controls the state of SELinux on the system.</span><br><span class="line"># SELINUX= can take one of these three values:</span><br><span class="line">#     enforcing - SELinux security policy is enforced.</span><br><span class="line">#     permissive - SELinux prints warnings instead of enforcing.</span><br><span class="line">#     disabled - No SELinux policy is loaded.</span><br><span class="line">SELINUX=disabled</span><br><span class="line"># SELINUXTYPE= can take one of these two values:</span><br><span class="line">#     targeted - Targeted processes are protected,</span><br><span class="line">#     mls - Multi Level Security protection.</span><br><span class="line">SELINUXTYPE=targeted</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<blockquote>
+<p>尖叫提示：selinux本次生效关闭必须重启，如果此时不想重启，可以临时生效之</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo setenforce 0</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li><p>启动ganglia</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo service httpd start</span><br><span class="line">[rickyin@hadoop102 flume]$ sudo service gmetad start</span><br><span class="line">[rickyin@hadoop102 flume]$ sudo service gmond start</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>打开网页浏览ganglia页面</p>
+</li>
+</ol>
+<p><a href="http://192.168.1.102/ganglia" target="_blank" rel="noopener">http://192.168.1.102/ganglia</a></p>
+<blockquote>
+<p>尖叫提示：如果完成以上操作依然出现权限不足错误，请修改/var/lib/ganglia目录的权限</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ sudo chmod -R 777 /var/lib/ganglia</span><br></pre></td></tr></table></figure>
+<h3 id="操作Flume测试监控"><a href="#操作Flume测试监控" class="headerlink" title="操作Flume测试监控"></a>操作Flume测试监控</h3><ol>
+<li><p>修改/opt/module/flume/conf目录下的flume-env.sh配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">JAVA_OPTS=&quot;-Dflume.monitoring.type=ganglia</span><br><span class="line">-Dflume.monitoring.hosts=192.168.1.102:8649</span><br><span class="line">-Xms100m</span><br><span class="line">-Xmx200m&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动Flume任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ bin/flume-ng agent \</span><br><span class="line">--conf conf/ \</span><br><span class="line">--name a1 \</span><br><span class="line">--conf-file job/flume-netcat-logger.conf \</span><br><span class="line">-Dflume.root.logger==INFO,console \</span><br><span class="line">-Dflume.monitoring.type=ganglia \</span><br><span class="line">-Dflume.monitoring.hosts=192.168.1.102:8649</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>发送数据观察ganglia监测图</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[rickyin@hadoop102 flume]$ nc localhost 44444</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="自定义Source"><a href="#自定义Source" class="headerlink" title="自定义Source"></a>自定义Source</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><font size="3" color="red">Source是负责接收数据到Flume Agent的组件</font>。Source组件可以处理各种类型、各种格式的日志数据，包括avro、thrift、exec、jms、spooling directory、netcat、sequence generator、syslog、http、legacy。官方提供的source类型已经很多，但是有时候并不能满足实际开发当中的需求，此时我们就需要根据实际需求自定义某些source。<br><br>官方也提供了自定义source的接口：<a href="https://flume.apache.org/FlumeDeveloperGuide.html#source" target="_blank" rel="noopener">https://flume.apache.org/FlumeDeveloperGuide.html#source</a><br>根据官方说明自定义MySource需要继承<font size="3" color="red">AbstractSource</font>类并实现<font size="3" color="red">Configurable</font>和<font size="3" color="red">PollableSource</font>接口。<br><br>实现相应方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">getBackOffSleepIncrement()//暂不用</span><br><span class="line">getMaxBackOffSleepInterval()//暂不用</span><br><span class="line">configure(Context context)//初始化context（读取配置文件内容）</span><br><span class="line">process()//获取数据封装成event并写入channel，这个方法将被循环调用。</span><br><span class="line">使用场景：读取MySQL数据或者其他文件系统。</span><br></pre></td></tr></table></figure><br><br>### 需求<br><br>使用flume接收数据，并给每条数据添加前缀，输出到控制台。前缀可从flume配置文件中配置。<br><br><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/3_132233812558216406.png" alt="image"><br><br>### 分析<br><br><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/4_132233812562903906.png" alt="image"><br><br>### 编码<br><br>导入pom依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.apache.flume&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;flume-ng-core&lt;/artifactId&gt;</span><br><span class="line">        &lt;version&gt;1.7.0&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure><br><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">package com.atguigu;</span><br><span class="line"></span><br><span class="line">import org.apache.flume.Context;</span><br><span class="line">import org.apache.flume.EventDeliveryException;</span><br><span class="line">import org.apache.flume.PollableSource;</span><br><span class="line">import org.apache.flume.conf.Configurable;</span><br><span class="line">import org.apache.flume.event.SimpleEvent;</span><br><span class="line">import org.apache.flume.source.AbstractSource;</span><br><span class="line"></span><br><span class="line">import java.util.HashMap;</span><br><span class="line"></span><br><span class="line">public class MySource extends AbstractSource implements Configurable, PollableSource &#123;</span><br><span class="line"></span><br><span class="line">    //定义配置文件将来要读取的字段</span><br><span class="line">    private Long delay;</span><br><span class="line">    private String field;</span><br><span class="line"></span><br><span class="line">    //初始化配置信息</span><br><span class="line">    @Override</span><br><span class="line">    public void configure(Context context) &#123;</span><br><span class="line">        delay = context.getLong(&quot;delay&quot;);</span><br><span class="line">        field = context.getString(&quot;field&quot;, &quot;Hello!&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Status process() throws EventDeliveryException &#123;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            //创建事件头信息</span><br><span class="line">            HashMap&lt;String, String&gt; hearderMap = new HashMap&lt;&gt;();</span><br><span class="line">            //创建事件</span><br><span class="line">            SimpleEvent event = new SimpleEvent();</span><br><span class="line">            //循环封装事件</span><br><span class="line">            for (int i = 0; i &lt; 5; i++) &#123;</span><br><span class="line">                //给事件设置头信息</span><br><span class="line">                event.setHeaders(hearderMap);</span><br><span class="line">                //给事件设置内容</span><br><span class="line">                event.setBody((field + i).getBytes());</span><br><span class="line">                //将事件写入channel</span><br><span class="line">                getChannelProcessor().processEvent(event);</span><br><span class="line">                Thread.sleep(delay);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            return Status.BACKOFF;</span><br><span class="line">        &#125;</span><br><span class="line">        return Status.READY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public long getBackOffSleepIncrement() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public long getMaxBackOffSleepInterval() &#123;</span><br><span class="line">        return 0;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br><br>### 测试<br><br>1. 打包:将写好的代码打包，并放到flume的lib目录（/opt/module/flume）下。<br>2. 配置文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"># Name the components on this agent</span><br><span class="line">a1.sources = r1</span><br><span class="line">a1.sinks = k1</span><br><span class="line">a1.channels = c1</span><br><span class="line"></span><br><span class="line"># Describe/configure the source</span><br><span class="line">a1.sources.r1.type = com.atguigu.MySource</span><br><span class="line">a1.sources.r1.delay = 1000</span><br><span class="line">#a1.sources.r1.field = atguigu</span><br><span class="line"></span><br><span class="line"># Describe the sink</span><br><span class="line">a1.sinks.k1.type = logger</span><br><span class="line"></span><br><span class="line"># Use a channel which buffers events in memory</span><br><span class="line">a1.channels.c1.type = memory</span><br><span class="line">a1.channels.c1.capacity = 1000</span><br><span class="line">a1.channels.c1.transactionCapacity = 100</span><br><span class="line"></span><br><span class="line"># Bind the source and sink to the channel</span><br><span class="line">a1.sources.r1.channels = c1</span><br><span class="line">a1.sinks.k1.channel = c1</span><br></pre></td></tr></table></figure><br><br>3. 开启任务<br><br>## 自定义Sink<br><br>### 介绍<br><br><font size="3" color="red">Sink不断地轮询Channel中的事件且批量地移除它们，并将这些事件批量写入到存储或索引系统、或者被发送到另一个Flume Agent。</font>
+
+<p>Sink是完全事务性的。在从Channel批量删除数据之前，每个Sink用Channel启动一个事务。批量事件一旦成功写出到存储系统或下一个Flume Agent，Sink就利用Channel提交事务。事务一旦被提交，该Channel从自己的内部缓冲区删除事件。</p>
+<p>Sink组件目的地包括hdfs、logger、avro、thrift、ipc、file、null、HBase、solr、自定义。官方提供的Sink类型已经很多，但是有时候并不能满足实际开发当中的需求，此时我们就需要根据实际需求自定义某些Sink。</p>
+<p>官方也提供了自定义source的接口：<a href="https://flume.apache.org/FlumeDeveloperGuide.html#sink" target="_blank" rel="noopener">https://flume.apache.org/FlumeDeveloperGuide.html#sink</a><br>根据官方说明自定义MySink需要继承AbstractSink类并实现Configurable接口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">实现相应方法：</span><br><span class="line">configure(Context context)//初始化context（读取配置文件内容）</span><br><span class="line">process()//从Channel读取获取数据（event），这个方法将被循环调用。</span><br><span class="line">使用场景：读取Channel数据写入MySQL或者其他文件系统。</span><br></pre></td></tr></table></figure></p>
+<h3 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h3><p>使用flume接收数据，并在Sink端给每条数据添加前缀和后缀，输出到控制台。前后缀可在flume任务配置文件中配置。<br><br>流程分析：<br><img src="http://p.caigoubao.cc/606599/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flume/5_132233818349935156.png" alt="image"></p>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">package com.atguigu;</span><br><span class="line"></span><br><span class="line">import org.apache.flume.*;</span><br><span class="line">import org.apache.flume.conf.Configurable;</span><br><span class="line">import org.apache.flume.sink.AbstractSink;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line"></span><br><span class="line">public class MySink extends AbstractSink implements Configurable &#123;</span><br><span class="line"></span><br><span class="line">    //创建Logger对象</span><br><span class="line">    private static final Logger LOG = LoggerFactory.getLogger(AbstractSink.class);</span><br><span class="line"></span><br><span class="line">    private String prefix;</span><br><span class="line">    private String suffix;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Status process() throws EventDeliveryException &#123;</span><br><span class="line"></span><br><span class="line">        //声明返回值状态信息</span><br><span class="line">        Status status;</span><br><span class="line"></span><br><span class="line">        //获取当前Sink绑定的Channel</span><br><span class="line">        Channel ch = getChannel();</span><br><span class="line"></span><br><span class="line">        //获取事务</span><br><span class="line">        Transaction txn = ch.getTransaction();</span><br><span class="line"></span><br><span class="line">        //声明事件</span><br><span class="line">        Event event;</span><br><span class="line"></span><br><span class="line">        //开启事务</span><br><span class="line">        txn.begin();</span><br><span class="line"></span><br><span class="line">        //读取Channel中的事件，直到读取到事件结束循环</span><br><span class="line">        while (true) &#123;</span><br><span class="line">            event = ch.take();</span><br><span class="line">            if (event != null) &#123;</span><br><span class="line">                break;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            //处理事件（打印）</span><br><span class="line">            LOG.info(prefix + new String(event.getBody()) + suffix);</span><br><span class="line"></span><br><span class="line">            //事务提交</span><br><span class="line">            txn.commit();</span><br><span class="line">            status = Status.READY;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line"></span><br><span class="line">            //遇到异常，事务回滚</span><br><span class="line">            txn.rollback();</span><br><span class="line">            status = Status.BACKOFF;</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line"></span><br><span class="line">            //关闭事务</span><br><span class="line">            txn.close();</span><br><span class="line">        &#125;</span><br><span class="line">        return status;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void configure(Context context) &#123;</span><br><span class="line"></span><br><span class="line">        //读取配置文件内容，有默认值</span><br><span class="line">        prefix = context.getString(&quot;prefix&quot;, &quot;hello:&quot;);</span><br><span class="line"></span><br><span class="line">        //读取配置文件内容，无默认值</span><br><span class="line">        suffix = context.getString(&quot;suffix&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/01/13/Flume基础学习-二之开发案例/" rel="next" title="Flume基础学习-二之开发案例">
+                <i class="fa fa-chevron-left"></i> Flume基础学习-二之开发案例
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">111</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Flume监控之Ganglia"><span class="nav-number">1.</span> <span class="nav-text">Flume监控之Ganglia</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Ganglia的安装与部署"><span class="nav-number">1.1.</span> <span class="nav-text">Ganglia的安装与部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作Flume测试监控"><span class="nav-number">1.2.</span> <span class="nav-text">操作Flume测试监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Source"><span class="nav-number">2.</span> <span class="nav-text">自定义Source</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#需求"><span class="nav-number">2.2.</span> <span class="nav-text">需求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#编码"><span class="nav-number">2.3.</span> <span class="nav-text">编码</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
