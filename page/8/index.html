@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/1.LayUI学习/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -282,7 +282,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/1.LayUI学习/" itemprop="url">LayUI学习</a></h1>
+                <a class="post-title-link" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/" itemprop="url">三.StringBuffer和StringBuilder可变的源码分析</a></h1>
         
 
         <div class="post-meta">
@@ -334,15 +334,13 @@
       
         
           
-          LayUI开始使用
-国人开发的前端框架，好看，又好用
-
-
-官网首页下载 layui 的最新版，下载后解压出来的目录如下：123456789101112├─css //css目录│  │─modules //模块css目录（一般如果模块相对较大，我们会单独提取，比如下面三个：）│  │  ├─layd
+          目标本次源码分析的目标是深入了解 StringBuffer类中 append 方法的实现机制。
+分析方法测试代码
+1234StringBuffer stringBuffer = new StringBuffer(); //断点 stringBuffer.append(&quot;hello&quot
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/1.LayUI学习/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/三.StringBuffer和StringBuilder可变的源码分析/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -393,7 +391,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -412,7 +410,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/" itemprop="url">十.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页</a></h1>
+                <a class="post-title-link" href="/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/" itemprop="url">五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？</a></h1>
         
 
         <div class="post-meta">
@@ -464,13 +462,14 @@
       
         
           
-          一.计划121、使用freemarker实现网页静态化2、ActiveMq同步生成静态网页
-二.网页静态化可以使用Freemarker实现网页静态化。
-2.1 什么是freemarkerFreeMarker是一个用Java语言编写的模板引擎，它基于模板来生成文本输出。FreeMarker与Web容器
+          之前我们见证了IP的诞生，一旦机器有了IP，就可以在网络的环境里和其他机器展开沟通了
+宿舍六个人，两个人买了电脑，那两台电脑能不能连接起来呢？不会说，当然啊，买个路由器不就行了吗
+现在一台家用路由器非常便宜，一百多块的事情。但是在早期的时候绝对是奢侈品
+第一层（物理层）使用路由器是第三层的事，我们先
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/10.宜立方商城——freemarker实现网页静态化以及ActiveMq同步生成静态网页/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/五、从物理层到MAC层：如何在宿舍里自己组网玩联机游戏？/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -521,7 +520,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/13.宜立方商城——订单系统/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -540,7 +539,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/13.宜立方商城——订单系统/" itemprop="url">十三.宜立方商城——订单系统</a></h1>
+                <a class="post-title-link" href="/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/" itemprop="url">五.HashMap底层实现和源码解析(阿里面试题)</a></h1>
         
 
         <div class="post-meta">
@@ -592,25 +591,13 @@
       
         
           
-          一.项目计划
-订单系统实现
-订单生成
-数据库读写分离
-
-二.订单系统
-
-2.1 功能分析1、在购物车页面点击“去结算”按钮跳转到订单确认页面。
-
-必须要求用户登录
-使用拦截器实现
-如果用户未登录就跳转到登录界面
-如果用户已经登录，放行。展示购物车页面
-判断Cookie中是否有购物车数据
-如果有同步到
+          什么事HashMapHashMap是一种存储双列(key-value)数据结构的集合，进行说明，这种数据结构上提供快存和快取(时间复杂度是1，操作复杂度也是1)
+HashMap是什么数据结构组成JDK1.7版本之前含1.7：数组+链表JDK1.8之后含1.8:数组+链表+红黑树
+进一步细腻的认知：数
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/13.宜立方商城——订单系统/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/五.HashMap底层实现和源码解析(阿里面试题)/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -661,7 +648,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/六、Redis-对象/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -680,7 +667,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/" itemprop="url">二.Struts2————跳转方式和访问Servlet的API以及如何获得参数和集合参数的封装</a></h1>
+                <a class="post-title-link" href="/2019/07/05/六、Redis-对象/" itemprop="url">六、Redis-对象</a></h1>
         
 
         <div class="post-meta">
@@ -732,12 +719,13 @@
       
         
           
-          今天到了Struts2学习的第二天，今天总体内容来说比较少，所以博主能够好好休息一下，这篇写完还早，准备看个电影，哈哈哈哈；
-Struts2的页面跳转方式（各种方式背后的源码其实还是我们在Servlet中写的）:&nbsp;&nbsp;&nbsp;&nbsp;转发：&gt; 根据前面学习，我们知道S
+          前言之前我们说了 Redis 的基本数据结构，但是 Redis 并没有直接使用这些数据结构来实现键值对数据库，而是基于这些数据结构创建了一个对象系统。
+除此之外，Redis还引入了基于引用计数技术的内存回收机制和键的空转时长
+对象的类型和编码Redis 使用对象来表示数据库中的键和值，当我们在 Re
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/2.Struts2——跳转方式&访问Servlet的API&如何获得参数&集合类型参数的封装/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/六、Redis-对象/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -788,7 +776,7 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/3.宜立方商城——nginx搭建/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -807,7 +795,7 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/3.宜立方商城——nginx搭建/" itemprop="url">三.宜立方商城——nginx搭建</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/" itemprop="url">十七.String类，Arrays工具类，折半查找，包装类</a></h1>
         
 
         <div class="post-meta">
@@ -859,16 +847,15 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
       
         
           
-          一.课程计划：1234567第三天：1、商品类目选择2、图片上传a)图片服务器FastDFSb)图片上传功能实现3、富文本编辑器的使用KindEditor4、商品添加功能完成
+          一.String类1.String不可变的原理
 
-主讲nginx
+String类里面的value是final修饰的
 
-二.商品类目选择：&emsp;&emsp;2.1 原型页面分析：
-&emsp;&emsp;2.2 前端代
+2.StringBuffer和StringBuilderStringBuffer和StringBuilder非常类似，均代表可变的字符序列。 这两个类都是抽象类AbstractStringBuild
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/3.宜立方商城——nginx搭建/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十七.String类，Arrays工具类，折半查找，包装类/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -919,7 +906,7 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/6.宜立方商城——redis集群/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -938,7 +925,7 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/6.宜立方商城——redis集群/" itemprop="url">6.宜立方商城——redis集群</a></h1>
+                <a class="post-title-link" href="/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/" itemprop="url">六、交换机与VLAN：办公室太复杂，我要回学校</a></h1>
         
 
         <div class="post-meta">
@@ -990,13 +977,12 @@ Struts2的页面跳转方式（各种方式背后的源码其实还是我们在S
       
         
           
-          1.课程计划1234561、首页轮播图展示(已经完成)2、Redis服务器搭建3、向业务逻辑中添加缓存。4、使用redis做缓存5、缓存同步。6、Solr服务器安装
-2.Redis集群的搭建2.1.redis-cluster架构图&emsp;(redis官方给出的集群方案)
-redis-cluste
+          上一次，我们在宿舍组件了一个本地的局域网，可以愉快的玩游戏了。当然这是一个简单的场景，因为只有一台交换机，电脑数目很少。今天，我们来看看办公室的网络
+拓扑结构是怎么形成的？我们常见到的办公室大多是一排排的桌子，每个桌子都有网口，一排十几个座位就有十几个网口，一个楼层就会有几十个甚至上百个网口。如果算
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/6.宜立方商城——redis集群/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/六、交换机与VLAN：办公室太复杂，我要回学校/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1047,7 +1033,7 @@ redis-cluste
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.反转链表/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十二、深入理解Java中的迭代器/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1066,7 +1052,7 @@ redis-cluste
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/2.反转链表/" itemprop="url">LeetCode-206：反转链表</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十二、深入理解Java中的迭代器/" itemprop="url">十二.深入理解Java中的迭代器</a></h1>
         
 
         <div class="post-meta">
@@ -1118,18 +1104,12 @@ redis-cluste
       
         
           
-          
-本题为LeetCode中第206道题(不是很难，只要数据结构基础可以就行)
-
-反转一个单链表。
-示例:
-12输入: 1-&gt;2-&gt;3-&gt;4-&gt;5-&gt;NULL输出: 5-&gt;4-&gt;3-&gt;2-&gt;1-&gt;NULL
-进阶:
-你可以迭代或递归地反转链表。
+          概述Java集合框架的集合类，我们有时候称之为容器。容器的种类有很多种，比如ArrayList、LinkedList、HashSet…，每种容器都有自己的特点，ArrayList底层维护的是一个数组；LinkedList是链表结构的；HashSet依赖的是哈希表，每种容器都有自己特有的数据结构。
+　
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/2.反转链表/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十二、深入理解Java中的迭代器/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1180,7 +1160,7 @@ redis-cluste
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/2.数据类型和运算符/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十六.抽象类和抽象方法，接口，内部类/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1199,7 +1179,7 @@ redis-cluste
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/2.数据类型和运算符/" itemprop="url">二.注释</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十六.抽象类和抽象方法，接口，内部类/" itemprop="url">十六.抽象类和抽象方法、接口、内部类</a></h1>
         
 
         <div class="post-meta">
@@ -1251,13 +1231,12 @@ redis-cluste
       
         
           
-          注释为了方便程序的阅读，Java语言允许程序员在程序中写上一些说明性的文字，用来提高程序的可读性，这些文字性的说明就称为注释。 注释不会出现在字节码文件中，即Java编译器编译时会跳过注释语句。 在Java中根据注释的功能不同，主要分为单行注释、多行注释和文档注释。
-
-单行注释:使用“//”开头，“
+          一.抽象类和抽象方法1.抽象方法使用abstract修饰的方法，没有方法体，只有声明。定义的是一种“规范”，就是告诉子类必须要给抽象方法提供具体的实现。
+2.抽象类包含抽象方法的类就是抽象类。通过abstract方法定义规范，然后要求子类必须定义具体实现。通过抽象类，我们就可以做到严格限制子类的设计
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/2.数据类型和运算符/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十六.抽象类和抽象方法，接口，内部类/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1308,7 +1287,7 @@ redis-cluste
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/4.7垃圾回收机制(Garbage Collection)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/四、DHCP与PXE：IP是怎么来的，又是怎么没的？/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1327,7 +1306,7 @@ redis-cluste
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/4.7垃圾回收机制(Garbage Collection)/" itemprop="url">十.垃圾回收机制(Garbage Collection)</a></h1>
+                <a class="post-title-link" href="/2019/07/05/四、DHCP与PXE：IP是怎么来的，又是怎么没的？/" itemprop="url">四、DHCP与PXE：IP是怎么来的，又是怎么没的？</a></h1>
         
 
         <div class="post-meta">
@@ -1379,12 +1358,12 @@ redis-cluste
       
         
           
-          4.7垃圾回收机制(Garbage Collection)Java引入了垃圾回收机制，令C++程序员最头疼的内存管理问题迎刃而解。Java程序员可以将更多的精力放到业务逻辑上而不是内存管理工作上，大大的提高了开发效率。
-4.7.1垃圾回收原理和算法内存管理Java的内存管理很大程度指的就是对象的管理
+          如何配置IP地址？如果你对这一方面又了解（反正我没有），那就可以用命令自己配置一个ip地址。可以使用 ifconfig ,也可以使用ip addr 。设置好了以后，用下面这两个命令，将网卡 up一下（UP 表示网卡处于启动的状态），就可以开始工作了。
+使用 net-tools：12$ sudo if
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/4.7垃圾回收机制(Garbage Collection)/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/四、DHCP与PXE：IP是怎么来的，又是怎么没的？/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1435,7 +1414,7 @@ redis-cluste
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/3.4方法/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/05/十八.File类、枚举、异常/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="RickYinPeng">
@@ -1454,7 +1433,7 @@ redis-cluste
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/07/05/3.4方法/" itemprop="url">八.方法</a></h1>
+                <a class="post-title-link" href="/2019/07/05/十八.File类、枚举、异常/" itemprop="url">十八.File类、枚举、异常</a></h1>
         
 
         <div class="post-meta">
@@ -1506,12 +1485,12 @@ redis-cluste
       
         
           
-          方法方法就是一段用来完成特定功能的代码片段，类似于其它语言的函数。
-方法用于定义该类或该类的实例的行为特征和功能实现。 方法是类和对象行为特征的抽象。方法很类似于面向过程中的函数。面向过程中，函数是最基本单位，整个程序由一个个函数调用组成。面向对象中，整个程序的基本单位是类，方法是从属于类和对象的。
+          一.File类的基本用法java.io.File类：代表文件和目录。 在开发中，读取文件、生成文件、删除文件、修改文件的属性时经常会用到本类。
+1.File类的常见构造方法:public File(String pathname)以pathname为路径创建File对象，如果pathname是相对路
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/07/05/3.4方法/#more" rel="contents">
+            <a class="btn" href="/2019/07/05/十八.File类、枚举、异常/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1603,7 +1582,7 @@ redis-cluste
               
                 <a href="/archives">
               
-                  <span class="site-state-item-count">114</span>
+                  <span class="site-state-item-count">115</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
