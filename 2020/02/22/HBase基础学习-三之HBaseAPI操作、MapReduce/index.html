@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hadoop," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="HBase API操作环境准备新建项目后在pom.xml中添加依赖1234567891011&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.apache.hbase&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;hbase-server&amp;lt;/artifactId&amp;gt;    &amp;lt;version&amp;gt;1.3.1&amp;lt;/ver">
+<meta name="keywords" content="Hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HBase基础学习-三之HBaseAPI操作、MapReduce操作">
+<meta property="og:url" content="http://yoursite.com/2020/02/22/HBase基础学习-三之HBaseAPI操作、MapReduce/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="HBase API操作环境准备新建项目后在pom.xml中添加依赖1234567891011&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.apache.hbase&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;hbase-server&amp;lt;/artifactId&amp;gt;    &amp;lt;version&amp;gt;1.3.1&amp;lt;/ver">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-02-22T15:04:41.802Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HBase基础学习-三之HBaseAPI操作、MapReduce操作">
+<meta name="twitter:description" content="HBase API操作环境准备新建项目后在pom.xml中添加依赖1234567891011&amp;lt;dependency&amp;gt;    &amp;lt;groupId&amp;gt;org.apache.hbase&amp;lt;/groupId&amp;gt;    &amp;lt;artifactId&amp;gt;hbase-server&amp;lt;/artifactId&amp;gt;    &amp;lt;version&amp;gt;1.3.1&amp;lt;/ver">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/02/22/HBase基础学习-三之HBaseAPI操作、MapReduce/"/>
+
+
+
+
+
+  <title>HBase基础学习-三之HBaseAPI操作、MapReduce操作 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/22/HBase基础学习-三之HBaseAPI操作、MapReduce/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HBase基础学习-三之HBaseAPI操作、MapReduce操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-02-22T23:03:49+08:00">
+                2020-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="HBase-API操作"><a href="#HBase-API操作" class="headerlink" title="HBase API操作"></a>HBase API操作</h2><h3 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h3><p>新建项目后在pom.xml中添加依赖<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;hbase-server&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.3.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;hbase-client&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.3.1&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="HBaseAPI"><a href="#HBaseAPI" class="headerlink" title="HBaseAPI"></a>HBaseAPI</h3><h4 id="整体操作"><a href="#整体操作" class="headerlink" title="整体操作"></a>整体操作</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rickyin.hbase;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapred.JobConf;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试HBaseAPI</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHBaseAPI_1</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过java代码访问mysql数据库:JDBC</span></span><br><span class="line">        <span class="comment">//1.加载数据库驱动</span></span><br><span class="line">        <span class="comment">//2.获取数据库连接(url,user,password)</span></span><br><span class="line">        <span class="comment">//3.获取数据库的操作对象</span></span><br><span class="line">        <span class="comment">//4.sql</span></span><br><span class="line">        <span class="comment">//5.执行数据库操作</span></span><br><span class="line">        <span class="comment">//6.获取查询结果ResultSet</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//通过Java代码访问HBase数据库</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//0.创建配置对象，获取hbase连接</span></span><br><span class="line">        Configuration configuration = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.获取hbase连接对象</span></span><br><span class="line">        Connection connection = ConnectionFactory.createConnection(configuration);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//2.获取操作对象: Admin</span></span><br><span class="line">        <span class="comment">//new HBaseAdmin(connection);这种方式过时了</span></span><br><span class="line">        Admin admin = connection.getAdmin();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//3.操作数据库:</span></span><br><span class="line">        <span class="comment">//  3.1判断命名空间是否存在</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            admin.getNamespaceDescriptor(<span class="string">"rickyin"</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NamespaceNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            <span class="comment">//创建命名空间</span></span><br><span class="line">            NamespaceDescriptor namespaceDescriptor = NamespaceDescriptor.create(<span class="string">"rickyin"</span>).build();</span><br><span class="line">            admin.createNamespace(namespaceDescriptor);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//  3.2判断hbase中是否存在某张表</span></span><br><span class="line">        TableName student = TableName.valueOf(<span class="string">"rickyin:student"</span>);</span><br><span class="line">        <span class="keyword">boolean</span> exists = admin.tableExists(student);</span><br><span class="line">        System.out.println(exists);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (exists) &#123;</span><br><span class="line">            <span class="comment">//获取指定的表对象</span></span><br><span class="line">            Table table = connection.getTable(student);</span><br><span class="line"></span><br><span class="line">            <span class="comment">//查询数据</span></span><br><span class="line">            <span class="comment">//DDL(create、drop、alter),DML(update、insert、delete),DQL(select)</span></span><br><span class="line">            String rowkey = <span class="string">"1001"</span>;</span><br><span class="line">            <span class="comment">//字符编码问题</span></span><br><span class="line">            Get get = <span class="keyword">new</span> Get(Bytes.toBytes(rowkey));</span><br><span class="line">            <span class="comment">//查询结果</span></span><br><span class="line">            Result result = table.get(get);</span><br><span class="line">            <span class="keyword">boolean</span> empty = result.isEmpty();</span><br><span class="line">            System.out.println(<span class="string">"1001数据是否存在:"</span> + !empty);</span><br><span class="line">            <span class="keyword">if</span> (empty) &#123;</span><br><span class="line">                <span class="comment">//新增数据</span></span><br><span class="line">                Put put = <span class="keyword">new</span> Put(Bytes.toBytes(rowkey));</span><br><span class="line">                String falily = <span class="string">"info"</span>;</span><br><span class="line">                String column = <span class="string">"name"</span>;</span><br><span class="line">                String val = <span class="string">"zhangsan"</span>;</span><br><span class="line">                put.addColumn(Bytes.toBytes(falily), Bytes.toBytes(column), Bytes.toBytes(val));</span><br><span class="line">                table.put(put);</span><br><span class="line">                System.out.println(<span class="string">"增加数据..."</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="comment">//展示数据</span></span><br><span class="line">                Cell[] cells = result.rawCells();</span><br><span class="line">                <span class="keyword">for</span> (Cell cell : cells) &#123;</span><br><span class="line">                    <span class="comment">//cell.</span></span><br><span class="line">                    System.out.println(<span class="string">"value:"</span> + Bytes.toString(CellUtil.cloneValue(cell)));</span><br><span class="line">                    System.out.println(<span class="string">"rowkey:"</span> + Bytes.toString(CellUtil.cloneRow(cell)));</span><br><span class="line">                    System.out.println(<span class="string">"family:"</span> + Bytes.toString(CellUtil.cloneFamily(cell)));</span><br><span class="line">                    System.out.println(<span class="string">"column:"</span> + Bytes.toString(CellUtil.cloneQualifier(cell)));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//创建表</span></span><br><span class="line">            HTableDescriptor hTableDescriptor = <span class="keyword">new</span> HTableDescriptor(student);</span><br><span class="line">            <span class="comment">//增加列族</span></span><br><span class="line">            HColumnDescriptor hColumnDescriptor = <span class="keyword">new</span> HColumnDescriptor(<span class="string">"info"</span>);</span><br><span class="line">            hTableDescriptor.addFamily(hColumnDescriptor);</span><br><span class="line"></span><br><span class="line">            admin.createTable(hTableDescriptor);</span><br><span class="line"></span><br><span class="line">            System.out.println(<span class="string">"表创建完成..."</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//4.获取操作的结果</span></span><br><span class="line">        <span class="comment">//5.关闭数据库连接</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rickyin.hbase;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 测试HBaseAPI</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHBaseAPI_2</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        Configuration configuration = HBaseConfiguration.create();</span><br><span class="line"></span><br><span class="line">        <span class="comment">//1.获取hbase连接对象</span></span><br><span class="line">        Connection connection = ConnectionFactory.createConnection(configuration);</span><br><span class="line"></span><br><span class="line">        TableName tableName = TableName.valueOf(<span class="string">"rickyin:student"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 删除表操作</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">        Admin admin = connection.getAdmin();</span></span><br><span class="line"><span class="comment">        if (admin.tableExists(tableName)) &#123;</span></span><br><span class="line"><span class="comment">            //禁用表</span></span><br><span class="line"><span class="comment">            admin.disableTable(tableName);</span></span><br><span class="line"><span class="comment">            //删除表</span></span><br><span class="line"><span class="comment">            admin.deleteTable(tableName);</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">        */</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 删除数据操作</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        Table table = connection.getTable(tableName);</span><br><span class="line"></span><br><span class="line">        String rowkey = <span class="string">"1001"</span>;</span><br><span class="line">        Delete delete = <span class="keyword">new</span> Delete(Bytes.toBytes(rowkey));</span><br><span class="line">        table.delete(delete);</span><br><span class="line">        System.out.println(<span class="string">"删除数据"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="获取Configuration对象"><a href="#获取Configuration对象" class="headerlink" title="获取Configuration对象"></a>获取Configuration对象</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> Configuration conf;</span><br><span class="line"><span class="keyword">static</span>&#123;</span><br><span class="line">	<span class="comment">//使用HBaseConfiguration的单例方法实例化</span></span><br><span class="line">	conf = HBaseConfiguration.create();</span><br><span class="line">    conf.set(<span class="string">"hbase.zookeeper.quorum"</span>, <span class="string">"192.168.9.102"</span>);</span><br><span class="line">    conf.set(<span class="string">"hbase.zookeeper.property.clientPort"</span>, <span class="string">"2181"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><font size="3" color="red">注意</font>：获取Configuration对象可以这样获取，也可以向我上面写的那样获取，区别就是上面的方法讲zookeeper的配置放在了配置文件中(<font size="3" color="red">hbase-site.xml</font>)放于项目的resources目录下，而这里是手动添加进去的，都可以</p>
+</blockquote>
+<h4 id="判断表是否存在"><a href="#判断表是否存在" class="headerlink" title="判断表是否存在"></a>判断表是否存在</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">isTableExist</span><span class="params">(String tableName)</span> <span class="keyword">throws</span> MasterNotRunningException,</span></span><br><span class="line"><span class="function"> ZooKeeperConnectionException, IOException</span>&#123;</span><br><span class="line">	<span class="comment">//在HBase中管理、访问表需要先创建HBaseAdmin对象</span></span><br><span class="line">    <span class="comment">//Connection connection = ConnectionFactory.createConnection(conf);</span></span><br><span class="line">    <span class="comment">//HBaseAdmin admin = (HBaseAdmin) connection.getAdmin();</span></span><br><span class="line">	HBaseAdmin admin = <span class="keyword">new</span> HBaseAdmin(conf);</span><br><span class="line">	<span class="keyword">return</span> admin.tableExists(tableName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">createTable</span><span class="params">(String tableName, String... columnFamily)</span> <span class="keyword">throws</span></span></span><br><span class="line"><span class="function"> MasterNotRunningException, ZooKeeperConnectionException, IOException</span>&#123;</span><br><span class="line">	HBaseAdmin admin = <span class="keyword">new</span> HBaseAdmin(conf);</span><br><span class="line">	<span class="comment">//判断表是否存在</span></span><br><span class="line">	<span class="keyword">if</span>(isTableExist(tableName))&#123;</span><br><span class="line">		System.out.println(<span class="string">"表"</span> + tableName + <span class="string">"已存在"</span>);</span><br><span class="line">		<span class="comment">//System.exit(0);</span></span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="comment">//创建表属性对象,表名需要转字节</span></span><br><span class="line">		HTableDescriptor descriptor = <span class="keyword">new</span> HTableDescriptor(TableName.valueOf(tableName));</span><br><span class="line">		<span class="comment">//创建多个列族</span></span><br><span class="line">		<span class="keyword">for</span>(String cf : columnFamily)&#123;</span><br><span class="line">			descriptor.addFamily(<span class="keyword">new</span> HColumnDescriptor(cf));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//根据对表的配置，创建表</span></span><br><span class="line">		admin.createTable(descriptor);</span><br><span class="line">		System.out.println(<span class="string">"表"</span> + tableName + <span class="string">"创建成功！"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">dropTable</span><span class="params">(String tableName)</span> <span class="keyword">throws</span> MasterNotRunningException,</span></span><br><span class="line"><span class="function"> ZooKeeperConnectionException, IOException</span>&#123;</span><br><span class="line">	HBaseAdmin admin = <span class="keyword">new</span> HBaseAdmin(conf);</span><br><span class="line">	<span class="keyword">if</span>(isTableExist(tableName))&#123;</span><br><span class="line">		admin.disableTable(tableName);</span><br><span class="line">		admin.deleteTable(tableName);</span><br><span class="line">		System.out.println(<span class="string">"表"</span> + tableName + <span class="string">"删除成功！"</span>);</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"表"</span> + tableName + <span class="string">"不存在！"</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="向表中插入数据"><a href="#向表中插入数据" class="headerlink" title="向表中插入数据"></a>向表中插入数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addRowData</span><span class="params">(String tableName, String rowKey, String columnFamily, String</span></span></span><br><span class="line"><span class="function"><span class="params"> column, String value)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">	<span class="comment">//创建HTable对象</span></span><br><span class="line">	HTable hTable = <span class="keyword">new</span> HTable(conf, tableName);</span><br><span class="line">	<span class="comment">//向表中插入数据</span></span><br><span class="line">	Put put = <span class="keyword">new</span> Put(Bytes.toBytes(rowKey));</span><br><span class="line">	<span class="comment">//向Put对象中组装数据</span></span><br><span class="line">	put.add(Bytes.toBytes(columnFamily), Bytes.toBytes(column), Bytes.toBytes(value));</span><br><span class="line">	hTable.put(put);</span><br><span class="line">	hTable.close();</span><br><span class="line">	System.out.println(<span class="string">"插入数据成功"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="删除多行数据"><a href="#删除多行数据" class="headerlink" title="删除多行数据"></a>删除多行数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deleteMultiRow</span><span class="params">(String tableName, String... rows)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">	HTable hTable = <span class="keyword">new</span> HTable(conf, tableName);</span><br><span class="line">	List&lt;Delete&gt; deleteList = <span class="keyword">new</span> ArrayList&lt;Delete&gt;();</span><br><span class="line">	<span class="keyword">for</span>(String row : rows)&#123;</span><br><span class="line">		Delete delete = <span class="keyword">new</span> Delete(Bytes.toBytes(row));</span><br><span class="line">		deleteList.add(delete);</span><br><span class="line">	&#125;</span><br><span class="line">	hTable.delete(deleteList);</span><br><span class="line">	hTable.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="获取所有数据"><a href="#获取所有数据" class="headerlink" title="获取所有数据"></a>获取所有数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getAllRows</span><span class="params">(String tableName)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">	HTable hTable = <span class="keyword">new</span> HTable(conf, tableName);</span><br><span class="line">	<span class="comment">//得到用于扫描region的对象</span></span><br><span class="line">	Scan scan = <span class="keyword">new</span> Scan();</span><br><span class="line">	<span class="comment">//使用HTable得到resultcanner实现类的对象</span></span><br><span class="line">	ResultScanner resultScanner = hTable.getScanner(scan);</span><br><span class="line">	<span class="keyword">for</span>(Result result : resultScanner)&#123;</span><br><span class="line">		Cell[] cells = result.rawCells();</span><br><span class="line">		<span class="keyword">for</span>(Cell cell : cells)&#123;</span><br><span class="line">			<span class="comment">//得到rowkey</span></span><br><span class="line">			System.out.println(<span class="string">"行键:"</span> + Bytes.toString(CellUtil.cloneRow(cell)));</span><br><span class="line">			<span class="comment">//得到列族</span></span><br><span class="line">			System.out.println(<span class="string">"列族"</span> + Bytes.toString(CellUtil.cloneFamily(cell)));</span><br><span class="line">			System.out.println(<span class="string">"列:"</span> + Bytes.toString(CellUtil.cloneQualifier(cell)));</span><br><span class="line">			System.out.println(<span class="string">"值:"</span> + Bytes.toString(CellUtil.cloneValue(cell)));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="获取某一行数据"><a href="#获取某一行数据" class="headerlink" title="获取某一行数据"></a>获取某一行数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getRow</span><span class="params">(String tableName, String rowKey)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">	HTable table = <span class="keyword">new</span> HTable(conf, tableName);</span><br><span class="line">	Get get = <span class="keyword">new</span> Get(Bytes.toBytes(rowKey));</span><br><span class="line">	<span class="comment">//get.setMaxVersions();显示所有版本</span></span><br><span class="line">    <span class="comment">//get.setTimeStamp();显示指定时间戳的版本</span></span><br><span class="line">	Result result = table.get(get);</span><br><span class="line">	<span class="keyword">for</span>(Cell cell : result.rawCells())&#123;</span><br><span class="line">		System.out.println(<span class="string">"行键:"</span> + Bytes.toString(result.getRow()));</span><br><span class="line">		System.out.println(<span class="string">"列族"</span> + Bytes.toString(CellUtil.cloneFamily(cell)));</span><br><span class="line">		System.out.println(<span class="string">"列:"</span> + Bytes.toString(CellUtil.cloneQualifier(cell)));</span><br><span class="line">		System.out.println(<span class="string">"值:"</span> + Bytes.toString(CellUtil.cloneValue(cell)));</span><br><span class="line">		System.out.println(<span class="string">"时间戳:"</span> + cell.getTimestamp());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="获取某一行指定“列族-列”的数据"><a href="#获取某一行指定“列族-列”的数据" class="headerlink" title="获取某一行指定“列族:列”的数据"></a>获取某一行指定“列族:列”的数据</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getRowQualifier</span><span class="params">(String tableName, String rowKey, String family, String</span></span></span><br><span class="line"><span class="function"><span class="params"> qualifier)</span> <span class="keyword">throws</span> IOException</span>&#123;</span><br><span class="line">	HTable table = <span class="keyword">new</span> HTable(conf, tableName);</span><br><span class="line">	Get get = <span class="keyword">new</span> Get(Bytes.toBytes(rowKey));</span><br><span class="line">	get.addColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier));</span><br><span class="line">	Result result = table.get(get);</span><br><span class="line">	<span class="keyword">for</span>(Cell cell : result.rawCells())&#123;</span><br><span class="line">		System.out.println(<span class="string">"行键:"</span> + Bytes.toString(result.getRow()));</span><br><span class="line">		System.out.println(<span class="string">"列族"</span> + Bytes.toString(CellUtil.cloneFamily(cell)));</span><br><span class="line">		System.out.println(<span class="string">"列:"</span> + Bytes.toString(CellUtil.cloneQualifier(cell)));</span><br><span class="line">		System.out.println(<span class="string">"值:"</span> + Bytes.toString(CellUtil.cloneValue(cell)));</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="HBaseAPI封装"><a href="#HBaseAPI封装" class="headerlink" title="HBaseAPI封装"></a>HBaseAPI封装</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rickyin.util;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.HBaseConfiguration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.TableName;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Connection;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.ConnectionFactory;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Put;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Table;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HBase操作工具类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HBaseUtils</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//为了解决线程安全问题</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> ThreadLocal&lt;Connection&gt; connHolder = <span class="keyword">new</span> ThreadLocal&lt;Connection&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">HBaseUtils</span><span class="params">()</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取HBase连接</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">makeHbaseConnection</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"><span class="comment">//        Configuration conf = HBaseConfiguration.create();</span></span><br><span class="line"><span class="comment">//        conn = ConnectionFactory.createConnection(conf);</span></span><br><span class="line"><span class="comment">//        return conn;</span></span><br><span class="line">        Connection conn = connHolder.get();</span><br><span class="line">        <span class="keyword">if</span> (conn == <span class="keyword">null</span>) &#123;</span><br><span class="line">            Configuration conf = HBaseConfiguration.create();</span><br><span class="line">            conn = ConnectionFactory.createConnection(conf);</span><br><span class="line">            connHolder.set(conn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 增加数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rowKey rowkey</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> family 列祖</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> column 列名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> value  值</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertData</span><span class="params">(String tableName, String rowKey, String family, String column, String value)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Connection conn = connHolder.get();</span><br><span class="line">        Table table = conn.getTable(TableName.valueOf(tableName));</span><br><span class="line">        Put put = <span class="keyword">new</span> Put(Bytes.toBytes(rowKey));</span><br><span class="line">        put.addColumn(Bytes.toBytes(family), Bytes.toBytes(column), Bytes.toBytes(value));</span><br><span class="line">        table.put(put);</span><br><span class="line">        table.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 关闭HBase连接</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> IOException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        Connection conn = connHolder.get();</span><br><span class="line">        <span class="keyword">if</span> (conn != <span class="keyword">null</span>) &#123;</span><br><span class="line">            conn.close();</span><br><span class="line">            connHolder.remove();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="MapReduce"><a href="#MapReduce" class="headerlink" title="MapReduce"></a>MapReduce</h2><p>通过HBase的相关JavaAPI，我们可以实现伴随HBase操作的MapReduce过程，比如使用MapReduce将数据从本地文件系统导入到HBase的表中，比如我们从HBase中读取一些原始数据后使用MapReduce做数据分析。</p>
+<h3 id="查看HBase的MapReduce任务的执行"><a href="#查看HBase的MapReduce任务的执行" class="headerlink" title="查看HBase的MapReduce任务的执行"></a>查看HBase的MapReduce任务的执行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bin/hbase mapredcp</span><br></pre></td></tr></table></figure>
+<h3 id="环境变量的导入"><a href="#环境变量的导入" class="headerlink" title="环境变量的导入"></a>环境变量的导入</h3><p>在/etc/profile配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HBASE_HOME=/opt/module/hbase-1.3.1</span><br></pre></td></tr></table></figure></p>
+<p>并在hadoop-env.sh中配置：（<font size="3" color="red">注意：在for循环之后配</font>）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:/opt/module/hbase/lib/*</span><br></pre></td></tr></table></figure></p>
+<h3 id="MR-从HBase到HBase"><a href="#MR-从HBase到HBase" class="headerlink" title="MR-从HBase到HBase"></a>MR-从HBase到HBase</h3><h4 id="Table2TableApplication"><a href="#Table2TableApplication" class="headerlink" title="Table2TableApplication"></a>Table2TableApplication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.tool.HBaseMapperReduceTool;</span><br><span class="line">import org.apache.hadoop.util.ToolRunner;</span><br><span class="line"></span><br><span class="line">public class Table2TableApplication &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        //ToolRunner可以运行mapreduce</span><br><span class="line">        ToolRunner.run(new HBaseMapperReduceTool(), args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="HBaseMapperReduceTool"><a href="#HBaseMapperReduceTool" class="headerlink" title="HBaseMapperReduceTool"></a>HBaseMapperReduceTool</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.tool;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.mapper.ScanDataMapper;</span><br><span class="line">import com.rickyin.hbase.reducer.InsertDataReducer;</span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.client.Scan;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.JobStatus;</span><br><span class="line">import org.apache.hadoop.util.Tool;</span><br><span class="line"></span><br><span class="line">public class HBaseMapperReduceTool implements Tool &#123;</span><br><span class="line">    public int run(String[] strings) throws Exception &#123;</span><br><span class="line">        //作业</span><br><span class="line">        Job job = Job.getInstance();</span><br><span class="line">        job.setJarByClass(HBaseMapperReduceTool.class);</span><br><span class="line"></span><br><span class="line">        //mapper</span><br><span class="line">        TableMapReduceUtil.initTableMapperJob(</span><br><span class="line">                &quot;rickyin:student&quot;,</span><br><span class="line">                new Scan(),</span><br><span class="line">                ScanDataMapper.class,</span><br><span class="line">                ImmutableBytesWritable.class,</span><br><span class="line">                Put.class,</span><br><span class="line">                job);</span><br><span class="line">        //reducer</span><br><span class="line">        TableMapReduceUtil.initTableReducerJob(</span><br><span class="line">                &quot;rickyin:user&quot;,</span><br><span class="line">                InsertDataReducer.class,</span><br><span class="line">                job);</span><br><span class="line"></span><br><span class="line">        //执行作业</span><br><span class="line">        boolean flag = job.waitForCompletion(true);</span><br><span class="line"></span><br><span class="line">        return flag ? JobStatus.State.SUCCEEDED.getValue() : JobStatus.State.FAILED.getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setConf(Configuration configuration) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Configuration getConf() &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ScanDataMapper"><a href="#ScanDataMapper" class="headerlink" title="ScanDataMapper"></a>ScanDataMapper</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mapper;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.hbase.Cell;</span><br><span class="line">import org.apache.hadoop.hbase.CellUtil;</span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.client.Result;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableMapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class ScanDataMapper extends TableMapper&lt;ImmutableBytesWritable, Put&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void map(ImmutableBytesWritable key, Result value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //运行mapper查询数据</span><br><span class="line"></span><br><span class="line">        //scan result -&gt; put</span><br><span class="line">        Put put = new Put(key.get());</span><br><span class="line">        for (Cell cell : value.rawCells()) &#123;</span><br><span class="line">            put.addColumn(CellUtil.cloneFamily(cell), CellUtil.cloneQualifier(cell), CellUtil.cloneValue(cell));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        context.write(key, put);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="InsertDataReducer"><a href="#InsertDataReducer" class="headerlink" title="InsertDataReducer"></a>InsertDataReducer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.reducer;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableReducer;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class InsertDataReducer extends TableReducer&lt;ImmutableBytesWritable, Put, NullWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(ImmutableBytesWritable key, Iterable&lt;Put&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //运行reducer，增加数据</span><br><span class="line">        for (Put put : values) &#123;</span><br><span class="line">            context.write(NullWritable.get(), put);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="MR-从文件到HBase"><a href="#MR-从文件到HBase" class="headerlink" title="MR-从文件到HBase"></a>MR-从文件到HBase</h3><h4 id="File2TableApplication"><a href="#File2TableApplication" class="headerlink" title="File2TableApplication"></a>File2TableApplication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mr;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.mr.tool.File2TableTool;</span><br><span class="line">import org.apache.hadoop.util.ToolRunner;</span><br><span class="line"></span><br><span class="line">public class File2TableApplication &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        ToolRunner.run(new File2TableTool(), args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="File2TableTool"><a href="#File2TableTool" class="headerlink" title="File2TableTool"></a>File2TableTool</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mr.tool;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.mr.mapper.ReadFileMapper;</span><br><span class="line">import com.rickyin.hbase.mr.reducer.InsertDataReducer;</span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.fs.Path;</span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.JobStatus;</span><br><span class="line">import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line">import org.apache.hadoop.util.Tool;</span><br><span class="line"></span><br><span class="line">public class File2TableTool implements Tool &#123;</span><br><span class="line">    public int run(String[] strings) throws Exception &#123;</span><br><span class="line">        Job job = Job.getInstance();</span><br><span class="line">        job.setJarByClass(File2TableTool.class);</span><br><span class="line"></span><br><span class="line">        //hbase =&gt; hbase(util)：之前的</span><br><span class="line">        //hdfs =&gt; hbase(util):现在的做法</span><br><span class="line"></span><br><span class="line">        //format</span><br><span class="line">        Path path = new Path(&quot;hdfs://hadoop101:9000/student.csv&quot;);</span><br><span class="line">        FileInputFormat.addInputPath(job, path);</span><br><span class="line"></span><br><span class="line">        //mapper</span><br><span class="line">        job.setMapperClass(ReadFileMapper.class);</span><br><span class="line">        job.setMapOutputKeyClass(ImmutableBytesWritable.class);</span><br><span class="line">        job.setMapOutputValueClass(Put.class);</span><br><span class="line"></span><br><span class="line">        //reducer</span><br><span class="line">        TableMapReduceUtil.initTableReducerJob(</span><br><span class="line">                &quot;rickyin:student&quot;,</span><br><span class="line">                InsertDataReducer.class,</span><br><span class="line">                job);</span><br><span class="line"></span><br><span class="line">        boolean flag = job.waitForCompletion(true);</span><br><span class="line">        return flag ? JobStatus.State.SUCCEEDED.getValue() : JobStatus.State.FAILED.getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setConf(Configuration configuration) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Configuration getConf() &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ReadFileMapper"><a href="#ReadFileMapper" class="headerlink" title="ReadFileMapper"></a>ReadFileMapper</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mr.mapper;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line">import org.apache.hadoop.io.LongWritable;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class ReadFileMapper extends Mapper&lt;LongWritable, Text, ImmutableBytesWritable, Put&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">        String[] split = value.toString().split(&quot;,&quot;);</span><br><span class="line">        String rowkey = split[0];</span><br><span class="line"></span><br><span class="line">        byte[] bs = Bytes.toBytes(rowkey);</span><br><span class="line">        Put put = new Put(bs);</span><br><span class="line">        put.addColumn(Bytes.toBytes(&quot;info&quot;), Bytes.toBytes(&quot;name&quot;), Bytes.toBytes(split[1]));</span><br><span class="line">        context.write(new ImmutableBytesWritable(bs), put);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="InsertDataReducer-1"><a href="#InsertDataReducer-1" class="headerlink" title="InsertDataReducer"></a>InsertDataReducer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mr.reducer;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.hbase.client.Put;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableReducer;</span><br><span class="line">import org.apache.hadoop.io.NullWritable;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class InsertDataReducer extends TableReducer&lt;ImmutableBytesWritable, Put, NullWritable&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(ImmutableBytesWritable key, Iterable&lt;Put&gt; values, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        //运行reducer，增加数据</span><br><span class="line">        for (Put put : values) &#123;</span><br><span class="line">            context.write(NullWritable.get(), put);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="从HBase到MYsql"><a href="#从HBase到MYsql" class="headerlink" title="从HBase到MYsql"></a>从HBase到MYsql</h3><h4 id="HBase2MysqlApplication"><a href="#HBase2MysqlApplication" class="headerlink" title="HBase2MysqlApplication"></a>HBase2MysqlApplication</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.tool.HBase2MysqlTool;</span><br><span class="line">import org.apache.hadoop.util.ToolRunner;</span><br><span class="line"></span><br><span class="line">public class HBase2MysqlApplication &#123;</span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        ToolRunner.run(new HBase2MysqlTool(), args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="HBase2MysqlTool"><a href="#HBase2MysqlTool" class="headerlink" title="HBase2MysqlTool"></a>HBase2MysqlTool</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.tool;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.bean.CacheData;</span><br><span class="line">import com.rickyin.hbase.format.MysqlOutputFormat;</span><br><span class="line">import com.rickyin.hbase.mapper.ScanHbaseMapper;</span><br><span class="line">import com.rickyin.hbase.reducer.Hbase2MysqlReducer;</span><br><span class="line">import org.apache.hadoop.conf.Configuration;</span><br><span class="line">import org.apache.hadoop.hbase.client.Scan;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Job;</span><br><span class="line">import org.apache.hadoop.mapreduce.JobStatus;</span><br><span class="line">import org.apache.hadoop.util.Tool;</span><br><span class="line"></span><br><span class="line">public class HBase2MysqlTool implements Tool &#123;</span><br><span class="line">    public int run(String[] strings) throws Exception &#123;</span><br><span class="line">        Job job = Job.getInstance();</span><br><span class="line">        job.setJarByClass(HBase2MysqlTool.class);</span><br><span class="line"></span><br><span class="line">        //mapper</span><br><span class="line">        TableMapReduceUtil.initTableMapperJob(</span><br><span class="line">                &quot;rickyin:student&quot;,</span><br><span class="line">                new Scan(),</span><br><span class="line">                ScanHbaseMapper.class,</span><br><span class="line">                Text.class,</span><br><span class="line">                CacheData.class,</span><br><span class="line">                job);</span><br><span class="line">        //reducer</span><br><span class="line">        job.setReducerClass(Hbase2MysqlReducer.class);</span><br><span class="line">        job.setOutputKeyClass(Text.class);</span><br><span class="line">        job.setOutputValueClass(CacheData.class);</span><br><span class="line"></span><br><span class="line">        job.setOutputFormatClass(MysqlOutputFormat.class);</span><br><span class="line"></span><br><span class="line">        return job.waitForCompletion(true) ? JobStatus.State.SUCCEEDED.getValue() : JobStatus.State.FAILED.getValue();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setConf(Configuration configuration) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Configuration getConf() &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="ScanHbaseMapper"><a href="#ScanHbaseMapper" class="headerlink" title="ScanHbaseMapper"></a>ScanHbaseMapper</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.mapper;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.bean.CacheData;</span><br><span class="line">import org.apache.hadoop.hbase.Cell;</span><br><span class="line">import org.apache.hadoop.hbase.CellUtil;</span><br><span class="line">import org.apache.hadoop.hbase.client.Result;</span><br><span class="line">import org.apache.hadoop.hbase.io.ImmutableBytesWritable;</span><br><span class="line">import org.apache.hadoop.hbase.mapreduce.TableMapper;</span><br><span class="line">import org.apache.hadoop.hbase.util.Bytes;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class ScanHbaseMapper extends TableMapper&lt;Text, CacheData&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void map(ImmutableBytesWritable key, Result result, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        for (Cell cell : result.rawCells()) &#123;</span><br><span class="line">            String name = Bytes.toString(CellUtil.cloneValue(cell));</span><br><span class="line">            CacheData data = new CacheData();</span><br><span class="line">            data.setName(name);</span><br><span class="line">            data.setCount(1);</span><br><span class="line"></span><br><span class="line">            context.write(new Text(name), data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="CacheData"><a href="#CacheData" class="headerlink" title="CacheData"></a>CacheData</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.bean;</span><br><span class="line"></span><br><span class="line">import org.apache.hadoop.io.WritableComparable;</span><br><span class="line"></span><br><span class="line">import java.io.DataInput;</span><br><span class="line">import java.io.DataOutput;</span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class CacheData implements WritableComparable&lt;CacheData&gt; &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private Integer count;</span><br><span class="line"></span><br><span class="line">    public String getName() &#123;</span><br><span class="line">        return name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setName(String name) &#123;</span><br><span class="line">        this.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getCount() &#123;</span><br><span class="line">        return count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setCount(Integer count) &#123;</span><br><span class="line">        this.count = count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int compareTo(CacheData data) &#123;</span><br><span class="line">        return name.compareTo(data.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void write(DataOutput dataOutput) throws IOException &#123;</span><br><span class="line">        dataOutput.writeUTF(name);</span><br><span class="line">        dataOutput.writeInt(count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void readFields(DataInput dataInput) throws IOException &#123;</span><br><span class="line">        name = dataInput.readUTF();</span><br><span class="line">        count = dataInput.readInt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="MysqlOutputFormat-需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的"><a href="#MysqlOutputFormat-需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的" class="headerlink" title="MysqlOutputFormat(需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的)"></a>MysqlOutputFormat(需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的)</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.format;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.bean.CacheData;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.*;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class MysqlOutputFormat extends OutputFormat&lt;Text, CacheData&gt; &#123;</span><br><span class="line">    public RecordWriter&lt;Text, CacheData&gt; getRecordWriter(TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void checkOutputSpecs(JobContext jobContext) throws IOException, InterruptedException &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public OutputCommitter getOutputCommitter(TaskAttemptContext taskAttemptContext) throws IOException, InterruptedException &#123;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Hbase2MysqlReducer"><a href="#Hbase2MysqlReducer" class="headerlink" title="Hbase2MysqlReducer"></a>Hbase2MysqlReducer</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">package com.rickyin.hbase.reducer;</span><br><span class="line"></span><br><span class="line">import com.rickyin.hbase.bean.CacheData;</span><br><span class="line">import org.apache.hadoop.io.Text;</span><br><span class="line">import org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line"></span><br><span class="line">public class Hbase2MysqlReducer extends Reducer&lt;Text, CacheData, Text, CacheData&gt; &#123;</span><br><span class="line">    @Override</span><br><span class="line">    protected void reduce(Text key, Iterable&lt;CacheData&gt; datas, Context context) throws IOException, InterruptedException &#123;</span><br><span class="line">        int sum = 0;</span><br><span class="line">        for (CacheData data : datas) &#123;</span><br><span class="line">            sum = sum + data.getCount();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        CacheData sumData = new CacheData();</span><br><span class="line">        sumData.setName(key.toString());</span><br><span class="line">        sumData.setCount(sum);</span><br><span class="line"></span><br><span class="line">        context.write(key, sumData);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="HBase协处理器"><a href="#HBase协处理器" class="headerlink" title="HBase协处理器"></a>HBase协处理器</h2><p>之前我们第一个MR操作是将HBase中一张表的数据写入到HBase的另外一张表中，这样显得会很麻烦，我们有没有什么办法在往A表中写数据的时候同时也往B表中写入数据(有点B表是A表的备份表的意思)，mysql中有个trggie可以做到，HBase中有个协处理器可以做</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.rickyin.hbase.coprocesser;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.TableName;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Durability;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.HTableInterface;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Put;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.client.Table;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.coprocessor.BaseRegionObserver;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.coprocessor.ObserverContext;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.coprocessor.RegionCoprocessorEnvironment;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.hbase.regionserver.wal.WALEdit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 协处理器(HBase自己的功能)</span></span><br><span class="line"><span class="comment"> * 1.创建类，继承BaseRegionObserver</span></span><br><span class="line"><span class="comment"> * 2.重写方法(里面有很多方法，得明白重写哪个方法，我们现在是往A表中插入数据的时候同时也往B表中写入数据):postPut</span></span><br><span class="line"><span class="comment"> * 3.实现逻辑</span></span><br><span class="line"><span class="comment"> *  a.增加 rickyin:student 的数据</span></span><br><span class="line"><span class="comment"> *  b.同时增加 rickyin:user 的数据</span></span><br><span class="line"><span class="comment"> * 4.将项目打包h后上传到hbase中，让hbase可以识别协处理器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InsertRickStudentCoprocesser</span> <span class="keyword">extends</span> <span class="title">BaseRegionObserver</span> </span>&#123;</span><br><span class="line">    <span class="comment">// prePut:Put之前操作</span></span><br><span class="line">    <span class="comment">// doPut: 正在put</span></span><br><span class="line">    <span class="comment">// postPut:Put之后</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">postPut</span><span class="params">(ObserverContext&lt;RegionCoprocessorEnvironment&gt; e, Put put, WALEdit edit, Durability durability)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        <span class="comment">//获取表</span></span><br><span class="line">        <span class="comment">//table</span></span><br><span class="line">        Table table = e.getEnvironment().getTable(TableName.valueOf(<span class="string">"rickyin:user"</span>));</span><br><span class="line"></span><br><span class="line">        <span class="comment">//增加数据</span></span><br><span class="line">        table.put(put);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//关闭表</span></span><br><span class="line">        table.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop/" rel="tag"># Hadoop</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/17/HBase基础学习-二之hbase数据结构、原理/" rel="next" title="HBase基础学习-二之hbase数据结构、原理">
+                <i class="fa fa-chevron-left"></i> HBase基础学习-二之hbase数据结构、原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">117</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase-API操作"><span class="nav-number">1.</span> <span class="nav-text">HBase API操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境准备"><span class="nav-number">1.1.</span> <span class="nav-text">环境准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBaseAPI"><span class="nav-number">1.2.</span> <span class="nav-text">HBaseAPI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#整体操作"><span class="nav-number">1.2.1.</span> <span class="nav-text">整体操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取Configuration对象"><span class="nav-number">1.2.2.</span> <span class="nav-text">获取Configuration对象</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判断表是否存在"><span class="nav-number">1.2.3.</span> <span class="nav-text">判断表是否存在</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建表"><span class="nav-number">1.2.4.</span> <span class="nav-text">创建表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除表"><span class="nav-number">1.2.5.</span> <span class="nav-text">删除表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#向表中插入数据"><span class="nav-number">1.2.6.</span> <span class="nav-text">向表中插入数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除多行数据"><span class="nav-number">1.2.7.</span> <span class="nav-text">删除多行数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取所有数据"><span class="nav-number">1.2.8.</span> <span class="nav-text">获取所有数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取某一行数据"><span class="nav-number">1.2.9.</span> <span class="nav-text">获取某一行数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#获取某一行指定“列族-列”的数据"><span class="nav-number">1.2.10.</span> <span class="nav-text">获取某一行指定“列族:列”的数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HBaseAPI封装"><span class="nav-number">1.3.</span> <span class="nav-text">HBaseAPI封装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MapReduce"><span class="nav-number">2.</span> <span class="nav-text">MapReduce</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看HBase的MapReduce任务的执行"><span class="nav-number">2.1.</span> <span class="nav-text">查看HBase的MapReduce任务的执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#环境变量的导入"><span class="nav-number">2.2.</span> <span class="nav-text">环境变量的导入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MR-从HBase到HBase"><span class="nav-number">2.3.</span> <span class="nav-text">MR-从HBase到HBase</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Table2TableApplication"><span class="nav-number">2.3.1.</span> <span class="nav-text">Table2TableApplication</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HBaseMapperReduceTool"><span class="nav-number">2.3.2.</span> <span class="nav-text">HBaseMapperReduceTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ScanDataMapper"><span class="nav-number">2.3.3.</span> <span class="nav-text">ScanDataMapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InsertDataReducer"><span class="nav-number">2.3.4.</span> <span class="nav-text">InsertDataReducer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MR-从文件到HBase"><span class="nav-number">2.4.</span> <span class="nav-text">MR-从文件到HBase</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#File2TableApplication"><span class="nav-number">2.4.1.</span> <span class="nav-text">File2TableApplication</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#File2TableTool"><span class="nav-number">2.4.2.</span> <span class="nav-text">File2TableTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ReadFileMapper"><span class="nav-number">2.4.3.</span> <span class="nav-text">ReadFileMapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#InsertDataReducer-1"><span class="nav-number">2.4.4.</span> <span class="nav-text">InsertDataReducer</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#从HBase到MYsql"><span class="nav-number">2.5.</span> <span class="nav-text">从HBase到MYsql</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HBase2MysqlApplication"><span class="nav-number">2.5.1.</span> <span class="nav-text">HBase2MysqlApplication</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#HBase2MysqlTool"><span class="nav-number">2.5.2.</span> <span class="nav-text">HBase2MysqlTool</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ScanHbaseMapper"><span class="nav-number">2.5.3.</span> <span class="nav-text">ScanHbaseMapper</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CacheData"><span class="nav-number">2.5.4.</span> <span class="nav-text">CacheData</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MysqlOutputFormat-需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的"><span class="nav-number">2.5.5.</span> <span class="nav-text">MysqlOutputFormat(需要在这个里面实现向mysql中写数据，这里我没有写，但是整体架子是这样的)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hbase2MysqlReducer"><span class="nav-number">2.5.6.</span> <span class="nav-text">Hbase2MysqlReducer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HBase协处理器"><span class="nav-number">3.</span> <span class="nav-text">HBase协处理器</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
