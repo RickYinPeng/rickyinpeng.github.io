@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Elasticsearch," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[toc] 三、Elasticsearch入门1. Elasticsearch基本概念1.1 文档 Elasticsearch是面向文档的，文档是所有可搜索数据的最小单位 日志文件中的日志项 一本电影的具体信息/一张唱片的详细信息 MP3播放器里的一首歌/一篇PDF文档中的具体内容   文档会被序列化成Json格式，保存在Elasticsearch中 Json对象由字段组成 每个字段都有对应的字段">
+<meta name="keywords" content="Elasticsearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch基础学习二">
+<meta property="og:url" content="http://yoursite.com/2021/01/03/ES基础学习二/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="[toc] 三、Elasticsearch入门1. Elasticsearch基本概念1.1 文档 Elasticsearch是面向文档的，文档是所有可搜索数据的最小单位 日志文件中的日志项 一本电影的具体信息/一张唱片的详细信息 MP3播放器里的一首歌/一篇PDF文档中的具体内容   文档会被序列化成Json格式，保存在Elasticsearch中 Json对象由字段组成 每个字段都有对应的字段">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/14.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/15.png">
+<meta property="og:image" content="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/8.png">
+<meta property="og:image" content="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/9.png">
+<meta property="og:image" content="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/10.png">
+<meta property="og:image" content="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/11.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/12.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/13.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/16.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/21.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/22.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/17.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/18.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/23.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/19.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/24.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/25.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/26.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/20.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/27.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/28.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/29.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/30.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/31.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/32.png">
+<meta property="og:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/33.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/34.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/35.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/37.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/38.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/39.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/40.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/41.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/42.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/44.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/45_132504876586261293.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/46.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/47.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/48.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/49.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/50.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/51.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/52.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/53.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/54.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/55.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/56.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/57.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/58.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/59.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/60.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/61.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/62.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/63.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/64.png">
+<meta property="og:image" content="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/65.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/69.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/66.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/75.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/67.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/68.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/69.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/70.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/71.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/72.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/73.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/74.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/77.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/76.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/78.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/79.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/80.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/81.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/82.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/83.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/84.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/86.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/85.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/87.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/88.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/89.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/91.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/90.png">
+<meta property="og:image" content="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/92.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/96.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/97.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/93.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/95.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/99.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/94.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/100.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/101.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/102.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/103.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/104.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/105.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/106.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/107.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/108.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/109.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/110.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/111.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/112.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/113.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/114.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/115.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/120.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/121.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/116.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/117.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/122.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/118.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/123.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/119.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/124.png">
+<meta property="og:image" content="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/125.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/125_132516237529696250.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/126.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/127.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/128.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/129.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/130.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/131.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/132.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/133.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/134.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/135.png">
+<meta property="og:image" content="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/136.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/137.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/138.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/139.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/140.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/141.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/142.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/143.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/144.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/145.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/146.png">
+<meta property="og:image" content="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/147.png">
+<meta property="og:image" content="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/151.png">
+<meta property="og:image" content="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/148.png">
+<meta property="og:image" content="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/149.png">
+<meta property="og:image" content="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/150.png">
+<meta property="og:updated_time" content="2021-01-03T13:02:22.739Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch基础学习二">
+<meta name="twitter:description" content="[toc] 三、Elasticsearch入门1. Elasticsearch基本概念1.1 文档 Elasticsearch是面向文档的，文档是所有可搜索数据的最小单位 日志文件中的日志项 一本电影的具体信息/一张唱片的详细信息 MP3播放器里的一首歌/一篇PDF文档中的具体内容   文档会被序列化成Json格式，保存在Elasticsearch中 Json对象由字段组成 每个字段都有对应的字段">
+<meta name="twitter:image" content="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/14.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/03/ES基础学习二/"/>
+
+
+
+
+
+  <title>Elasticsearch基础学习二 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/03/ES基础学习二/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Elasticsearch基础学习二</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-03T21:00:53+08:00">
+                2021-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[toc]</p>
+<h1 id="三、Elasticsearch入门"><a href="#三、Elasticsearch入门" class="headerlink" title="三、Elasticsearch入门"></a>三、<code>Elasticsearch</code>入门</h1><h2 id="1-Elasticsearch基本概念"><a href="#1-Elasticsearch基本概念" class="headerlink" title="1. Elasticsearch基本概念"></a>1. <code>Elasticsearch</code>基本概念</h2><h3 id="1-1-文档"><a href="#1-1-文档" class="headerlink" title="1.1 文档"></a>1.1 文档</h3><ul>
+<li><code>Elasticsearch</code>是面向文档的，<font size="3" color="red">文档是所有可搜索数据的最小单位</font><ul>
+<li>日志文件中的日志项</li>
+<li>一本电影的具体信息/一张唱片的详细信息</li>
+<li><code>MP3</code>播放器里的一首歌/一篇<code>PDF</code>文档中的具体内容</li>
+</ul>
+</li>
+<li>文档会被序列化成<code>Json</code>格式，保存在<code>Elasticsearch</code>中<ul>
+<li><code>Json</code>对象由字段组成</li>
+<li>每个字段都有对应的字段类型(字符串/数值/布尔/日期/二进制/范围类型)</li>
+</ul>
+</li>
+<li>每个文档都有一个<code>UniqueID</code><ul>
+<li>你可以自己指定<code>ID</code></li>
+<li>或者通过<code>Elasticsearch</code>自动生成</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-1-1-Json文档"><a href="#1-1-1-Json文档" class="headerlink" title="1.1.1 Json文档"></a>1.1.1 Json文档</h4><ul>
+<li>一篇文档包含了一系列的字段。类似数据库表中一条记录</li>
+<li><code>Json</code>文档，格式灵活，不需要预先定义格式<ul>
+<li>字段的类型可以指定或者通过<code>Elasticsearch</code>自动推算</li>
+<li>支持数据/支持嵌套</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-1-2-文档元数据"><a href="#1-1-2-文档元数据" class="headerlink" title="1.1.2 文档元数据"></a>1.1.2 文档元数据</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;index&quot; : &quot;movies&quot;,</span><br><span class="line">    &quot;_type&quot; : &quot;_doc&quot;,</span><br><span class="line">    &quot;_id&quot; : &quot;1&quot;,</span><br><span class="line">    &quot;_score&quot; : 14.69302,</span><br><span class="line">    &quot;_source&quot; : &#123;</span><br><span class="line">        &quot;year&quot; : 1995,</span><br><span class="line">        &quot;@version&quot; : &quot;1&quot;,</span><br><span class="line">        &quot;genre&quot; : [</span><br><span class="line">            &quot;Adventure&quot;,</span><br><span class="line">            &quot;Animation&quot;,</span><br><span class="line">            &quot;Children&quot;,</span><br><span class="line">            &quot;Comedy&quot;,</span><br><span class="line">            &quot;Fantasy&quot;</span><br><span class="line">        ],</span><br><span class="line">        &quot;id&quot; : &quot;1&quot;,</span><br><span class="line">        &quot;title&quot; : &quot;Toy Story&quot;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<ul>
+<li>元数据，用于标注文档的相关信息<ul>
+<li><code>_index</code>: 文档所属的索引名</li>
+<li><code>_type</code>: 文档所属的类型名</li>
+<li><code>_id</code>: 文档唯一<code>ID</code></li>
+<li><code>_source</code>: 文档的原始<code>JSON</code>数据</li>
+<li><code>_all</code>: 整合所有字段内容到该字段，已被废除</li>
+<li><code>_version</code>: 文档的版本信息</li>
+<li><code>_score</code>: 相关性打分</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-2-索引"><a href="#1-2-索引" class="headerlink" title="1.2 索引"></a>1.2 索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;movies&quot; : &#123;</span><br><span class="line">    &quot;settings&quot; : &#123;</span><br><span class="line">      &quot;index&quot; : &#123;</span><br><span class="line">        &quot;creation_date&quot; : &quot;1604218204918&quot;,</span><br><span class="line">        &quot;number_of_shards&quot; : &quot;1&quot;,</span><br><span class="line">        &quot;number_of_replicas&quot; : &quot;1&quot;,</span><br><span class="line">        &quot;uuid&quot; : &quot;F9-uy1bUTemm1Hs_LaDMQQ&quot;,</span><br><span class="line">        &quot;version&quot; : &#123;</span><br><span class="line">          &quot;created&quot; : &quot;7010099&quot;</span><br><span class="line">        &#125;,</span><br><span class="line">        &quot;provided_name&quot; : &quot;movies&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>index</code>: 索引是文档的容器，是一类文档的结合<ul>
+<li><code>index</code>体现了逻辑空间的概念：每个索引都有自己的<code>Mapping</code>定义，用于定义包含文档的字段名和字段类型</li>
+<li><code>Shard</code>体现了物理空间的概念：索引中的数据分散在<code>Shard</code>中</li>
+</ul>
+</li>
+<li>索引的<code>Mapping</code>与<code>Setting</code><ul>
+<li><code>Mapping</code>定义文档字段的类型</li>
+<li><code>Setting</code>定义不同的数据分布</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-2-1-索引的不同语义"><a href="#1-2-1-索引的不同语义" class="headerlink" title="1.2.1 索引的不同语义"></a>1.2.1 索引的不同语义</h4><p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/14.png" alt="image"></p>
+<ul>
+<li>名词：一个<code>Elasticsearch</code>集群中，可以创建很多不同的索引</li>
+<li>动词：保存一个文档到<code>Elasticsearch</code>的过程也叫索引(<code>indexing</code>)<ul>
+<li><code>ES</code>中，创建一个倒排索引的过程</li>
+</ul>
+</li>
+<li>名词：一个<code>B树</code>索引，一个倒排索引</li>
+</ul>
+<h4 id="1-2-2-Type-这个我也不知道是干什么的"><a href="#1-2-2-Type-这个我也不知道是干什么的" class="headerlink" title="1.2.2 Type(这个我也不知道是干什么的)"></a>1.2.2 <code>Type</code>(这个我也不知道是干什么的)</h4><p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/15.png" alt="image"></p>
+<h4 id="1-2-3-ES和RDBMS对比"><a href="#1-2-3-ES和RDBMS对比" class="headerlink" title="1.2.3 ES和RDBMS对比"></a>1.2.3 <code>ES</code>和<code>RDBMS</code>对比</h4><table>
+<thead>
+<tr>
+<th>RDBMS</th>
+<th>Elasticsearch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Table</td>
+<td>index(Type)</td>
+</tr>
+<tr>
+<td>Row</td>
+<td>Document</td>
+</tr>
+<tr>
+<td>Column</td>
+<td>Filed</td>
+</tr>
+<tr>
+<td>Schema</td>
+<td>Mapping</td>
+</tr>
+<tr>
+<td>SQL</td>
+<td>DSL</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>传统关系型数据库和<code>Elasticsearch</code>的区别<ul>
+<li><code>Elasticsearch</code><ul>
+<li><code>Schemaless</code>:数据组织更加灵活</li>
+<li>相关性：算相关度</li>
+<li>高性能全文检索</li>
+</ul>
+</li>
+<li><code>RDBMS</code><ul>
+<li>事务</li>
+<li><code>Join</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-3-REST-API"><a href="#1-3-REST-API" class="headerlink" title="1.3 REST API"></a>1.3 <code>REST API</code></h3><p><img src="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/8.png" alt="image"></p>
+<h3 id="1-4-kibana上索引管理"><a href="#1-4-kibana上索引管理" class="headerlink" title="1.4 kibana上索引管理"></a>1.4 <code>kibana</code>上索引管理</h3><p><img src="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/9.png" alt="image"><br><img src="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/10.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//查看索引相关信息</span><br><span class="line">GET movies</span><br><span class="line"></span><br><span class="line">//查看索引的文档总数</span><br><span class="line">GET movies/_count</span><br><span class="line"></span><br><span class="line">//查看前10条文档，了解文档格式</span><br><span class="line">POST movies/_search&#123;</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//_cat indices API</span><br><span class="line">//查看indices</span><br><span class="line">GET /_cat/indices/movies*?v&amp;s=index</span><br><span class="line"></span><br><span class="line">//查看状态未绿的索引</span><br><span class="line">GET /_cat/indices?v&amp;health=green</span><br><span class="line"></span><br><span class="line">//按照文档个数排序</span><br><span class="line">GET /_cat/indices?v&amp;s=docs.count:desc</span><br><span class="line"></span><br><span class="line">//查看具体的字段</span><br><span class="line">GET /_cat/indices/movies*?pri&amp;v&amp;h=health,index,pri,rep,docs.count,mt</span><br><span class="line"></span><br><span class="line">//How much memory is used per index?</span><br><span class="line">GET /_cat/indices?v&amp;h=i,tm&amp;s=tm:desc</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-5-分布式系统的可用性和扩展性"><a href="#1-5-分布式系统的可用性和扩展性" class="headerlink" title="1.5 分布式系统的可用性和扩展性"></a>1.5 分布式系统的可用性和扩展性</h3><h4 id="1-5-1-高可用"><a href="#1-5-1-高可用" class="headerlink" title="1.5.1 高可用"></a>1.5.1 高可用</h4><ul>
+<li>服务可用性-运行有节点停止服务</li>
+<li>数据可用性-部分节点丢失，不会丢失数据</li>
+</ul>
+<h4 id="1-5-2-可扩展性"><a href="#1-5-2-可扩展性" class="headerlink" title="1.5.2 可扩展性"></a>1.5.2 可扩展性</h4><ul>
+<li>请求量提升/数据的不断增长(将数据分布到所有节点上)</li>
+</ul>
+<h3 id="1-6-ES的分布式特性"><a href="#1-6-ES的分布式特性" class="headerlink" title="1.6 ES的分布式特性"></a>1.6 <code>ES</code>的分布式特性</h3><h4 id="1-6-1-ES的分布式架构的好处"><a href="#1-6-1-ES的分布式架构的好处" class="headerlink" title="1.6.1 ES的分布式架构的好处"></a>1.6.1 <code>ES</code>的分布式架构的好处</h4><ul>
+<li>存储的水平扩容</li>
+<li>提高系统的可用性，部分节点停止服务，整个集群的服务不受影响</li>
+</ul>
+<h4 id="1-6-2-ES的分布式架构"><a href="#1-6-2-ES的分布式架构" class="headerlink" title="1.6.2 ES的分布式架构"></a>1.6.2 <code>ES</code>的分布式架构</h4><ul>
+<li>不同的集群通过不同的名字来区分，默认名字<code>elasticsearch</code></li>
+<li>通过配置文件修改，或者在命令行中 <code>-E cluster.name=node1</code>进行设定</li>
+<li>一个集群可以有一个或者多个节点</li>
+</ul>
+<h3 id="1-7-ES节点"><a href="#1-7-ES节点" class="headerlink" title="1.7 ES节点"></a>1.7 <code>ES</code>节点</h3><ul>
+<li>节点是一个<code>Elasticsearch</code>的实例<ul>
+<li>本质上就是一个<font size="3" color="red"><code>Java</code>进程</font></li>
+<li>一台机器上可以运行多个<code>Elasticsearch</code>进程，但是生产环境一般建议一台机器上只运行一个<code>Elasticsearch</code>实例</li>
+</ul>
+</li>
+<li>每一个节点都有名字，通过配置文件配置，或者启动时候 <code>-E node.name=node1</code>指定</li>
+<li>每一个节点在启动之后，会分配一个<code>UID</code>，保存在<code>data</code>目录下</li>
+</ul>
+<h3 id="1-8-Master-eligible-nodes和Master-Node"><a href="#1-8-Master-eligible-nodes和Master-Node" class="headerlink" title="1.8 Master-eligible nodes和Master Node"></a>1.8 <code>Master-eligible nodes</code>和<code>Master Node</code></h3><ul>
+<li>每个节点启动后，默认就是一个<code>Master eligible</code>节点<ul>
+<li>可以设置 <code>node.master:false</code>禁止</li>
+</ul>
+</li>
+<li><code>Master-eligible</code>节点可以参加选主流程，成为<code>Master</code>节点</li>
+<li>当第一个节点启动时候，它会将自己选举成<code>Master</code>节点</li>
+<li>每个节点上都保存了集群的状态，只有<code>Master</code>节点才能修改集群的状态信息<ul>
+<li>集群状态(Cluster State),维护了一个集群中，必要的信息<ul>
+<li>所有的节点信息</li>
+<li>所有的索引和其相关的<code>Mapping</code>和<code>Setting</code>信息</li>
+<li>分片的路由信息</li>
+</ul>
+</li>
+<li>任意节点都能修改信息会导致数据的不一致性</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-8-Data-Node-amp-Coordinating-Node"><a href="#1-8-Data-Node-amp-Coordinating-Node" class="headerlink" title="1.8 Data Node &amp; Coordinating Node"></a>1.8 <code>Data Node &amp; Coordinating Node</code></h3><ul>
+<li><code>Data Node</code><ul>
+<li>可以保存数据的节点，叫做<code>Data Node</code>。负责保存分片数据。在数据扩展上起到了至关重要的作用</li>
+</ul>
+</li>
+<li><code>Coordinating Node</code><ul>
+<li>负责接受<code>Client</code>的请求，将请求分发到合适的节点，最终把结果汇集到一起</li>
+<li>每个节点默认都起到了<code>Coordinating Node</code>的职责</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-9-其他节点类型"><a href="#1-9-其他节点类型" class="headerlink" title="1.9 其他节点类型"></a>1.9 其他节点类型</h3><ul>
+<li><code>Hot</code> 和 <code>Warm Node</code><ul>
+<li>不同硬件配置的 <code>Data Node</code>,用来实现 <code>Hot</code> 和 <code>Warm</code>架构，降低集群部署的成本</li>
+</ul>
+</li>
+<li><code>Machine Learing Node</code><ul>
+<li>负责跑机器学习的 <code>Job</code>,用来做异常检测</li>
+</ul>
+</li>
+<li><code>Tribe Node</code><ul>
+<li>(5.3开始使用<code>Cross Cluster Serarch</code>)<code>Tribe Node</code> 连接到不同的<code>Elasticsearch</code>集群，并且支持将这些集群当成一个单独的集群处理</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-10-配置节点类型"><a href="#1-10-配置节点类型" class="headerlink" title="1.10 配置节点类型"></a>1.10 配置节点类型</h3><ul>
+<li>开发环境中一个节点可以承担多种角色</li>
+<li>生产环境中，应该设置单一的角色的节点(<code>dedicated node</code>)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>配置参数</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>master eligible</td>
+<td>node.master</td>
+<td>true</td>
+</tr>
+<tr>
+<td>data</td>
+<td>node.data</td>
+<td>true</td>
+</tr>
+<tr>
+<td>ingest</td>
+<td>node.ingest</td>
+<td>true</td>
+</tr>
+<tr>
+<td>coordinating only</td>
+<td>无</td>
+<td>每个节点默认都是 <code>coordinating</code> 节点。设置其他类型全部为<code>false</code></td>
+</tr>
+<tr>
+<td>machine learing</td>
+<td>node.ml</td>
+<td>true(需 enable x-pack)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-11-分片-Primary-Shard-amp-Replica-Shard"><a href="#1-11-分片-Primary-Shard-amp-Replica-Shard" class="headerlink" title="1.11 分片(Primary Shard &amp; Replica Shard)"></a>1.11 分片(<code>Primary Shard</code> &amp; <code>Replica Shard</code>)</h3><ul>
+<li>主分片，用以解决数据水平扩展的问题。通过主分片，可以将数据分布到集群内的所有节点之上<ul>
+<li>一个分片是一个运行的<code>Lucene</code>的实例</li>
+<li>主分片数在索引创建时指定，后续不允许修改，除非<code>Reindex</code></li>
+</ul>
+</li>
+<li>副本，用以解决数据高可用的问题。分片时主分片的拷贝<ul>
+<li>副本分片数，可以动态的调整</li>
+<li>增加副本数，还可以在一定程度上提高服务的可用性(读取的吞吐)</li>
+</ul>
+</li>
+<li>一个三节点的集群中，<code>blogs</code>索引的分片分布情况<ul>
+<li>思考：增加一个节点或改大主分片数对系统的影响？<br><img src="http://d1.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/11.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h3 id="1-12-分片的设定（主分片是在创建时设定的，后期不能改，除非reindex）"><a href="#1-12-分片的设定（主分片是在创建时设定的，后期不能改，除非reindex）" class="headerlink" title="1.12 分片的设定（主分片是在创建时设定的，后期不能改，除非reindex）"></a>1.12 分片的设定（主分片是在创建时设定的，后期不能改，除非<code>reindex</code>）</h3><ul>
+<li>对与生产环境中分片的设定，需要提前做好容量规划<ul>
+<li>分片数设置过小<ul>
+<li>导致后续无法增加节点实现水平扩展</li>
+<li>单个分片的数据量太大，导致数据重新分配耗时(数据倾斜)</li>
+</ul>
+</li>
+<li>分片数设置过大，<code>7.0</code> 开始，默认主分片设置成1，解决了<code>over-sharding</code>的问题<ul>
+<li>影响搜索结果的相关性打分，影响统计结果的准确性</li>
+<li>单个节点上过多的分片，会导致资源浪费，同时也会影响性能</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="1-13-查看集群的健康状况"><a href="#1-13-查看集群的健康状况" class="headerlink" title="1.13 查看集群的健康状况"></a>1.13 查看集群的健康状况</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GET _cluster/health</span><br></pre></td></tr></table></figure>
+<p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/12.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/13.png" alt="image"></p>
+<ul>
+<li><code>Green</code>：主分片与副本都正常分配</li>
+<li><code>Yellow</code>：主分片全部正常分配，有副本分片未能正常分配</li>
+<li><code>Red</code>：有主分片未能分配<ul>
+<li>例如：当服务器的磁盘容量超过<code>85%</code>时，去创建了一个新的索引</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-文档的基本CRUD与批量操作"><a href="#2-文档的基本CRUD与批量操作" class="headerlink" title="2. 文档的基本CRUD与批量操作"></a>2. 文档的基本CRUD与批量操作</h2><h3 id="2-1-文档的CRUD"><a href="#2-1-文档的CRUD" class="headerlink" title="2.1 文档的CRUD"></a>2.1 文档的CRUD</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index</td>
+<td><code>PUT my_index/_doc/1</code><br>{“user”:”mike”,”comment”:”xxxx”}</td>
+</tr>
+<tr>
+<td>Create</td>
+<td><code>PUT my_index/_create/1</code><br>{“user”:”mike”,”comment”:”xxxx”}<br><code>POST my_index/_doc</code>(不指定ID，自动生成)<br>{“user”:”mike”,”comment”:”xxxx”}</td>
+</tr>
+<tr>
+<td>Read</td>
+<td><code>GET my_index/_doc/1</code></td>
+</tr>
+<tr>
+<td>Update</td>
+<td><code>POST my_index/_update/1</code><br>{“doc”:{“user”:”mike”,”comment”:”xxxx”}}</td>
+</tr>
+<tr>
+<td>Delete</td>
+<td><code>DELETE my_index/_doc/1</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>Type</code>名，约定都用<code>_doc</code></li>
+<li><code>Create</code>：如果ID已经存在，会失败</li>
+<li><code>Index</code>：如果ID不存在，创建新的文档。否则，先删除现有的文档，再创建新的文档，版本会增加</li>
+<li><code>Update</code>：文档必须已经存在，更新只会对相应字段做增量修改</li>
+</ul>
+<h4 id="2-1-1-Create一个文档"><a href="#2-1-1-Create一个文档" class="headerlink" title="2.1.1 Create一个文档"></a>2.1.1 <code>Create</code>一个文档</h4><p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/16.png" alt="image"></p>
+<ul>
+<li>支持自动生成文档<code>Id</code>和指定文档<code>Id</code>两种方式</li>
+<li>通过调用<code>post users/_doc</code><ul>
+<li>系统会自动生成<code>document Id</code></li>
+</ul>
+</li>
+<li>使用<code>HTTP PUT user/_create/1</code>创建时，<code>URI</code>中显示指定<code>_create</code>,此时如果该<code>id</code>的文档已经存在，操作失败<br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/21.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/22.png" alt="image"></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//create document. 自动生成 _id</span><br><span class="line">POST users/_doc</span><br><span class="line">&#123;</span><br><span class="line">  &quot;user&quot; : &quot;Mike&quot;,</span><br><span class="line">    &quot;post_date&quot; : &quot;2020-11-15T19:38:42&quot;,</span><br><span class="line">    &quot;message&quot; : &quot;trying out Kibana&quot;</span><br><span class="line">&#125;</span><br><span class="line">//create document. 指定Id。如果id已经存在，报错</span><br><span class="line">PUT users/_doc/1?op_type=create</span><br><span class="line">&#123;</span><br><span class="line">  &quot;user&quot; : &quot;Mike&quot;,</span><br><span class="line">    &quot;post_date&quot; : &quot;2020-11-15T19:38:42&quot;,</span><br><span class="line">    &quot;message&quot; : &quot;trying out Elasticsearch&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-2-Get一个文档"><a href="#2-1-2-Get一个文档" class="headerlink" title="2.1.2 Get一个文档"></a>2.1.2 <code>Get</code>一个文档</h4><p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/17.png" alt="image"></p>
+<ul>
+<li>找到文档，返回<code>HTTP 200</code><ul>
+<li>文档元信息<ul>
+<li>_index/_type/</li>
+<li>版本信息，同一个<code>Id</code>的文档，即使被删除，<code>Version</code>号也会不断增加</li>
+<li><code>_source</code>中默认包含了文档的所有原始信息</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>找不到文档，返回<code>HTTP 404</code><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/18.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/23.png" alt="image"></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//Get document by Id</span><br><span class="line">GET users/_doc/1</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-3-Index文档"><a href="#2-1-3-Index文档" class="headerlink" title="2.1.3 Index文档"></a>2.1.3 <code>Index</code>文档</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//Index,如果文档已经存在，就会删除旧文档，写入新文档，版本号会+1</span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;user&quot; : &quot;Mike&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Index</code>和<code>Create</code>不一样的地方：如果文档不存在，就索引新的文档。否则现有文档会被删除，新的文档被索引。版本信息+1<br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/19.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/24.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/25.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/26.png" alt="image"></li>
+</ul>
+<h4 id="2-1-4-Update文档"><a href="#2-1-4-Update文档" class="headerlink" title="2.1.4 Update文档"></a>2.1.4 <code>Update</code>文档</h4><ul>
+<li><code>Update</code>方法不会删除原来的文档，而是实现真正的数据更新</li>
+<li><code>Post</code>方法 <code>/Payload</code> 需要包含再<code>doc</code>中<br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/20.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/27.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/28.png" alt="image"></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//Update,在原文档的基础上增加字段</span><br><span class="line">POST users/_update/1/</span><br><span class="line">&#123;</span><br><span class="line">  &quot;doc&quot;:&#123;</span><br><span class="line">    &quot;post_date&quot; : &quot;2020-11-15T19:59:42&quot;,</span><br><span class="line">    &quot;message&quot; : &quot;trying out Elasticsearch&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-批量操作"><a href="#2-2-批量操作" class="headerlink" title="2.2 批量操作"></a>2.2 批量操作</h3><h4 id="2-2-1-Bulk-API"><a href="#2-2-1-Bulk-API" class="headerlink" title="2.2.1 Bulk API"></a>2.2.1 <code>Bulk API</code></h4><p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/29.png" alt="image"></p>
+<ul>
+<li>在一次<code>REST</code>请求中，<font size="3" color="red">重新建立网络连接是非常损耗性能的</font></li>
+<li>支持在一次<code>API</code>调用中，对不同的索引进行操作</li>
+<li>支持四种类型操作<ul>
+<li><code>Index</code></li>
+<li><code>Create</code></li>
+<li><code>Update</code></li>
+<li><code>Delete</code></li>
+</ul>
+</li>
+<li>可以在<code>URI</code>中指定<code>Index</code>,也可以在请求的<code>Payload</code>中进行</li>
+<li><font size="3" color="red">操作中单挑操作失败，并不会影响其他操作</font></li>
+<li>返回结果包含了每一条操作执行的结果<br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/30.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//Bulk 操作</span><br><span class="line">//执行两次，查看每次的结果</span><br><span class="line"></span><br><span class="line">//执行第一次</span><br><span class="line">POST _bulk</span><br><span class="line">&#123;&quot;index&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;_id&quot;:&quot;1&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;field1&quot;:&quot;value1&quot;&#125;</span><br><span class="line">&#123;&quot;delete&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;_id&quot;:&quot;2&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;create&quot;:&#123;&quot;_index&quot;:&quot;test2&quot;,&quot;_id&quot;:&quot;3&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;field1&quot;:&quot;value3&quot;&#125;</span><br><span class="line">&#123;&quot;update&quot;:&#123;&quot;_id&quot;:&quot;1&quot;,&quot;_index&quot;:&quot;test&quot;&#125;&#125;</span><br><span class="line">&#123;&quot;doc&quot;:&#123;&quot;field2&quot;:&quot;value2&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="2-2-2-批量读取-mget"><a href="#2-2-2-批量读取-mget" class="headerlink" title="2.2.2 批量读取-mget"></a>2.2.2 批量读取-<code>mget</code></h4><ul>
+<li>批量操作，可以减少网络连接所产生的开销，提高性能<br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/31.png" alt="image"><br><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/32.png" alt="image"></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">// mget 操作</span><br><span class="line">GET /_mget</span><br><span class="line">&#123;</span><br><span class="line">  &quot;docs&quot;:[</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;_index&quot;:&quot;test&quot;,</span><br><span class="line">        &quot;_id&quot;:&quot;1&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;_index&quot;:&quot;test&quot;,</span><br><span class="line">        &quot;_id&quot;:&quot;2&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-3-批量查询-msearch"><a href="#2-2-3-批量查询-msearch" class="headerlink" title="2.2.3 批量查询-msearch"></a>2.2.3 批量查询-<code>msearch</code></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">### msearch 操作</span><br><span class="line">POST kibana_sample_data_ecommerce/_msearch</span><br><span class="line">&#123;&#125;</span><br><span class="line">&#123;&quot;query&quot; : &#123;&quot;match_all&quot; : &#123;&#125;&#125;,&quot;size&quot;:1&#125;</span><br><span class="line">&#123;&quot;index&quot; : &quot;kibana_sample_data_flights&quot;&#125;</span><br><span class="line">&#123;&quot;query&quot; : &#123;&quot;match_all&quot; : &#123;&#125;&#125;,&quot;size&quot;:2&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://mk.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/33.png" alt="image"></p>
+<h4 id="2-2-4-常见错误返回"><a href="#2-2-4-常见错误返回" class="headerlink" title="2.2.4 常见错误返回"></a>2.2.4 常见错误返回</h4><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无法连接</td>
+<td>网络故障或集群挂了</td>
+</tr>
+<tr>
+<td>连接无法关闭</td>
+<td>网路故障或节点出错</td>
+</tr>
+<tr>
+<td>429</td>
+<td>集群过于繁忙</td>
+</tr>
+<tr>
+<td>4xx</td>
+<td>请求体格式有错</td>
+</tr>
+<tr>
+<td>500</td>
+<td>集群内部错误</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-正排与倒排索引"><a href="#3-正排与倒排索引" class="headerlink" title="3. 正排与倒排索引"></a>3. 正排与倒排索引</h2><h3 id="3-1-正排"><a href="#3-1-正排" class="headerlink" title="3.1 正排"></a>3.1 正排</h3><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/34.png" alt="image"></p>
+<h3 id="3-2-倒排索引"><a href="#3-2-倒排索引" class="headerlink" title="3.2 倒排索引"></a>3.2 倒排索引</h3><p>如果你想找某个词，在书中的具体页码，那正排就不能满足了，那我们可以建一个<code>内容</code>-&gt;<code>文档Id</code>的一种索引结构，就可以满足我们的需求了<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/35.png" alt="image"></p>
+<h4 id="3-2-1-倒排索引的核心组成"><a href="#3-2-1-倒排索引的核心组成" class="headerlink" title="3.2.1 倒排索引的核心组成"></a>3.2.1 倒排索引的核心组成</h4><p>倒排索引包含两部分</p>
+<ul>
+<li>单词词典(Term Dictionary),记录所有文档的单词，记录单词到倒排列表的关联关系<ul>
+<li>单词词典一般比较大，可以通过<code>B+树</code>或<code>哈希拉链法</code>实现，以满足高性能的插入和查找</li>
+</ul>
+</li>
+<li>倒排序列(Posting List)记录了单词对应的文档结合，由倒排索引项组成<ul>
+<li>倒排索引项(Posting)<ul>
+<li>文档Id</li>
+<li>词频TF-该单词在文档中出现的次数，用于相关性评分</li>
+<li>位置(Position)-单词在文档中分词的位置。用于语句搜索(phrase query)</li>
+<li>偏移(Offset)-记录单词的开始结束位置，实现高亮显示</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-2-2-Elasticsearch的一个例子"><a href="#3-2-2-Elasticsearch的一个例子" class="headerlink" title="3.2.2 Elasticsearch的一个例子"></a>3.2.2 <code>Elasticsearch</code>的一个例子</h4><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/37.png" alt="image"></p>
+<h4 id="3-2-3-Elasticsearch的倒排索引"><a href="#3-2-3-Elasticsearch的倒排索引" class="headerlink" title="3.2.3 Elasticsearch的倒排索引"></a>3.2.3 <code>Elasticsearch</code>的倒排索引</h4><ul>
+<li><code>Elasticsearch</code>的<code>Json</code>文档中的每个字段，都有自己的倒排索引</li>
+<li>可以指定对某些字段不做索引<ul>
+<li>优点：节省存储空间</li>
+<li>缺点：字段无法被搜索</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-通过Analyzer进行分词"><a href="#4-通过Analyzer进行分词" class="headerlink" title="4. 通过Analyzer进行分词"></a>4. 通过<code>Analyzer</code>进行分词</h2><h3 id="4-1-Analysis与Analyzer"><a href="#4-1-Analysis与Analyzer" class="headerlink" title="4.1 Analysis与Analyzer"></a>4.1 <code>Analysis</code>与<code>Analyzer</code></h3><ul>
+<li><code>Analysis</code>：文本分析是把全文本转换一系列单词(<code>term\token</code>)的过程，也叫分词</li>
+<li><code>Analysis</code>是通过<code>Analyzer</code>来实现的<ul>
+<li>可使用<code>Elasticsearch</code>内置的分析器/或者按需定制化分析器</li>
+</ul>
+</li>
+<li>除了在数据写入时转换词条，匹配<code>Query</code>语句时候也需要用相同的分析器对查询语句进行分析</li>
+</ul>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/38.png" alt="image"></p>
+<h3 id="4-2-Analyzer的组成"><a href="#4-2-Analyzer的组成" class="headerlink" title="4.2 Analyzer的组成"></a>4.2 <code>Analyzer</code>的组成</h3><ul>
+<li>分词器时专门处理分词的组件，<code>Analyzer</code>由三部分组成<ul>
+<li><code>Character Filters</code>(针对原始文本处理，例如去除<code>html</code>)</li>
+<li><code>Tokenizer</code>(按照规则切分为单词)</li>
+<li><code>Token Filter</code>(将切分的单词进行加工，小写，删除<code>stopword</code>,增加同义词)</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/39.png" alt="image"></p>
+<h2 id="5-Elasticsearch的内置分词器"><a href="#5-Elasticsearch的内置分词器" class="headerlink" title="5. Elasticsearch的内置分词器"></a>5. <code>Elasticsearch</code>的内置分词器</h2><ul>
+<li><code>Standard Analyzer</code>：默认分词器，按词切分，小写处理</li>
+<li><code>Simple Analyzer</code>：按照非字母切分（符号被过滤），小写处理</li>
+<li><code>Stop Analyzer</code>：小写处理，停用词过滤(<code>the</code>,<code>a</code>,<code>is</code>)</li>
+<li><code>Whitespace Analyzer</code>：按照空格切分，不转小写</li>
+<li><code>Keyword Analyzer</code>：不分词，直接将输入当作输出</li>
+<li><code>Patter Analyzer</code>：正则表达式，默认<code>\w+(非字符分割)</code></li>
+<li><code>Language</code>：提供了30多种常用语言的分词器</li>
+<li><code>Customer Analyzer</code>：自定义分词器</li>
+</ul>
+<h3 id="5-1-使用-analyzer-API"><a href="#5-1-使用-analyzer-API" class="headerlink" title="5.1 使用_analyzer API"></a>5.1 使用<code>_analyzer API</code></h3><h4 id="5-1-1-直接指定Analyzer进行测试"><a href="#5-1-1-直接指定Analyzer进行测试" class="headerlink" title="5.1.1 直接指定Analyzer进行测试"></a>5.1.1 直接指定<code>Analyzer</code>进行测试</h4><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/40.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 直接指定Analyzer进行测试</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;Mastering Elasticsearch,elasticsearch in Action&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-2-2-指定索引的字段进行测试"><a href="#5-2-2-指定索引的字段进行测试" class="headerlink" title="5.2.2 指定索引的字段进行测试"></a>5.2.2 指定索引的字段进行测试</h4><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/41.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 指定索引的字段进行测试</span><br><span class="line">POST users/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;field&quot;:&quot;message&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;Mastering Elasticsearch&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-2-3-自定义分词器进行测试"><a href="#5-2-3-自定义分词器进行测试" class="headerlink" title="5.2.3 自定义分词器进行测试"></a>5.2.3 自定义分词器进行测试</h4><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/42.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># 自定义分词器进行测试</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;filter&quot;: [&quot;lowercase&quot;],</span><br><span class="line">  &quot;text&quot;: &quot;Mastering Elasticsearch&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-2-Standard-Analyzer分词器-Elasticsearch的默认分词器"><a href="#5-2-Standard-Analyzer分词器-Elasticsearch的默认分词器" class="headerlink" title="5.2 Standard Analyzer分词器(Elasticsearch的默认分词器)"></a>5.2 <code>Standard Analyzer</code>分词器(<font size="3" color="red"><code>Elasticsearch</code>的默认分词器</font>)</h3><ul>
+<li>默认分词器</li>
+<li>按词切分</li>
+<li>小写处理</li>
+</ul>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/44.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/45_132504876586261293.png" alt="image"></p>
+<h3 id="5-3-Simple-Analyzer"><a href="#5-3-Simple-Analyzer" class="headerlink" title="5.3 Simple Analyzer"></a>5.3 <code>Simple Analyzer</code></h3><ul>
+<li>按照非字母切分，非字母的都被去除</li>
+<li>小写处理<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/46.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/47.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Simple Analyzer</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;simple&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;2 runing Quick brown-foxes leap over lazy dogs in the summer evening&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-3-Whitespace-Analyzer"><a href="#5-3-Whitespace-Analyzer" class="headerlink" title="5.3 Whitespace Analyzer"></a>5.3 <code>Whitespace Analyzer</code></h3><ul>
+<li>按照空格切分<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/48.png" alt="image"></li>
+</ul>
+<h3 id="5-4-Stop-Analyzer"><a href="#5-4-Stop-Analyzer" class="headerlink" title="5.4 Stop Analyzer"></a>5.4 <code>Stop Analyzer</code></h3><ul>
+<li>相比<code>Simple Analyzer</code></li>
+<li>多了<code>stop filter</code><ul>
+<li>会把<code>the、a、is</code>等修饰性词语去掉<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/49.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h3 id="5-5-Keyword-Analyzer"><a href="#5-5-Keyword-Analyzer" class="headerlink" title="5.5 Keyword Analyzer"></a>5.5 <code>Keyword Analyzer</code></h3><ul>
+<li>不分词，直接将输入当一个<code>term</code>输出<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/50.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/51.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Keyword Analyzer</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;keyword&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;2 runing Quick brown-foxes leap over lazy dogs in the summer evening&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-5-Pattern-Analyzer"><a href="#5-5-Pattern-Analyzer" class="headerlink" title="5.5 Pattern Analyzer"></a>5.5 <code>Pattern Analyzer</code></h3><ul>
+<li>通过正则表达式进行分词</li>
+<li>默认是<code>\w+</code>,非字符的符号进行分割<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/52.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/53.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Pattern Analyzer</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;pattern&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;2 runing Quick brown-foxes leap over lazy dogs in the summer evening&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-6-Language-Analyzer"><a href="#5-6-Language-Analyzer" class="headerlink" title="5.6 Language Analyzer"></a>5.6 <code>Language Analyzer</code></h3><ul>
+<li>对不同国家的语言进行分词<br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/54.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Language Analyzer</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;english&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;2 runing Quick brown-foxes leap over lazy dogs in the summer evening&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-7-中文分词的难点"><a href="#5-7-中文分词的难点" class="headerlink" title="5.7 中文分词的难点"></a>5.7 中文分词的难点</h3><ul>
+<li>中文句子，切分成一个一个词(不是一个个字)</li>
+<li>英文中，单词有自然的空格作为分隔</li>
+<li>一句中文，在不同的上下文，有不同的理解<ul>
+<li>这个苹果，不大好吃/这个苹果，不大，好吃！</li>
+</ul>
+</li>
+<li>例子<ul>
+<li>他说的确实在理/这事的确定不下来</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-8-ICU-Analyzer"><a href="#5-8-ICU-Analyzer" class="headerlink" title="5.8 ICU Analyzer"></a>5.8 <code>ICU Analyzer</code></h3><ul>
+<li>需要安装<code>plugin</code><ul>
+<li><code>Elasticsearch-plugin install analysis-icu</code></li>
+</ul>
+</li>
+<li>提供了<code>Unicode</code>的支持，更好的支持亚洲语言</li>
+</ul>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/55.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/56.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/57.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;icu_analyzer&quot;,</span><br><span class="line">  &quot;text&quot;:&quot;他说的确实在理&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET /movies/_search</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-Search-API概述"><a href="#5-Search-API概述" class="headerlink" title="5. Search API概述"></a>5. <code>Search API</code>概述</h2><ul>
+<li><code>URI Search</code><ul>
+<li>在<code>URL</code>中使用查询参数</li>
+</ul>
+</li>
+<li><code>Request Body Search</code><ul>
+<li>使用<code>Elasticsearch</code>提供的，基于JSON格式的更加完备的<code>Query Domain Specific Language(DSL)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="5-1-指定查询的索引"><a href="#5-1-指定查询的索引" class="headerlink" title="5.1 指定查询的索引"></a>5.1 指定查询的索引</h3><table>
+<thead>
+<tr>
+<th>语法</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/_search</td>
+<td>集群上所有的索引（用<code>_search</code>来标明这是一个搜索的请求）</td>
+</tr>
+<tr>
+<td>/index1/_search</td>
+<td>指定索引的名称为index1</td>
+</tr>
+<tr>
+<td>/index1,inde-2/_search</td>
+<td>可以指定多个索引，index1和index-2</td>
+</tr>
+<tr>
+<td>/index*/_search</td>
+<td>以index开头的索引</td>
+</tr>
+</tbody>
+</table>
+<h3 id="5-2-URI查询"><a href="#5-2-URI查询" class="headerlink" title="5.2 URI查询"></a>5.2 <code>URI</code>查询</h3><ul>
+<li>使用<code>&quot;q&quot;</code>，指定查询字符串</li>
+<li>“query string syntax”,<code>KV</code>键值对</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -XGET &quot;http://elasticsearch:9200/kibana_sample_data_ecommerce/_search?q=customer_first_name:Eddie&quot;</span><br></pre></td></tr></table></figure>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/58.png" alt="image"></p>
+<h3 id="5-3-Request-Body查询"><a href="#5-3-Request-Body查询" class="headerlink" title="5.3 Request Body查询"></a>5.3 <code>Request Body</code>查询</h3><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/59.png" alt="image"></p>
+<h3 id="5-4-搜索的返回结果（Response）"><a href="#5-4-搜索的返回结果（Response）" class="headerlink" title="5.4 搜索的返回结果（Response）"></a>5.4 搜索的返回结果（Response）</h3><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/60.png" alt="image"></p>
+<h3 id="5-5-相关性"><a href="#5-5-相关性" class="headerlink" title="5.5 相关性"></a>5.5 相关性</h3><h4 id="5-5-1-搜索的相关性"><a href="#5-5-1-搜索的相关性" class="headerlink" title="5.5.1 搜索的相关性"></a>5.5.1 搜索的相关性</h4><ul>
+<li>搜索时用户和搜索引擎的对话</li>
+<li>用户关心的时搜索结果的相关性<ul>
+<li>是否可以找到所有相关的内容</li>
+<li>有多少相关的内容被返回了</li>
+<li>文档的打分是否合理</li>
+<li>结合业务需求，平衡结果排名</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-5-2-衡量相关性"><a href="#5-5-2-衡量相关性" class="headerlink" title="5.5.2 衡量相关性"></a>5.5.2 衡量相关性</h4><ul>
+<li><code>Information Retrieval</code>(计算机领域的一门学课)<ul>
+<li><code>Precision(查准率)</code>: 尽可能返回较少的无关文档</li>
+<li><code>Recall(查全率)</code>：尽可能返回较多的相关文档</li>
+<li><code>Ranking</code>：是否能够按照相关度进行排序</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-5-3-Precision-and-Recall"><a href="#5-5-3-Precision-and-Recall" class="headerlink" title="5.5.3 Precision and Recall"></a>5.5.3 <code>Precision</code> and <code>Recall</code></h4><p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/61.png" alt="image"></p>
+<h3 id="5-6-URI-Search-通过URI-query实现搜索"><a href="#5-6-URI-Search-通过URI-query实现搜索" class="headerlink" title="5.6 URI Search:通过URI query实现搜索"></a>5.6 <code>URI Search</code>:通过<code>URI query</code>实现搜索</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">GET /movies/_search?q=2012&amp;df=title&amp;sort=year:desc&amp;from=o&amp;size=10&amp;timeout=1s</span><br><span class="line">&#123;</span><br><span class="line">    &quot;profile&quot;:true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>q</code>：指定查询语句，使用<code>Query String Syntax</code>(<font color="red" size="3">Query String Syntax</font>)</li>
+<li><code>df</code>：默认字段，不指定时，会对所有字段进行查询</li>
+<li><code>Sort</code>：排序<code>/from</code> 和 <code>size</code> 用于分页</li>
+<li><code>Profile</code>：可以查看查询时如何被执行的</li>
+</ul>
+<h4 id="5-6-1-指定字段查询-VS-范查询"><a href="#5-6-1-指定字段查询-VS-范查询" class="headerlink" title="5.6.1 指定字段查询 VS 范查询"></a>5.6.1 指定字段查询 VS 范查询</h4><ul>
+<li><code>q=title:2012</code> / <code>q=2012</code></li>
+</ul>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/62.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/63.png" alt="image"></p>
+<p><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/64.png" alt="image"><br><img src="http://kp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/65.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/69.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># 指定字段查询 VS 范查询</span><br><span class="line"># 指定字段查询</span><br><span class="line">GET /movies/_search?q=2012&amp;df=title</span><br><span class="line">&#123;</span><br><span class="line">    &quot;profile&quot;:true</span><br><span class="line">&#125;</span><br><span class="line"># 范查询</span><br><span class="line">GET /movies/_search?q=2012</span><br><span class="line">&#123;</span><br><span class="line">    &quot;profile&quot;:true</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-6-2-Term-VS-Phrase"><a href="#5-6-2-Term-VS-Phrase" class="headerlink" title="5.6.2 Term VS Phrase"></a>5.6.2 <code>Term</code> VS <code>Phrase</code></h4><ul>
+<li><code>Beautiful Mind</code>等效于<code>Beautiful OR Mind</code>，意思是只要有一个包含，就会返回</li>
+<li><code>&quot;Beautiful Mind&quot;</code>,等效于<code>Beautiful AND Mind</code>。<code>Phrase</code>查询(<font size="3" color="red">注意:要使用<code>Phrase</code>查询，需要将内容用引号引起来</font>)，还要求前后顺序保持一致;意思是这两个词都要包含</li>
+<li>分组与引号<ul>
+<li><code>title:(Beautiful AND Mind)</code>分组</li>
+<li><code>title:&quot;Beautiful Mind&quot;</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/66.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/75.png" alt="image"></p>
+<p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/67.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/68.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/69.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/70.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/71.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/72.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"># Term VS Phrase</span><br><span class="line"># Phrase 精确查找</span><br><span class="line">GET /movies/_search?q=title:&quot;Beautiful Mind&quot;</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET /movies/_search?q=title:Beautiful Mind</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># TermQuery 分组，Bool查询</span><br><span class="line">GET /movies/_search?q=title:(Mind Beautiful)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><code>TermQuery</code>需要用<code>()</code>括号来把要查找的词括起来代表一个分组，不然就会变成上面的那种情况，两个<code>Term</code>在一起的时候默认是<code>or</code>的关系<br><code>PhraseQuery</code>就是需要包含所有词，且保证顺序不变</p>
+</blockquote>
+<h4 id="5-6-3-布尔操作和分组操作"><a href="#5-6-3-布尔操作和分组操作" class="headerlink" title="5.6.3 布尔操作和分组操作"></a>5.6.3 布尔操作和分组操作</h4><ul>
+<li><code>AND</code>/<code>OR</code>/<code>NOT</code> 或者 <code>&amp;&amp;</code>/<code>||</code>/<code>!</code><ul>
+<li>必须大写</li>
+<li><code>title:(matrix NOT reloaded)</code></li>
+</ul>
+</li>
+<li>分组<ul>
+<li><code>+</code>表示<code>must</code></li>
+<li><code>-</code>表示<code>must_not</code></li>
+<li><code>title:(+matrix -reloaded)</code><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/73.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/74.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/77.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/76.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/78.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/79.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"># TermQuery 分组，Bool查询</span><br><span class="line">GET /movies/_search?q=title:(Mind Beautiful)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># AND</span><br><span class="line">GET /movies/_search?q=title:(Mind AND Beautiful)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"># NOT</span><br><span class="line">GET /movies/_search?q=title:(Beautiful NOT Mind)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># +</span><br><span class="line">GET /movies/_search?q=title:(Beautiful %2BMind)</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-6-4-范围查询和算数符号"><a href="#5-6-4-范围查询和算数符号" class="headerlink" title="5.6.4 范围查询和算数符号"></a>5.6.4 范围查询和算数符号</h4><ul>
+<li>范围查询<ul>
+<li>区间表示:<code>[]</code>闭区间，<code>{}</code>开区间<ul>
+<li><code>year:{2019 TO 2018}</code></li>
+<li><code>year:[* TO 2018]</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>算数符号<ul>
+<li><code>year:&gt;2010</code></li>
+<li><code>year:(&gt;2010 &amp;&amp; &lt;=2018)</code></li>
+<li><code>year:(+&gt;2010 +&lt;=2018)</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/80.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 所有的电影年份必须&gt;=1980</span><br><span class="line">GET /movies/_search?q=year:&gt;=1980</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-6-5-通配符查询、正则表达式、模糊匹配与近似查询"><a href="#5-6-5-通配符查询、正则表达式、模糊匹配与近似查询" class="headerlink" title="5.6.5 通配符查询、正则表达式、模糊匹配与近似查询"></a>5.6.5 通配符查询、正则表达式、模糊匹配与近似查询</h4><ul>
+<li>通配符查询(通配符查询效率低，占用内存大，不建议使用。特别是放在最前面)<ul>
+<li><code>?</code>代表 1 个字符，<code>*</code>代表 0 或多个字符<ul>
+<li><code>title:mi?d</code></li>
+<li><code>title:be*</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>正则表达式<ul>
+<li><code>title:[bt]oy</code></li>
+</ul>
+</li>
+<li>模糊匹配与近似查询<ul>
+<li><code>title:befutifl~1</code></li>
+<li><code>title:“lord rings”~2</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/81.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"># 通配符查询</span><br><span class="line">GET /movies/_search?q=title:b*</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 模糊匹配&amp;近似匹配</span><br><span class="line">GET /movies/_search?q=title:beautifl~1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET /movies/_search?q=title:&quot;lord Ring&quot;~2</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-7-Request-Body与Query-DSL简介"><a href="#5-7-Request-Body与Query-DSL简介" class="headerlink" title="5.7 Request Body与Query DSL简介"></a>5.7 <code>Request Body</code>与<code>Query DSL</code>简介</h3><h4 id="5-7-1-Request-Body-Search"><a href="#5-7-1-Request-Body-Search" class="headerlink" title="5.7.1 Request Body Search"></a>5.7.1 <code>Request Body Search</code></h4><ul>
+<li>将查询语句通过<code>HTTP Request Body</code>发送给<code>Elasticcsearch</code></li>
+<li><code>Query DSL</code><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/82.png" alt="image"></li>
+</ul>
+<h4 id="5-7-2-分页"><a href="#5-7-2-分页" class="headerlink" title="5.7.2 分页"></a>5.7.2 分页</h4><ul>
+<li><code>From</code>从0开始，默认返回10个结果</li>
+<li>获取靠后的翻页成本较高<br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/83.png" alt="image"></li>
+</ul>
+<h4 id="5-7-3-排序"><a href="#5-7-3-排序" class="headerlink" title="5.7.3 排序"></a>5.7.3 排序</h4><ul>
+<li>最好在”数字型”与”日期型”字段上排序</li>
+<li>因为对于多值类型或分析过的字段排序，系统会选一个值，无法得知该值<br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/84.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/86.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//对日期排序</span><br><span class="line">POST kibana_sample_data_ecommerce/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;profile&quot;: &quot;true&quot;,</span><br><span class="line">  &quot;sort&quot;: [&#123;&quot;order_date&quot;: &quot;desc&quot;&#125;],</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125; </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="5-7-4-source-filtering"><a href="#5-7-4-source-filtering" class="headerlink" title="5.7.4 _source filtering"></a>5.7.4 <code>_source filtering</code></h4><ul>
+<li>如果<code>_source</code>没有存储，那就只返回匹配的文档的元数据</li>
+<li><code>_source</code>支持使用通配符：<code>_source[&quot;name*,&quot;desc&quot;]</code><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/85.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/87.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//source filstering</span><br><span class="line">POST kibana_sample_data_ecommerce/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;_source&quot;: [&quot;order_date&quot;],</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="5-7-5-脚本字段"><a href="#5-7-5-脚本字段" class="headerlink" title="5.7.5 脚本字段"></a>5.7.5 脚本字段</h4><ul>
+<li>用例：订单中有不同的汇率，需要结合汇率对订单价格进行排序<br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/88.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//脚本字段</span><br><span class="line">GET kibana_sample_data_ecommerce/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;script_fields&quot;: &#123;</span><br><span class="line">    &quot;new_field&quot;: &#123;</span><br><span class="line">      &quot;script&quot;: &#123;</span><br><span class="line">        &quot;lang&quot;: &quot;painless&quot;,</span><br><span class="line">        &quot;source&quot;: &quot;doc[&apos;order_date&apos;].value+&apos;_hello&apos;&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="5-7-6-使用查询表达式：Match-Query-我们之前学了Term-Query-Phrase-Query"><a href="#5-7-6-使用查询表达式：Match-Query-我们之前学了Term-Query-Phrase-Query" class="headerlink" title="5.7.6 使用查询表达式：Match Query(我们之前学了Term Query,Phrase Query)"></a>5.7.6 使用查询表达式：<code>Match Query</code>(我们之前学了<code>Term Query</code>,<code>Phrase Query</code>)</h4><p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/89.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/91.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//matchQuery OR</span><br><span class="line">POST movies/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &quot;last Christmas&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">//matchQuery AND</span><br><span class="line">POST movies/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;last Christmas&quot;,</span><br><span class="line">        &quot;operator&quot;: &quot;and&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="5-7-7-短语搜索：Match-Phrase查询"><a href="#5-7-7-短语搜索：Match-Phrase查询" class="headerlink" title="5.7.7 短语搜索：Match Phrase查询"></a>5.7.7 短语搜索：<code>Match Phrase</code>查询</h4><p><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/90.png" alt="image"><br><img src="http://oio.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/92.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//matchPhrase</span><br><span class="line">POST movies/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_phrase&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &quot;one love&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">//matchPhrase slop:1</span><br><span class="line">POST movies/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_phrase&quot;: &#123;</span><br><span class="line">      &quot;title&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;one love&quot;,</span><br><span class="line">        &quot;slop&quot;: 1</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-8-几种查询方式的总结"><a href="#5-8-几种查询方式的总结" class="headerlink" title="5.8 几种查询方式的总结"></a>5.8 <font size="3" color="red">几种查询方式的总结</font></h3><p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/96.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/97.png" alt="image"></p>
+<h3 id="5-9-Query-String和Simple-Query-String查询"><a href="#5-9-Query-String和Simple-Query-String查询" class="headerlink" title="5.9 Query String和Simple Query String查询"></a>5.9 <code>Query String</code>和<code>Simple Query String</code>查询</h3><h4 id="5-8-1-Query-String-Query"><a href="#5-8-1-Query-String-Query" class="headerlink" title="5.8.1 Query String Query"></a>5.8.1 <code>Query String Query</code></h4><ul>
+<li>类似<code>URI Query</code><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/93.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/95.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/99.png" alt="image"></li>
+</ul>
+<h4 id="5-8-1-Simple-Query-String-Query"><a href="#5-8-1-Simple-Query-String-Query" class="headerlink" title="5.8.1 Simple Query String Query"></a>5.8.1 <code>Simple Query String Query</code></h4><ul>
+<li>类似<code>Query String</code>,但是会忽略错误的语法，同时只支持部分查询语法</li>
+<li>不支持<code>AND、OR、NOT</code>,会当作字符串处理</li>
+<li><code>Term</code>之间默认的关系是<code>OR</code>,可以指定<code>Operator</code></li>
+<li>支持部分逻辑<ul>
+<li><code>+</code>代替<code>AND</code></li>
+<li><code>|</code>代替<code>OR</code></li>
+<li><code>-</code>代替<code>NOT</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/94.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/100.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/101.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">PUT /users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;Ruan Yiming&quot;,</span><br><span class="line">  &quot;about&quot;:&quot;java,golang,node,swift,elasticsearch&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT /users/_doc/2</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;Li Yiming&quot;,</span><br><span class="line">  &quot;about&quot;:&quot;Hadoop&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Query String</span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;query_string&quot;: &#123;</span><br><span class="line">      &quot;default_field&quot;: &quot;name&quot;,</span><br><span class="line">      &quot;query&quot;: &quot;Ruan AND Yiming&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;query_string&quot;: &#123;</span><br><span class="line">      &quot;fields&quot;: [&quot;name&quot;,&quot;about&quot;], </span><br><span class="line">      &quot;query&quot;: &quot;(Ruan AND Yiming) OR (Hadoop)&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># Simple Query String 默认operator是 OR</span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;simple_query_string&quot;: &#123;</span><br><span class="line">      &quot;query&quot;: &quot;Ruan AND Yiming&quot;,</span><br><span class="line">      &quot;fields&quot;: [&quot;name&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;simple_query_string&quot;: &#123;</span><br><span class="line">      &quot;query&quot;: &quot;Ruan Yiming&quot;,</span><br><span class="line">      &quot;fields&quot;: [&quot;name&quot;],</span><br><span class="line">      &quot;default_operator&quot;: &quot;AND&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-10-es-match、match-phrase、query-string和term的区别"><a href="#5-10-es-match、match-phrase、query-string和term的区别" class="headerlink" title="5.10 es match、match_phrase、query_string和term的区别"></a>5.10 <font color="red">es match、match_phrase、query_string和term的区别</font></h3><p><a href="https://www.cnblogs.com/chenmz1995/p/10199147.html" target="_blank" rel="noopener">https://www.cnblogs.com/chenmz1995/p/10199147.html</a></p>
+<h2 id="6-Dynamic-Mapping和常见字段类型"><a href="#6-Dynamic-Mapping和常见字段类型" class="headerlink" title="6. Dynamic Mapping和常见字段类型"></a>6. <code>Dynamic Mapping</code>和常见字段类型</h2><h3 id="6-1-什么是Mapping"><a href="#6-1-什么是Mapping" class="headerlink" title="6.1 什么是Mapping"></a>6.1 什么是<code>Mapping</code></h3><ul>
+<li><code>Mapping</code>类似数据库中的<code>schema</code>的定义，作用如下<ul>
+<li>定义索引中的字段的名称</li>
+<li>定义字段的数据类型，例如字符串，数字，布尔……</li>
+<li>字段，倒排索引的相关配置，(Analyzed or Not Analyzed,Analyzer)</li>
+</ul>
+</li>
+<li><code>Mapping</code>会把<code>Json</code>文档映射成<code>Lucene</code>所需要的扁平格式</li>
+<li>一个<code>Mapping</code>属于一个索引的<code>Type</code><ul>
+<li>每个文档都属于一个<code>Type</code></li>
+<li>一个<code>Type</code>有一个<code>Mapping</code>定义</li>
+<li>7.0开始，不需要在<code>Mapping</code>定义中指定<code>type</code>信息</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-2-Elasticsearch字段的数据类型"><a href="#6-2-Elasticsearch字段的数据类型" class="headerlink" title="6.2 Elasticsearch字段的数据类型"></a>6.2 <code>Elasticsearch</code>字段的数据类型</h3><ul>
+<li>简单类型<ul>
+<li><code>Text/Keyword</code></li>
+<li><code>Date</code></li>
+<li><code>Integer/Floating</code></li>
+<li><code>Boolean</code></li>
+<li><code>IPv4 &amp; IPv6</code></li>
+</ul>
+</li>
+<li>复杂类型：对象和嵌套对象<ul>
+<li>对象类型/嵌套类型</li>
+</ul>
+</li>
+<li>特殊类型<ul>
+<li><code>geo_point &amp; geo_shape/percolator</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="6-3-什么是Dynamic-Mapping"><a href="#6-3-什么是Dynamic-Mapping" class="headerlink" title="6.3 什么是Dynamic Mapping"></a>6.3 什么是<code>Dynamic Mapping</code></h3><ul>
+<li>在写入文档时，如果索引不存在，会自动创建索引</li>
+<li><code>Dynamic Mapping</code>的机制，使得我们无需手动定义<code>Mappings</code>,<code>Elasticsearch</code>会自动根据文档信息，推算出字段的类型</li>
+<li>但是有时候推算的不对，例如地理位置信息</li>
+<li>当类型如果设置不对时，会导致一些功能无法正常运行，例如<code>Range</code>查询<br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/102.png" alt="image"></li>
+</ul>
+<h3 id="6-4-类型的自动识别"><a href="#6-4-类型的自动识别" class="headerlink" title="6.4 类型的自动识别"></a>6.4 类型的自动识别</h3><table>
+<thead>
+<tr>
+<th><code>JSON</code>类型</th>
+<th><code>Elasticsearch</code>类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>字符串</td>
+<td>匹配日期格式，设置成<code>Date</code><br>配置数字设置为<code>float</code>或者<code>long</code>,该选项默认关闭<br>设置为<code>Text</code>，并且增加<code>keyword</code>子字段</td>
+</tr>
+<tr>
+<td>布尔值</td>
+<td><code>boolean</code></td>
+</tr>
+<tr>
+<td>浮点数</td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td>整数</td>
+<td><code>long</code></td>
+</tr>
+<tr>
+<td>对象</td>
+<td><code>Object</code></td>
+</tr>
+<tr>
+<td>数组</td>
+<td>由第一个非空数值的类型所决定</td>
+</tr>
+<tr>
+<td>空值</td>
+<td>忽略</td>
+</tr>
+</tbody>
+</table>
+<p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/103.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/104.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">//写入文档，查看Mapping</span><br><span class="line">PUT mapping_test/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Chan&quot;,</span><br><span class="line">  &quot;lastName&quot;:&quot;Jackie&quot;,</span><br><span class="line">  &quot;loginDate&quot;:&quot;2018-07-24T10:29:48.103Z&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//查看Mapping</span><br><span class="line">GET mapping_test/_mapping</span><br><span class="line"></span><br><span class="line">//Delete index 删除索引</span><br><span class="line">DELETE mapping_test</span><br><span class="line"></span><br><span class="line">//dynamic mapping,推断字段的类型</span><br><span class="line">PUT mapping_test/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;uid&quot;:&quot;123&quot;,</span><br><span class="line">  &quot;isVip&quot;:false,</span><br><span class="line">  &quot;isAdmin&quot;:&quot;true&quot;,</span><br><span class="line">  &quot;age&quot;:19,</span><br><span class="line">  &quot;heigh&quot;:180</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#查看Mapping</span><br><span class="line">GET mapping_test/_mapping</span><br></pre></td></tr></table></figure></p>
+<h3 id="6-5-能否更改Mapping的字段类型"><a href="#6-5-能否更改Mapping的字段类型" class="headerlink" title="6.5 能否更改Mapping的字段类型"></a>6.5 能否更改<code>Mapping</code>的字段类型</h3><ul>
+<li>两种情况<ul>
+<li>新增字段<ul>
+<li><code>Dynamic</code>设为<code>true</code>时，一旦有新增字段的文档写入，<code>Mapping</code>也同时被更新</li>
+<li><code>Dynamic</code>设为<code>false</code>,<code>Mapping</code>不会被更新，新增字段的数据无法被索引，但是信息会出现在<code>_source</code>中</li>
+<li><code>Dynamic</code>设置成<code>Strict</code>,文档写入失败</li>
+</ul>
+</li>
+<li>对已有字段，一旦一句有数据写入，就不再支持修改字段定义<ul>
+<li><code>Lucene</code>实现的倒排索引，一旦生成后，就不允许修改</li>
+</ul>
+</li>
+<li>如果希望改变字段类型，必须<code>Reindex API</code>,重建索引</li>
+</ul>
+</li>
+<li>原因<ul>
+<li>如果修改了字段的数据类型，会导致已被索引的属于无法被搜索</li>
+<li>但是如果是增加新的字段，就不会有这样的影响</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-6-控制Dynamic-Mappings"><a href="#6-6-控制Dynamic-Mappings" class="headerlink" title="6.6 控制Dynamic Mappings"></a>6.6 控制<code>Dynamic Mappings</code></h3><p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/105.png" alt="image"><br>| | <code>&quot;true&quot;</code> | <code>&quot;false&quot;</code> | <code>&quot;strict&quot;</code><br>—|—|—|—<br>文档可索引 | <code>YES</code> | <code>YES</code> | <code>NO</code><br>字段可索引 | <code>YES</code> | <code>NO</code> | <code>NO</code><br><code>Mapping</code>被更新 | <code>YES</code> | <code>NO</code> | <code>NO</code></p>
+<ul>
+<li>当 <code>dynamic</code>被设置成<code>false</code>时候，存在新增字段的数据写入，该数据可以被索引，但是新增字段被丢弃</li>
+<li>当设置成<code>Strict</code>模式时候，数据写入直接出错</li>
+</ul>
+<p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/106.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/107.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/108.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/109.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/110.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/111.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/112.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/113.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#默认Mapping支持dynamic，写入的文档中加入新的字段</span><br><span class="line">PUT dynamic_mapping_test/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;newField&quot;:&quot;someValue&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST dynamic_mapping_test/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;newField&quot;: &quot;someValue&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#修改dynamic的值为false</span><br><span class="line">PUT dynamic_mapping_test/_mapping</span><br><span class="line">&#123;</span><br><span class="line">  &quot;dynamic&quot;:false</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#新增 anotherField字段,字段依旧可以存入ES</span><br><span class="line">PUT dynamic_mapping_test/_doc/10</span><br><span class="line">&#123;</span><br><span class="line">  &quot;anotherField&quot;:&quot;someValue&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#但是，该字段不可以被搜索，因为dynamic的值被我们设置为了false</span><br><span class="line">POST dynamic_mapping_test/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;anotherField&quot;: &quot;anotherField&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#查看索引的Mapping文件</span><br><span class="line">GET dynamic_mapping_test/_mapping</span><br><span class="line"></span><br><span class="line">#修改dynamic的值为strict</span><br><span class="line">PUT dynamic_mapping_test/_mapping</span><br><span class="line">&#123;</span><br><span class="line">  &quot;dynamic&quot;:&quot;strict&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#写入数据出错，HTTP Code 400</span><br><span class="line">PUT dynamic_mapping_test/_doc/12</span><br><span class="line">&#123;</span><br><span class="line">  &quot;lastField&quot;:&quot;value&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="7-显示Mapping设置与常见参数"><a href="#7-显示Mapping设置与常见参数" class="headerlink" title="7 显示Mapping设置与常见参数"></a>7 显示<code>Mapping</code>设置与常见参数</h2><h3 id="7-1-如何显示定义一个Mapping"><a href="#7-1-如何显示定义一个Mapping" class="headerlink" title="7.1 如何显示定义一个Mapping"></a>7.1 如何显示定义一个<code>Mapping</code></h3><p><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/114.png" alt="image"></p>
+<h3 id="7-2-自定义Mapping的一些建议"><a href="#7-2-自定义Mapping的一些建议" class="headerlink" title="7.2 自定义Mapping的一些建议"></a>7.2 自定义<code>Mapping</code>的一些建议</h3><ul>
+<li>可以参考<code>API</code>手册，纯手写</li>
+<li>为了减少输入的工作量，减少出错概率，可以依照以下步骤<ul>
+<li>创建一个临时的<code>index</code>,写入一些样本数据</li>
+<li>通过访问<code>Mapping API</code>获得该临时文件的动态<code>Mapping</code>定义</li>
+<li>修改后用，使用该配置创建你的索引</li>
+<li>删除临时索引</li>
+</ul>
+</li>
+</ul>
+<h3 id="7-3-控制当前字段是否被索引"><a href="#7-3-控制当前字段是否被索引" class="headerlink" title="7.3 控制当前字段是否被索引"></a>7.3 控制当前字段是否被索引</h3><ul>
+<li><code>Index</code>:控制当前字段是否被索引。默认为<code>true</code>。如果设置成<code>false</code>,该字段不可被搜索<br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/115.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/120.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/121.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">DELETE dynamic_mapping_test</span><br><span class="line">#设置 index 为 false</span><br><span class="line">DELETE users</span><br><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;firstName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;lastName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;mobile&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;index&quot;: false</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Ruan&quot;,</span><br><span class="line">  &quot;lastName&quot;:&quot;Yiming&quot;,</span><br><span class="line">  &quot;mobile&quot;:&quot;123456789&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST /users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;mobile&quot;: &quot;123456789&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-3-index-Options"><a href="#7-3-index-Options" class="headerlink" title="7.3 index Options"></a>7.3 <code>index Options</code></h3><ul>
+<li>对于倒排索引的建立，es提供了四种不同级别的<code>index Options</code>配置，可以控制倒排索引记录的内容<ul>
+<li><code>docs</code>:记录<code>doc id</code></li>
+<li><code>freqs</code>:记录<code>doc id</code>和<code>term frequencies</code></li>
+<li><code>positions</code>:记录<code>doc id</code>/<code>term frequencies</code>/<code>term position</code></li>
+<li><code>offsets</code>:记录<code>doc id</code>/<code>term frequencies</code>/<code>term position</code>/<code>character offects</code></li>
+</ul>
+</li>
+<li><code>Text</code>类型默认记录<code>postions</code>,其他默认为<code>docs</code></li>
+<li>记录内容越多，占用存储空间越大<br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/116.png" alt="image"></li>
+</ul>
+<h3 id="7-4-null-value"><a href="#7-4-null-value" class="headerlink" title="7.4 null_value"></a>7.4 <code>null_value</code></h3><ul>
+<li>需要对<code>null</code>值实现搜索</li>
+<li>只有<code>keyword</code>类型支持设定<code>Null_Value</code><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/117.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/122.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#设定Null_value</span><br><span class="line">DELETE users</span><br><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">    &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;firstName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;lastName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;mobile&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;keyword&quot;,</span><br><span class="line">        &quot;null_value&quot;: &quot;NULL&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Ruan&quot;,</span><br><span class="line">  &quot;lastName&quot;:&quot;Yiming&quot;,</span><br><span class="line">  &quot;mobile&quot;:null</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;mobile&quot;: &quot;NULL&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="7-5-copy-to设置"><a href="#7-5-copy-to设置" class="headerlink" title="7.5 copy_to设置"></a>7.5 <code>copy_to</code>设置</h3><ul>
+<li><code>_all</code>在<code>7</code>中被<code>copy_to</code>所替代</li>
+<li>满足一些特定的搜索需求</li>
+<li><code>copy_to</code>将字段的数值拷贝到目标字段，实现类似<code>_all</code>的作用</li>
+<li><code>copy_to</code>的目标字段不出现在<code>_source</code>中<br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/118.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/123.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#设置 Copy to</span><br><span class="line">DELETE users</span><br><span class="line">PUT users</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;properties&quot;: &#123;</span><br><span class="line">      &quot;firstName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;copy_to&quot;: &quot;fullName&quot;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;lastName&quot;:&#123;</span><br><span class="line">        &quot;type&quot;: &quot;text&quot;,</span><br><span class="line">        &quot;copy_to&quot;: &quot;fullName&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot;:&quot;Ruan&quot;,</span><br><span class="line">  &quot;lastName&quot;:&quot;Yiming&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match&quot;: &#123;</span><br><span class="line">      &quot;fullName&quot;: &#123;</span><br><span class="line">        &quot;query&quot;: &quot;Ruan Yiming&quot;,</span><br><span class="line">        &quot;operator&quot;: &quot;and&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<blockquote>
+<p>当你索引一个文档的时候，它如果包含了<code>firstName</code>和<code>lastName</code>，我们都会把这个值拷贝到<code>fullName</code>字段上去，当你要查询时，就可以用<code>fullName</code>来查询了</p>
+</blockquote>
+<h3 id="7-6-数组类型"><a href="#7-6-数组类型" class="headerlink" title="7.6 数组类型"></a>7.6 数组类型</h3><ul>
+<li><code>Elasticsearch</code>中不提供专门的数组类型。但是任何字段，都可以包含多个相同类型的数值<br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/119.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/124.png" alt="image"><br><img src="http://mml.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/125.png" alt="image"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">#数组类型</span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;onebird&quot;,</span><br><span class="line">  &quot;interests&quot;:&quot;reading&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;:&quot;twobirds&quot;,</span><br><span class="line">  &quot;interests&quot;:[&quot;reading&quot;,&quot;music&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST users/_search</span><br><span class="line">&#123;</span><br><span class="line">  &quot;query&quot;: &#123;</span><br><span class="line">    &quot;match_all&quot;: &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET users/_mapping</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="8-多字段特性及Mapping中配置自定义Analyzer"><a href="#8-多字段特性及Mapping中配置自定义Analyzer" class="headerlink" title="8. 多字段特性及Mapping中配置自定义Analyzer"></a>8. 多字段特性及<code>Mapping</code>中配置自定义<code>Analyzer</code></h2><h3 id="8-1-多字段类型"><a href="#8-1-多字段类型" class="headerlink" title="8.1 多字段类型"></a>8.1 多字段类型</h3><p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/125_132516237529696250.png" alt="image"></p>
+<ul>
+<li>多字段特性<ul>
+<li>厂商名字实现精确匹配<ul>
+<li>增加一个<code>keyword</code>的<font size="3" color="red">子字段</font></li>
+</ul>
+</li>
+<li>使用不同的<code>analyzer</code><ul>
+<li>不同语言</li>
+<li>pingyin字段的搜索</li>
+<li>还支持为搜索和索引指定不同的<code>analyzer</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="8-2-Exact-Values-精确值-VS-Full-Text-全文本"><a href="#8-2-Exact-Values-精确值-VS-Full-Text-全文本" class="headerlink" title="8.2 Exact Values(精确值) VS Full Text(全文本)"></a>8.2 <code>Exact Values</code>(精确值) VS <code>Full Text</code>(全文本)</h3><ul>
+<li><code>Exact values vs Full Text</code><ul>
+<li><code>Exact Value</code>:包括数字/日期/具体一个字符串(例如：”Apple Store”)<ul>
+<li><code>Elasticsearch</code>中的<code>keyword</code></li>
+</ul>
+</li>
+<li>全文本，非结构化的文本数据<ul>
+<li><code>Elasticsearch</code>中的<code>text</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/126.png" alt="image"></p>
+<h4 id="8-2-1-Exact-Values不需要被分词（Exact-Values和Full-Text最大的区别）"><a href="#8-2-1-Exact-Values不需要被分词（Exact-Values和Full-Text最大的区别）" class="headerlink" title="8.2.1 Exact Values不需要被分词（Exact Values和Full Text最大的区别）"></a>8.2.1 <code>Exact Values</code>不需要被分词（Exact Values和Full Text最大的区别）</h4><ul>
+<li><code>Elasticsearch</code>为每一个字段创建一个倒排索引<ul>
+<li><code>Exact Value</code>在索引时，不需要做特殊的分词处理</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/127.png" alt="image"></p>
+<h3 id="8-3-自定义分词"><a href="#8-3-自定义分词" class="headerlink" title="8.3 自定义分词"></a>8.3 自定义分词</h3><ul>
+<li>当<code>Elasticsearch</code>自带的分词器无法满足时，可以自定义分词器。通过组合不同的<font size="3" color="red">组件</font>实现（下面这三个组件是<code>Analyzer</code>的组成,可看上面4.2）<ul>
+<li><code>Character Filter</code></li>
+<li><code>Tokenizer</code></li>
+<li><code>Token Filter</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="8-3-1-Character-Filters"><a href="#8-3-1-Character-Filters" class="headerlink" title="8.3.1 Character Filters"></a>8.3.1 <code>Character Filters</code></h4><ul>
+<li>在<code>Tokenizer</code>之前对文本进行处理，例如增加删除及替换字符。可以配置多个<code>Character Filters</code>。会影响<code>Tokenizer</code>的<code>position</code>和<code>offset</code>信息</li>
+<li>一些自带的<code>Character Filter</code><ul>
+<li><code>HTML strip</code>: 去除<code>html</code>标签</li>
+<li><code>Mapping</code>: 字符串替换</li>
+<li><code>Pattern replace</code>: 正则匹配替换</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/128.png" alt="image"><br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/129.png" alt="image"><br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/130.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;keyword&quot;,</span><br><span class="line">  &quot;char_filter&quot;: [&quot;html_strip&quot;],</span><br><span class="line">  &quot;text&quot;: &quot;&lt;b&gt;hello world&lt;/b&gt;&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//使用 char filter进行替换(将&apos;-&apos;替换为&apos;_&apos;)</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;char_filter&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;type&quot;:&quot;mapping&quot;,</span><br><span class="line">      &quot;mappings&quot;:[&quot;- =&gt; _&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;text&quot;: &quot;123-456,I-test! test-990 650-555-1234&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//char filter替换表情符号</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;char_filter&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;type&quot;:&quot;mapping&quot;,</span><br><span class="line">      &quot;mappings&quot;: [&quot;:) =&gt; happy&quot;,&quot;:( =&gt; sad&quot;]</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;text&quot;: [&quot;I am felling :)&quot;,&quot;Felling :( today&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//正则表达式</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;standard&quot;,</span><br><span class="line">  &quot;char_filter&quot;: [</span><br><span class="line">    &#123;</span><br><span class="line">      &quot;type&quot;: &quot;pattern_replace&quot;,</span><br><span class="line">      &quot;pattern&quot;: &quot;http://(.*)&quot;,</span><br><span class="line">      &quot;replacement&quot;: &quot;$1&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  ],</span><br><span class="line">  &quot;text&quot;: [&quot;http://www.elastic.co&quot;]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="8-3-2-Tokenizer"><a href="#8-3-2-Tokenizer" class="headerlink" title="8.3.2 Tokenizer"></a>8.3.2 <code>Tokenizer</code></h4><ul>
+<li>将原始的文本按照一定的规则，切分为词(<code>term or token</code>)</li>
+<li><code>Elasticsearch</code>内置的<code>Tokenizers</code><ul>
+<li><code>whitespace</code>/<code>standard</code>/<code>uax_url_email</code>/<code>pattern</code>/<code>keyword</code>/<code>path hierarchy</code></li>
+</ul>
+</li>
+<li>可以用<code>java</code>开发插件，实现自己的<code>Tokenizer</code></li>
+</ul>
+<p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/131.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Tokenizer</span><br><span class="line">POST _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;path_hierarchy&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;/user/ymruan/a/b/c/d/e&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="8-3-3-Token-Filters"><a href="#8-3-3-Token-Filters" class="headerlink" title="8.3.3 Token Filters"></a>8.3.3 <code>Token Filters</code></h4><ul>
+<li>将<code>Tokenizer</code>输出的单词(<code>term</code>),进行增加，修改，删除</li>
+<li>自带的<code>Token Filters</code><ul>
+<li><code>Lowercase</code>/<code>stop</code>/<code>synonym</code>(添加近义词)</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/132.png" alt="image"><br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/133.png" alt="image"><br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/134.png" alt="image"><br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/135.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"># Token Filters</span><br><span class="line"></span><br><span class="line">#whitespace与stop</span><br><span class="line">#按照空格切分，且将一些特定词过滤，比如 on in the ,这些词称之为stop，但是这里的第一个大写的The不会被去除</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;whitespace&quot;,</span><br><span class="line">  &quot;filter&quot;: [&quot;stop&quot;],</span><br><span class="line">  &quot;text&quot;: [&quot;The rain in Spain falls mainly on the plain.&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#加入 lowercase后，The被当成 stopword 删除</span><br><span class="line">#先做了小写处理</span><br><span class="line">GET _analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;tokenizer&quot;: &quot;whitespace&quot;,</span><br><span class="line">  &quot;filter&quot;: [&quot;lowercase&quot;,&quot;stop&quot;],</span><br><span class="line">  &quot;text&quot;: [&quot;The girls in China are playing this game!&quot;]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 如何自定义一个 analyzer 去满足自己特定的需求</span><br><span class="line">DELETE my_index</span><br><span class="line">PUT my_index</span><br><span class="line">&#123;</span><br><span class="line">  &quot;settings&quot;: &#123;</span><br><span class="line">    &quot;analysis&quot;: &#123;</span><br><span class="line">      &quot;analyzer&quot;: &#123;</span><br><span class="line">        &quot;my_custom_analyzer&quot;: &#123;</span><br><span class="line">          &quot;typpe&quot;:&quot;custom&quot;,</span><br><span class="line">          &quot;char_filter&quot;: [</span><br><span class="line">            &quot;emoticons&quot;</span><br><span class="line">          ],</span><br><span class="line">          &quot;tokenizer&quot;: &quot;punctuation&quot;,</span><br><span class="line">          &quot;filter&quot;: [</span><br><span class="line">            &quot;lowercase&quot;,</span><br><span class="line">            &quot;english_stop&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;tokenizer&quot;: &#123;</span><br><span class="line">        &quot;punctuation&quot;:&#123;</span><br><span class="line">          &quot;type&quot;: &quot;pattern&quot;,</span><br><span class="line">          &quot;pattern&quot;: &quot;[.,!?]&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;char_filter&quot;: &#123;</span><br><span class="line">        &quot;emoticons&quot;: &#123;</span><br><span class="line">          &quot;type&quot;:&quot;mapping&quot;,</span><br><span class="line">          &quot;mappings&quot;: [</span><br><span class="line">            &quot;:) =&gt; _happy_&quot;,</span><br><span class="line">            &quot;:( =&gt; _sad_&quot;</span><br><span class="line">          ]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &quot;filter&quot;: &#123;</span><br><span class="line">        &quot;english_stop&quot;: &#123;</span><br><span class="line">          &quot;type&quot;:&quot;stop&quot;,</span><br><span class="line">          &quot;stopwords&quot;: &quot;_english_&quot;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">POST my_index/_analyze</span><br><span class="line">&#123;</span><br><span class="line">  &quot;analyzer&quot;: &quot;my_custom_analyzer&quot;,</span><br><span class="line">  &quot;text&quot;: &quot;I&apos;m a :) person,and you?&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="9-Index-Template和Dynamic-Template"><a href="#9-Index-Template和Dynamic-Template" class="headerlink" title="9. Index Template和Dynamic Template"></a>9. <code>Index Template</code>和<code>Dynamic Template</code></h2><h3 id="9-1-什么是Index-Template"><a href="#9-1-什么是Index-Template" class="headerlink" title="9.1 什么是Index Template"></a>9.1 什么是<code>Index Template</code></h3><ul>
+<li>随着时间的推移，你的集群上会有越来越多的索引，那比如说你的集群是用来做日志管理的，你会每天为这些日志生成一个新的索引，因为这样的方式可以让你的数据管理更加合理，另外集群会有一个更好的性能；</li>
+<li><code>Index Template</code>：帮助你设定<code>Mappings</code>和<code>Settings</code>，并按照一定的规则，自动匹配到新创建的索引之上<ul>
+<li>模板仅在一个索引被创建时，才会产生作用。修改模板不会影响已创建的索引</li>
+<li>你可以设定多个索引模板，这些设置会被<code>merge</code>在一起</li>
+<li>你可以指定<code>order</code>的数值，控制<code>merging</code>的过程<br><img src="http://8k.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/136.png" alt="image"></li>
+</ul>
+</li>
+</ul>
+<h4 id="9-1-1-Index-Template的工作方式"><a href="#9-1-1-Index-Template的工作方式" class="headerlink" title="9.1.1 Index Template的工作方式"></a>9.1.1 <code>Index Template</code>的工作方式</h4><ul>
+<li>当一个索引被创建时<ul>
+<li>应用<code>Elasticsearch</code>默认的<code>settings</code>和<code>mappings</code></li>
+<li>应用<code>order</code>数值低的<code>Index Template</code>中的设定</li>
+<li>应用<code>order</code>高的<code>Index Template</code>中的设定，之前的设定会被覆盖</li>
+<li>应用创建索引时，用户指定的<code>Settings</code>和<code>Mappings</code>,并覆盖之前模板中的设定</li>
+</ul>
+</li>
+</ul>
+<h4 id="9-1-2-Demo"><a href="#9-1-2-Demo" class="headerlink" title="9.1.2 Demo"></a>9.1.2 Demo</h4><ul>
+<li>创建2个<code>Index Template</code></li>
+<li>查看根据名字查看<code>Template</code></li>
+<li>查看所有<code>templates,_tmplate/*</code></li>
+<li>创建一个临时索引，查看<code>replica</code>和数据类型推断</li>
+<li>将所有名字设为能与<code>Index Template</code>匹配时，查看所生成的<code>Index</code>的<code>Mappings</code>和<code>Settings</code></li>
+</ul>
+<p><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/137.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/138.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/139.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/140.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/141.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/142.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/143.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/144.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"># 创建一个模板</span><br><span class="line">PUT _template/template_default</span><br><span class="line">&#123;</span><br><span class="line">  &quot;index_patterns&quot;: [&quot;*&quot;],</span><br><span class="line">  &quot;order&quot; : 0,</span><br><span class="line">  &quot;version&quot; : 1,</span><br><span class="line">  &quot;settings&quot; : &#123;</span><br><span class="line">    &quot;number_of_shards&quot; : 1,</span><br><span class="line">    &quot;number_of_replicas&quot; : 1</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"># 创建第二个模板</span><br><span class="line">PUT /_template/template_test</span><br><span class="line">&#123;</span><br><span class="line">  &quot;index_patterns&quot;: [&quot;test*&quot;],</span><br><span class="line">  &quot;order&quot; : 1,</span><br><span class="line">  &quot;settings&quot; : &#123;</span><br><span class="line">    &quot;number_of_shards&quot; : 1,</span><br><span class="line">    &quot;number_of_replicas&quot; : 2</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;mappings&quot; : &#123;</span><br><span class="line">    &quot;date_detection&quot; : false,</span><br><span class="line">    &quot;numeric_detection&quot; : true </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># 查看template信息</span><br><span class="line">GET /_template/template_default</span><br><span class="line">GET /_template/temp*</span><br><span class="line"></span><br><span class="line"># 写入新的数据，index以test开头</span><br><span class="line">PUT testtemplate/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;someNumber&quot; : &quot;1&quot;,</span><br><span class="line">  &quot;someDate&quot; : &quot;2020/12/05&quot;</span><br><span class="line">&#125;</span><br><span class="line">GET testtemplate/_mapping</span><br><span class="line">GET testtemplate/_settings</span><br><span class="line"></span><br><span class="line"># 自己设定的settings的优先级高于template</span><br><span class="line">PUT testmy</span><br><span class="line">&#123;</span><br><span class="line">  &quot;settings&quot;: &#123;</span><br><span class="line">    &quot;number_of_replicas&quot;: 5</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT testmy/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;key&quot; : &quot;value&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET testmy/_settings</span><br></pre></td></tr></table></figure></p>
+<h3 id="9-2-什么是Dynamic-Template"><a href="#9-2-什么是Dynamic-Template" class="headerlink" title="9.2 什么是Dynamic Template"></a>9.2 什么是<code>Dynamic Template</code></h3><ul>
+<li>根据<code>Elasticseach</code>识别的数据类型，结合字段名称，来动态设定字段类型<ul>
+<li>所有的字符串类型都设定成<code>Keyword</code>,或者关闭<code>keyword</code>字段</li>
+<li><code>is</code>开头的字段都设置成<code>boolean</code></li>
+<li><code>long_</code>开头的都设置成<code>long</code>类型</li>
+</ul>
+</li>
+</ul>
+<h4 id="9-2-1-Dynamic-Template"><a href="#9-2-1-Dynamic-Template" class="headerlink" title="9.2.1 Dynamic Template"></a>9.2.1 <code>Dynamic Template</code></h4><p><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/145.png" alt="image"></p>
+<ul>
+<li><code>Dynamic Template</code>是定义在某个索引的<code>Mapping</code>中</li>
+<li><code>Template</code>有一个名称</li>
+<li>匹配规则是一个数组</li>
+<li>为匹配到字段设置<code>Mapping</code></li>
+</ul>
+<p><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/146.png" alt="image"><br><img src="http://0o0.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/147.png" alt="image"><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">GET my_index/_mapping</span><br><span class="line">DELETE my_index</span><br><span class="line">PUT my_index</span><br><span class="line">&#123;</span><br><span class="line">  &quot;mappings&quot;: &#123;</span><br><span class="line">    &quot;dynamic_templates&quot;: [</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;string_as_boolean&quot;: &#123;</span><br><span class="line">          &quot;match_mapping_type&quot;: &quot;string&quot;,</span><br><span class="line">          &quot;match&quot; : &quot;is*&quot;,</span><br><span class="line">          &quot;mapping&quot;: &#123;</span><br><span class="line">            &quot;type&quot;: &quot;boolean&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125; </span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        &quot;string_as_keywords&quot;: &#123;</span><br><span class="line">          &quot;match_mapping_type&quot; : &quot;string&quot;,</span><br><span class="line">          &quot;mapping&quot; : &#123;</span><br><span class="line">            &quot;type&quot; : &quot;keyword&quot;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT my_index/_doc/1</span><br><span class="line">&#123;</span><br><span class="line">  &quot;firstName&quot; : &quot;Ruan&quot;,</span><br><span class="line">  &quot;isVip&quot; : &quot;true&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GET my_index/_mapping</span><br></pre></td></tr></table></figure></p>
+<h2 id="10-Elasticsearch聚合分析简介"><a href="#10-Elasticsearch聚合分析简介" class="headerlink" title="10. Elasticsearch聚合分析简介"></a>10. <code>Elasticsearch</code>聚合分析简介</h2><h3 id="10-1-什么是聚合？"><a href="#10-1-什么是聚合？" class="headerlink" title="10.1 什么是聚合？"></a>10.1 什么是聚合？</h3><ul>
+<li><code>Elasticsearch</code>除了搜索之外，提供的针对<code>ES</code>数据进行统计分析的功能<ul>
+<li>实时性高</li>
+<li><code>Hadoop(T+1)</code></li>
+</ul>
+</li>
+<li>通过聚合，我们会得到一个数据的概览，是分析和总结全套的数据，而不是寻找单个文档<ul>
+<li>尖沙咀和香港岛的客房数量</li>
+<li>不同的价格区间，可预定的经济型酒店和五星级酒店的数量</li>
+</ul>
+</li>
+<li>高性能，只需要一条语句，就可以从<code>Elasticsearch</code>得到分析结果<ul>
+<li>无需再客户端自己去实现分析逻辑</li>
+</ul>
+</li>
+<li><code>Kibana</code>中大量的可视化报表，都是聚合分析来的</li>
+</ul>
+<h3 id="10-2-聚合的分类"><a href="#10-2-聚合的分类" class="headerlink" title="10.2 聚合的分类"></a>10.2 聚合的分类</h3><ul>
+<li><code>Bucket Aggregation</code>:一些列满足特定条件的文档的集合（<font size="3" color="red">类似Group BY</font>）</li>
+<li><code>Metric Aggregation</code>:一些数学运算，可以对文档字段进行统计分析(最大值、最小值、平均值)</li>
+<li><code>Pipeline Aggregation</code>:对其他的聚合结果进行二次聚合</li>
+<li><code>Matrix Aggregation</code>:支持多个字段的操作并提供一个结果矩阵</li>
+</ul>
+<h3 id="10-3-Bucket-amp-Metric"><a href="#10-3-Bucket-amp-Metric" class="headerlink" title="10.3 Bucket &amp; Metric"></a>10.3 <code>Bucket</code> &amp; <code>Metric</code></h3><ul>
+<li><code>Bucket</code>: 可以理解为<code>SQL</code>中的<code>Group</code></li>
+<li><code>Metric</code>: 可以理解为<code>SQL</code>中的<code>Count</code>,可以执行一系列的统计方法</li>
+</ul>
+<h4 id="10-3-1-Bucket"><a href="#10-3-1-Bucket" class="headerlink" title="10.3.1 Bucket"></a>10.3.1 <code>Bucket</code></h4><p><img src="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/151.png" alt="image"></p>
+<ul>
+<li>一些例子<ul>
+<li>杭州属于浙江/一个演员属于 男或女</li>
+<li>嵌套关系：杭州属于浙江属于中国属于亚洲</li>
+</ul>
+</li>
+<li><code>Elasticsearch</code>提供了很多类型的<code>Bucket</code>，帮助你用多种方式划分文档<ul>
+<li><code>Term &amp; Range</code>(时间/年龄区间/地理位置)</li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/148.png" alt="image"></p>
+<h4 id="10-3-2-Metric"><a href="#10-3-2-Metric" class="headerlink" title="10.3.2 Metric"></a>10.3.2 <code>Metric</code></h4><ul>
+<li><code>Metric</code>会基于数据集计算结果，除了支持在字段上进行计算，同样也支持在脚本(<code>painless script</code>)产生的结果之上进行计算</li>
+<li>大多数<code>Metric</code>是数学计算，仅输出一个值<ul>
+<li><code>min</code>/<code>max</code>/<code>sum</code>/<code>avg</code>/<code>cardinality</code></li>
+</ul>
+</li>
+<li>部分<code>metric</code>支持输出多个数值<ul>
+<li><code>stats</code>/<code>percentiles</code>/<code>percentile_ranks</code></li>
+</ul>
+</li>
+</ul>
+<p><img src="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/149.png" alt="image"><br><img src="http://pp.027cgb.cn/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%89%E7%AB%A0ES%E5%85%A5%E9%97%A8/150.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Elasticsearch/" rel="tag"># Elasticsearch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/01/03/ES基础学习一/" rel="next" title="Elasticsearch基础学习一">
+                <i class="fa fa-chevron-left"></i> Elasticsearch基础学习一
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#三、Elasticsearch入门"><span class="nav-number">1.</span> <span class="nav-text">三、Elasticsearch入门</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Elasticsearch基本概念"><span class="nav-number">1.1.</span> <span class="nav-text">1. Elasticsearch基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-文档"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 文档</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-1-Json文档"><span class="nav-number">1.1.1.1.</span> <span class="nav-text">1.1.1 Json文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-2-文档元数据"><span class="nav-number">1.1.1.2.</span> <span class="nav-text">1.1.2 文档元数据</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-索引"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-1-索引的不同语义"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">1.2.1 索引的不同语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-2-Type-这个我也不知道是干什么的"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">1.2.2 Type(这个我也不知道是干什么的)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-3-ES和RDBMS对比"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">1.2.3 ES和RDBMS对比</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-REST-API"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 REST API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-4-kibana上索引管理"><span class="nav-number">1.1.4.</span> <span class="nav-text">1.4 kibana上索引管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-5-分布式系统的可用性和扩展性"><span class="nav-number">1.1.5.</span> <span class="nav-text">1.5 分布式系统的可用性和扩展性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-1-高可用"><span class="nav-number">1.1.5.1.</span> <span class="nav-text">1.5.1 高可用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-5-2-可扩展性"><span class="nav-number">1.1.5.2.</span> <span class="nav-text">1.5.2 可扩展性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-6-ES的分布式特性"><span class="nav-number">1.1.6.</span> <span class="nav-text">1.6 ES的分布式特性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-1-ES的分布式架构的好处"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">1.6.1 ES的分布式架构的好处</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-6-2-ES的分布式架构"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">1.6.2 ES的分布式架构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-7-ES节点"><span class="nav-number">1.1.7.</span> <span class="nav-text">1.7 ES节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-Master-eligible-nodes和Master-Node"><span class="nav-number">1.1.8.</span> <span class="nav-text">1.8 Master-eligible nodes和Master Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-8-Data-Node-amp-Coordinating-Node"><span class="nav-number">1.1.9.</span> <span class="nav-text">1.8 Data Node &amp; Coordinating Node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-9-其他节点类型"><span class="nav-number">1.1.10.</span> <span class="nav-text">1.9 其他节点类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-10-配置节点类型"><span class="nav-number">1.1.11.</span> <span class="nav-text">1.10 配置节点类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-11-分片-Primary-Shard-amp-Replica-Shard"><span class="nav-number">1.1.12.</span> <span class="nav-text">1.11 分片(Primary Shard &amp; Replica Shard)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-12-分片的设定（主分片是在创建时设定的，后期不能改，除非reindex）"><span class="nav-number">1.1.13.</span> <span class="nav-text">1.12 分片的设定（主分片是在创建时设定的，后期不能改，除非reindex）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-13-查看集群的健康状况"><span class="nav-number">1.1.14.</span> <span class="nav-text">1.13 查看集群的健康状况</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-文档的基本CRUD与批量操作"><span class="nav-number">1.2.</span> <span class="nav-text">2. 文档的基本CRUD与批量操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-文档的CRUD"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 文档的CRUD</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-1-Create一个文档"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">2.1.1 Create一个文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-2-Get一个文档"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">2.1.2 Get一个文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-3-Index文档"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">2.1.3 Index文档</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1-4-Update文档"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">2.1.4 Update文档</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-批量操作"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 批量操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-1-Bulk-API"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">2.2.1 Bulk API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-2-批量读取-mget"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">2.2.2 批量读取-mget</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-3-批量查询-msearch"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">2.2.3 批量查询-msearch</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2-4-常见错误返回"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">2.2.4 常见错误返回</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-正排与倒排索引"><span class="nav-number">1.3.</span> <span class="nav-text">3. 正排与倒排索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-正排"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 正排</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-倒排索引"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 倒排索引</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-1-倒排索引的核心组成"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">3.2.1 倒排索引的核心组成</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-2-Elasticsearch的一个例子"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">3.2.2 Elasticsearch的一个例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-3-Elasticsearch的倒排索引"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">3.2.3 Elasticsearch的倒排索引</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-通过Analyzer进行分词"><span class="nav-number">1.4.</span> <span class="nav-text">4. 通过Analyzer进行分词</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-Analysis与Analyzer"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 Analysis与Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-Analyzer的组成"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 Analyzer的组成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Elasticsearch的内置分词器"><span class="nav-number">1.5.</span> <span class="nav-text">5. Elasticsearch的内置分词器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-使用-analyzer-API"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 使用_analyzer API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-1-1-直接指定Analyzer进行测试"><span class="nav-number">1.5.1.1.</span> <span class="nav-text">5.1.1 直接指定Analyzer进行测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-2-指定索引的字段进行测试"><span class="nav-number">1.5.1.2.</span> <span class="nav-text">5.2.2 指定索引的字段进行测试</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-2-3-自定义分词器进行测试"><span class="nav-number">1.5.1.3.</span> <span class="nav-text">5.2.3 自定义分词器进行测试</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-Standard-Analyzer分词器-Elasticsearch的默认分词器"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 Standard Analyzer分词器(Elasticsearch的默认分词器)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-Simple-Analyzer"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 Simple Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-Whitespace-Analyzer"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.3 Whitespace Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-Stop-Analyzer"><span class="nav-number">1.5.5.</span> <span class="nav-text">5.4 Stop Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-Keyword-Analyzer"><span class="nav-number">1.5.6.</span> <span class="nav-text">5.5 Keyword Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-Pattern-Analyzer"><span class="nav-number">1.5.7.</span> <span class="nav-text">5.5 Pattern Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-Language-Analyzer"><span class="nav-number">1.5.8.</span> <span class="nav-text">5.6 Language Analyzer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-中文分词的难点"><span class="nav-number">1.5.9.</span> <span class="nav-text">5.7 中文分词的难点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-ICU-Analyzer"><span class="nav-number">1.5.10.</span> <span class="nav-text">5.8 ICU Analyzer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-Search-API概述"><span class="nav-number">1.6.</span> <span class="nav-text">5. Search API概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-指定查询的索引"><span class="nav-number">1.6.1.</span> <span class="nav-text">5.1 指定查询的索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-URI查询"><span class="nav-number">1.6.2.</span> <span class="nav-text">5.2 URI查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-Request-Body查询"><span class="nav-number">1.6.3.</span> <span class="nav-text">5.3 Request Body查询</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-搜索的返回结果（Response）"><span class="nav-number">1.6.4.</span> <span class="nav-text">5.4 搜索的返回结果（Response）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-相关性"><span class="nav-number">1.6.5.</span> <span class="nav-text">5.5 相关性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-1-搜索的相关性"><span class="nav-number">1.6.5.1.</span> <span class="nav-text">5.5.1 搜索的相关性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-2-衡量相关性"><span class="nav-number">1.6.5.2.</span> <span class="nav-text">5.5.2 衡量相关性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-5-3-Precision-and-Recall"><span class="nav-number">1.6.5.3.</span> <span class="nav-text">5.5.3 Precision and Recall</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-URI-Search-通过URI-query实现搜索"><span class="nav-number">1.6.6.</span> <span class="nav-text">5.6 URI Search:通过URI query实现搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-1-指定字段查询-VS-范查询"><span class="nav-number">1.6.6.1.</span> <span class="nav-text">5.6.1 指定字段查询 VS 范查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-2-Term-VS-Phrase"><span class="nav-number">1.6.6.2.</span> <span class="nav-text">5.6.2 Term VS Phrase</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-3-布尔操作和分组操作"><span class="nav-number">1.6.6.3.</span> <span class="nav-text">5.6.3 布尔操作和分组操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-4-范围查询和算数符号"><span class="nav-number">1.6.6.4.</span> <span class="nav-text">5.6.4 范围查询和算数符号</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-6-5-通配符查询、正则表达式、模糊匹配与近似查询"><span class="nav-number">1.6.6.5.</span> <span class="nav-text">5.6.5 通配符查询、正则表达式、模糊匹配与近似查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7-Request-Body与Query-DSL简介"><span class="nav-number">1.6.7.</span> <span class="nav-text">5.7 Request Body与Query DSL简介</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-1-Request-Body-Search"><span class="nav-number">1.6.7.1.</span> <span class="nav-text">5.7.1 Request Body Search</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-2-分页"><span class="nav-number">1.6.7.2.</span> <span class="nav-text">5.7.2 分页</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-3-排序"><span class="nav-number">1.6.7.3.</span> <span class="nav-text">5.7.3 排序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-4-source-filtering"><span class="nav-number">1.6.7.4.</span> <span class="nav-text">5.7.4 _source filtering</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-5-脚本字段"><span class="nav-number">1.6.7.5.</span> <span class="nav-text">5.7.5 脚本字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-6-使用查询表达式：Match-Query-我们之前学了Term-Query-Phrase-Query"><span class="nav-number">1.6.7.6.</span> <span class="nav-text">5.7.6 使用查询表达式：Match Query(我们之前学了Term Query,Phrase Query)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-7-7-短语搜索：Match-Phrase查询"><span class="nav-number">1.6.7.7.</span> <span class="nav-text">5.7.7 短语搜索：Match Phrase查询</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-8-几种查询方式的总结"><span class="nav-number">1.6.8.</span> <span class="nav-text">5.8 几种查询方式的总结</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-9-Query-String和Simple-Query-String查询"><span class="nav-number">1.6.9.</span> <span class="nav-text">5.9 Query String和Simple Query String查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#5-8-1-Query-String-Query"><span class="nav-number">1.6.9.1.</span> <span class="nav-text">5.8.1 Query String Query</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-8-1-Simple-Query-String-Query"><span class="nav-number">1.6.9.2.</span> <span class="nav-text">5.8.1 Simple Query String Query</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-10-es-match、match-phrase、query-string和term的区别"><span class="nav-number">1.6.10.</span> <span class="nav-text">5.10 es match、match_phrase、query_string和term的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Dynamic-Mapping和常见字段类型"><span class="nav-number">1.7.</span> <span class="nav-text">6. Dynamic Mapping和常见字段类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-什么是Mapping"><span class="nav-number">1.7.1.</span> <span class="nav-text">6.1 什么是Mapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-Elasticsearch字段的数据类型"><span class="nav-number">1.7.2.</span> <span class="nav-text">6.2 Elasticsearch字段的数据类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-什么是Dynamic-Mapping"><span class="nav-number">1.7.3.</span> <span class="nav-text">6.3 什么是Dynamic Mapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-类型的自动识别"><span class="nav-number">1.7.4.</span> <span class="nav-text">6.4 类型的自动识别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-5-能否更改Mapping的字段类型"><span class="nav-number">1.7.5.</span> <span class="nav-text">6.5 能否更改Mapping的字段类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-6-控制Dynamic-Mappings"><span class="nav-number">1.7.6.</span> <span class="nav-text">6.6 控制Dynamic Mappings</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-显示Mapping设置与常见参数"><span class="nav-number">1.8.</span> <span class="nav-text">7 显示Mapping设置与常见参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-如何显示定义一个Mapping"><span class="nav-number">1.8.1.</span> <span class="nav-text">7.1 如何显示定义一个Mapping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-自定义Mapping的一些建议"><span class="nav-number">1.8.2.</span> <span class="nav-text">7.2 自定义Mapping的一些建议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-控制当前字段是否被索引"><span class="nav-number">1.8.3.</span> <span class="nav-text">7.3 控制当前字段是否被索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-index-Options"><span class="nav-number">1.8.4.</span> <span class="nav-text">7.3 index Options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-null-value"><span class="nav-number">1.8.5.</span> <span class="nav-text">7.4 null_value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-5-copy-to设置"><span class="nav-number">1.8.6.</span> <span class="nav-text">7.5 copy_to设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-6-数组类型"><span class="nav-number">1.8.7.</span> <span class="nav-text">7.6 数组类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-多字段特性及Mapping中配置自定义Analyzer"><span class="nav-number">1.9.</span> <span class="nav-text">8. 多字段特性及Mapping中配置自定义Analyzer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-多字段类型"><span class="nav-number">1.9.1.</span> <span class="nav-text">8.1 多字段类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-Exact-Values-精确值-VS-Full-Text-全文本"><span class="nav-number">1.9.2.</span> <span class="nav-text">8.2 Exact Values(精确值) VS Full Text(全文本)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-2-1-Exact-Values不需要被分词（Exact-Values和Full-Text最大的区别）"><span class="nav-number">1.9.2.1.</span> <span class="nav-text">8.2.1 Exact Values不需要被分词（Exact Values和Full Text最大的区别）</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-自定义分词"><span class="nav-number">1.9.3.</span> <span class="nav-text">8.3 自定义分词</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-1-Character-Filters"><span class="nav-number">1.9.3.1.</span> <span class="nav-text">8.3.1 Character Filters</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-2-Tokenizer"><span class="nav-number">1.9.3.2.</span> <span class="nav-text">8.3.2 Tokenizer</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#8-3-3-Token-Filters"><span class="nav-number">1.9.3.3.</span> <span class="nav-text">8.3.3 Token Filters</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-Index-Template和Dynamic-Template"><span class="nav-number">1.10.</span> <span class="nav-text">9. Index Template和Dynamic Template</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-什么是Index-Template"><span class="nav-number">1.10.1.</span> <span class="nav-text">9.1 什么是Index Template</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-1-Index-Template的工作方式"><span class="nav-number">1.10.1.1.</span> <span class="nav-text">9.1.1 Index Template的工作方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#9-1-2-Demo"><span class="nav-number">1.10.1.2.</span> <span class="nav-text">9.1.2 Demo</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-什么是Dynamic-Template"><span class="nav-number">1.10.2.</span> <span class="nav-text">9.2 什么是Dynamic Template</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#9-2-1-Dynamic-Template"><span class="nav-number">1.10.2.1.</span> <span class="nav-text">9.2.1 Dynamic Template</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-Elasticsearch聚合分析简介"><span class="nav-number">1.11.</span> <span class="nav-text">10. Elasticsearch聚合分析简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-什么是聚合？"><span class="nav-number">1.11.1.</span> <span class="nav-text">10.1 什么是聚合？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-聚合的分类"><span class="nav-number">1.11.2.</span> <span class="nav-text">10.2 聚合的分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-Bucket-amp-Metric"><span class="nav-number">1.11.3.</span> <span class="nav-text">10.3 Bucket &amp; Metric</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#10-3-1-Bucket"><span class="nav-number">1.11.3.1.</span> <span class="nav-text">10.3.1 Bucket</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#10-3-2-Metric"><span class="nav-number">1.11.3.2.</span> <span class="nav-text">10.3.2 Metric</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

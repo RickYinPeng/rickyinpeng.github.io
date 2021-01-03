@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Elasticsearch," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="[toc] 二、安装上手1. Elasticsearch的安装和简单配置 Elasticsearch非常容易在个人电脑上搭建环境 下载Elasticsearch安装包https://elasticsearch.cn/download/ Elasticsearch还有官方的Docker镜像，我们可以在Docker中很容易的启动它  2. Elasticsearch的文件目录结构   目录 配置文件">
+<meta name="keywords" content="Elasticsearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch基础学习一">
+<meta property="og:url" content="http://yoursite.com/2021/01/03/ES基础学习一/index.html">
+<meta property="og:site_name" content="RickYinPeng&#39;s blog">
+<meta property="og:description" content="[toc] 二、安装上手1. Elasticsearch的安装和简单配置 Elasticsearch非常容易在个人电脑上搭建环境 下载Elasticsearch安装包https://elasticsearch.cn/download/ Elasticsearch还有官方的Docker镜像，我们可以在Docker中很容易的启动它  2. Elasticsearch的文件目录结构   目录 配置文件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/3.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/2.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/4.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/5.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/6.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/8.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/9.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/10.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/11.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/12.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/13.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/14.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/15.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/16.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/17.png">
+<meta property="og:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/18.png">
+<meta property="og:updated_time" content="2021-01-03T13:02:04.396Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch基础学习一">
+<meta name="twitter:description" content="[toc] 二、安装上手1. Elasticsearch的安装和简单配置 Elasticsearch非常容易在个人电脑上搭建环境 下载Elasticsearch安装包https://elasticsearch.cn/download/ Elasticsearch还有官方的Docker镜像，我们可以在Docker中很容易的启动它  2. Elasticsearch的文件目录结构   目录 配置文件">
+<meta name="twitter:image" content="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/3.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2021/01/03/ES基础学习一/"/>
+
+
+
+
+
+  <title>Elasticsearch基础学习一 | RickYinPeng's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+	<a href="https://github.com/RickYinPeng"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">RickYinPeng's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-search">
+          <a href="/search" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/01/03/ES基础学习一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="RickYinPeng">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/We.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="RickYinPeng's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Elasticsearch基础学习一</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-03T21:00:53+08:00">
+                2021-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>[toc]</p>
+<h1 id="二、安装上手"><a href="#二、安装上手" class="headerlink" title="二、安装上手"></a>二、安装上手</h1><h2 id="1-Elasticsearch的安装和简单配置"><a href="#1-Elasticsearch的安装和简单配置" class="headerlink" title="1. Elasticsearch的安装和简单配置"></a>1. <code>Elasticsearch</code>的安装和简单配置</h2><ol>
+<li><code>Elasticsearch</code>非常容易在个人电脑上搭建环境<br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/3.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/2.png" alt="image"></li>
+<li>下载<code>Elasticsearch</code>安装包<a href="这个地址是中文社区下载的地址">https://elasticsearch.cn/download/</a></li>
+<li><code>Elasticsearch</code>还有官方的<code>Docker</code>镜像，我们可以在<code>Docker</code>中很容易的启动它</li>
+</ol>
+<h2 id="2-Elasticsearch的文件目录结构"><a href="#2-Elasticsearch的文件目录结构" class="headerlink" title="2. Elasticsearch的文件目录结构"></a>2. <code>Elasticsearch</code>的文件目录结构</h2><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>配置文件</th>
+<th>描述 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bin</td>
+<td></td>
+<td>脚本启动，包括启动<code>Elasticsearch</code>,安装插件。运行统计数据等</td>
+</tr>
+<tr>
+<td>config</td>
+<td>elasticsearch.yml</td>
+<td>集群配置文件，user，role based 相关配置</td>
+</tr>
+<tr>
+<td>JDK</td>
+<td></td>
+<td>Java运行环境</td>
+</tr>
+<tr>
+<td>data</td>
+<td>path.data</td>
+<td>数据文件</td>
+</tr>
+<tr>
+<td>lib</td>
+<td></td>
+<td>Java类库</td>
+</tr>
+<tr>
+<td>logs</td>
+<td>path.log</td>
+<td>日志文件</td>
+</tr>
+<tr>
+<td>modules</td>
+<td></td>
+<td>包含所有ES模块</td>
+</tr>
+<tr>
+<td>plugins</td>
+<td></td>
+<td>包含所有已安装插件</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-1-JVM配置"><a href="#2-1-JVM配置" class="headerlink" title="2.1 JVM配置"></a>2.1 <code>JVM</code>配置</h3><ol>
+<li>修改 <code>config/jvm.options</code>,<code>7.1</code>版本的默认设置时 <code>1 GB</code></li>
+<li><code>Xmx</code>和<code>Xms</code>设置成一样</li>
+<li><code>Xmx</code>不要超过机器内存的<code>50%</code></li>
+<li>不要超过<code>30GB</code> - [<a href="https://www.elastic.co/blog/a-heap-of-trouble]" target="_blank" rel="noopener">https://www.elastic.co/blog/a-heap-of-trouble]</a></li>
+</ol>
+<h2 id="3-运行Elasticsearch"><a href="#3-运行Elasticsearch" class="headerlink" title="3. 运行Elasticsearch"></a>3. 运行<code>Elasticsearch</code></h2><h3 id="3-1-启动出现的问题"><a href="#3-1-启动出现的问题" class="headerlink" title="3.1 启动出现的问题"></a>3.1 启动出现的问题</h3><h4 id="max-file-descriptors-4096-for-elasticsearch-process-is-too-low-increase-to-at-least-65536"><a href="#max-file-descriptors-4096-for-elasticsearch-process-is-too-low-increase-to-at-least-65536" class="headerlink" title="max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]"></a>max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]</h4><ol>
+<li><p>每个进程最大同时打开文件数太小，可通过下面2个命令查看当前数量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Hn</span><br><span class="line">ulimit -Sn</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改/etc/security/limits.conf文件，增加配置，用户退出后重新登录生效</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*               soft    nofile          65536</span><br><span class="line">*               hard    nofile          65536</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="max-number-of-threads-3818-for-user-es-is-too-low-increase-to-at-least-4096"><a href="#max-number-of-threads-3818-for-user-es-is-too-low-increase-to-at-least-4096" class="headerlink" title="max number of threads [3818] for user [es] is too low, increase to at least [4096]"></a>max number of threads [3818] for user [es] is too low, increase to at least [4096]</h4><ol>
+<li><p>问题同上，最大线程个数太低。修改配置文件/etc/security/limits.conf（和问题1是一个文件），增加配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*               soft    nproc           4096</span><br><span class="line">*               hard    nproc           4096</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>可通过命令查看</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ulimit -Hu</span><br><span class="line">ulimit -Su</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-increase-to-at-least-262144"><a href="#max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-increase-to-at-least-262144" class="headerlink" title="max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]"></a>max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</h4><ol>
+<li><p>修改/etc/sysctl.conf文件，增加配置vm.max_map_count=262144</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vi /etc/sysctl.conf</span><br><span class="line">sysctl -p</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行命令sysctl -p生效</p>
+</li>
+</ol>
+<h3 id="3-2-启动"><a href="#3-2-启动" class="headerlink" title="3.2 启动"></a>3.2 启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/module/elasticsearch-7.1.0/bin/elasticsearch</span><br></pre></td></tr></table></figure>
+<ul>
+<li>打开浏览器输入:<code>http://192.168.37.130:9200/</code><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/4.png" alt="image"></li>
+</ul>
+<h2 id="4-为Elasticsearch安装插件-我们可以利用插件来实现一些安全策略，来保护我们存储的数据"><a href="#4-为Elasticsearch安装插件-我们可以利用插件来实现一些安全策略，来保护我们存储的数据" class="headerlink" title="4. 为Elasticsearch安装插件(我们可以利用插件来实现一些安全策略，来保护我们存储的数据)"></a>4. 为<code>Elasticsearch</code>安装插件(我们可以利用插件来实现一些安全策略，来保护我们存储的数据)</h2><p><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/5.png" alt="image"></p>
+<h3 id="4-1-查看当前Elasticsearch已经安装的插件"><a href="#4-1-查看当前Elasticsearch已经安装的插件" class="headerlink" title="4.1 查看当前Elasticsearch已经安装的插件"></a>4.1 查看当前<code>Elasticsearch</code>已经安装的插件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 elasticsearch-7.1.0]# bin/elasticsearch-plugin list</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-安装analysis-icu-analysis是一个国际化的分词插件"><a href="#4-2-安装analysis-icu-analysis是一个国际化的分词插件" class="headerlink" title="4.2 安装analysis-icu(analysis是一个国际化的分词插件)"></a>4.2 安装<code>analysis-icu</code>(<code>analysis</code>是一个国际化的分词插件)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop101 elasticsearch-7.1.0]# bin/elasticsearch-plugin install analysis-icu</span><br></pre></td></tr></table></figure>
+<h3 id="4-3-页面查看安装的插件"><a href="#4-3-页面查看安装的插件" class="headerlink" title="4.3 页面查看安装的插件"></a>4.3 页面查看安装的插件</h3><p><code>http://192.168.37.130:9200/_cat/plugins</code><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/6.png" alt="image"></p>
+<h2 id="5-在开发机上运行多个Elasticsearch实例"><a href="#5-在开发机上运行多个Elasticsearch实例" class="headerlink" title="5. 在开发机上运行多个Elasticsearch实例"></a>5. 在开发机上运行多个<code>Elasticsearch</code>实例</h2><ul>
+<li><code>Elasticsearch</code>中一个很大的特色就是以分布式的方式去运行，也就是说你可以在多台机器上去运行多个<code>Elasticsearch</code>实例，这些实例最后组成一个大的集群</li>
+<li>我们现在要在本机以一个多实例的方式去运行它，来了解它的机制</li>
+</ul>
+<h3 id="5-1-修改config-elasticsearch-yml"><a href="#5-1-修改config-elasticsearch-yml" class="headerlink" title="5.1 修改config/elasticsearch.yml"></a>5.1 修改<code>config/elasticsearch.yml</code></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 集群名称</span><br><span class="line">cluster.name: geektime</span><br><span class="line"># 是否锁住内存</span><br><span class="line">bootstrap.memory_lock: false</span><br><span class="line"># 连接地址</span><br><span class="line">network.host: 192.168.2.101</span><br><span class="line"># 候选主节点列表</span><br><span class="line">discovery.seed_hosts: [&quot;192.168.2.101:9301&quot;,&quot;192.168.2.101:9302&quot;,&quot;192.168.2.101:9303&quot;]</span><br><span class="line"># 初始化集群主节点列表</span><br><span class="line">cluster.initial_master_nodes: [&quot;node1&quot;,&quot;node2&quot;,&quot;node3&quot;]</span><br><span class="line"># 开启跨域访问支持，默认为false</span><br><span class="line">http.cors.enabled: true</span><br><span class="line"># # 跨域访问允许的域名地址，(允许所有域名)以上使用正则</span><br><span class="line">http.cors.allow-origin: &quot;*&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="5-2-修改config-jvm-options"><a href="#5-2-修改config-jvm-options" class="headerlink" title="5.2 修改config/jvm.options"></a>5.2 修改<code>config/jvm.options</code></h3><ul>
+<li>因为我是在虚拟机上，内存不是很大，所以这里将<code>JVM</code>内存调小一点<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xms512M</span><br><span class="line">-Xmx512M</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="5-3-创建数据目录和日志目录"><a href="#5-3-创建数据目录和日志目录" class="headerlink" title="5.3 创建数据目录和日志目录"></a>5.3 创建数据目录和日志目录</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#创建数据目录和日志目录</span><br><span class="line">cd data; mkdir data1 data2 data3</span><br><span class="line">cd logs; mkdir logs1 logs2 logs3</span><br></pre></td></tr></table></figure>
+<h3 id="5-4-启动"><a href="#5-4-启动" class="headerlink" title="5.4 启动"></a>5.4 启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 启动(同一台机子)</span><br><span class="line">bin/elasticsearch -E node.name=node1 -E cluster.name=geektime -E path.data=data/data1 -E path.logs=logs/logs1 -E http.port=9201 -E transport.tcp.port=9301 -E node.master=true -E node.data=true </span><br><span class="line">bin/elasticsearch -E node.name=node2 -E cluster.name=geektime -E path.data=data/data2 -E path.logs=logs/logs2 -E http.port=9202 -E transport.tcp.port=9302 -E node.master=true -E node.data=false</span><br><span class="line">bin/elasticsearch -E node.name=node3 -E cluster.name=geektime -E path.data=data/data3 -E path.logs=logs/logs3 -E http.port=9203 -E transport.tcp.port=9303 -E node.master=true -E node.data=false</span><br></pre></td></tr></table></figure>
+<ul>
+<li>访问：<a href="http://192.168.37.130:9201/_cat/nodes，就可以看到集群中的节点了" target="_blank" rel="noopener">http://192.168.37.130:9201/_cat/nodes，就可以看到集群中的节点了</a></li>
+</ul>
+<h2 id="6-Kibana的安装和界面快速浏览"><a href="#6-Kibana的安装和界面快速浏览" class="headerlink" title="6. Kibana的安装和界面快速浏览"></a>6. <code>Kibana</code>的安装和界面快速浏览</h2><h3 id="6-1-下载（都是国内的社区）"><a href="#6-1-下载（都是国内的社区）" class="headerlink" title="6.1 下载（都是国内的社区）"></a>6.1 下载（都是国内的社区）</h3><ul>
+<li><a href="https://elasticsearch.cn/download/" target="_blank" rel="noopener">https://elasticsearch.cn/download/</a></li>
+</ul>
+<h3 id="6-2-配置"><a href="#6-2-配置" class="headerlink" title="6.2 配置"></a>6.2 配置</h3><ul>
+<li>修改<code>config/Kibana.yml</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 用于在任何主机都可以访问</span><br><span class="line">server.host: &quot;0.0.0.0&quot;</span><br><span class="line"># es的地址,这个它默认是9200端口，我们现在启动的是9201、9202、9203，所以这里需要配置一下</span><br><span class="line">elasticsearch.hosts: [&quot;http://192.168.37.130:9201&quot;]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="6-3-启动"><a href="#6-3-启动" class="headerlink" title="6.3 启动"></a>6.3 启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[els@hadoop101 kibana-7.1.0-linux-x86_64]$ bin/kibana</span><br></pre></td></tr></table></figure>
+<h3 id="6-4-设置中文"><a href="#6-4-设置中文" class="headerlink" title="6.4 设置中文"></a>6.4 设置中文</h3><ul>
+<li>在kibana.yml配置文件中添加一行配置 <code>i18n.locale: &quot;zh-CN&quot;</code></li>
+</ul>
+<h3 id="6-4-访问及简单介绍"><a href="#6-4-访问及简单介绍" class="headerlink" title="6.4 访问及简单介绍"></a>6.4 访问及简单介绍</h3><ul>
+<li>访问:<a href="http://192.168.37.130:5601/" target="_blank" rel="noopener">http://192.168.37.130:5601/</a></li>
+</ul>
+<p><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/8.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/9.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/10.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/11.png" alt="image"></p>
+<h2 id="7-在Docker容器中运行Elasticsearch-Kibana和Cerebro"><a href="#7-在Docker容器中运行Elasticsearch-Kibana和Cerebro" class="headerlink" title="7. 在Docker容器中运行Elasticsearch Kibana和Cerebro"></a>7. 在<code>Docker</code>容器中运行<code>Elasticsearch Kibana</code>和<code>Cerebro</code></h2><h3 id="7-1-安装Docker和Docker-Compose"><a href="#7-1-安装Docker和Docker-Compose" class="headerlink" title="7.1 安装Docker和Docker Compose"></a>7.1 安装Docker和Docker Compose</h3><p>自行百度安装</p>
+<h3 id="7-2-Docker-Compose相关命令"><a href="#7-2-Docker-Compose相关命令" class="headerlink" title="7.2 Docker Compose相关命令"></a>7.2 Docker Compose相关命令</h3><ul>
+<li><code>docker-compose up</code>: 运行</li>
+<li><code>docker compose down</code></li>
+<li><code>docker compose down -v</code></li>
+<li><code>docker stop/rm containerID</code></li>
+</ul>
+<h3 id="7-3-运行Docker-comose，本地构建开发环境，直观了解Elasticsearch分布式特性-并集成Cerebro-方便查看集群状态"><a href="#7-3-运行Docker-comose，本地构建开发环境，直观了解Elasticsearch分布式特性-并集成Cerebro-方便查看集群状态" class="headerlink" title="7.3 运行Docker-comose，本地构建开发环境，直观了解Elasticsearch分布式特性,并集成Cerebro,方便查看集群状态"></a>7.3 运行<code>Docker-comose</code>，本地构建开发环境，直观了解<code>Elasticsearch</code>分布式特性,并集成<code>Cerebro</code>,方便查看集群状态</h3><h4 id="7-3-1-docker-compose-yaml文件"><a href="#7-3-1-docker-compose-yaml文件" class="headerlink" title="7.3.1 docker-compose.yaml文件"></a>7.3.1 <code>docker-compose.yaml</code>文件</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'2.2'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  cerebro:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">lmenezes/cerebro:0.8.3</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">cerebro</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9000:9000"</span></span><br><span class="line"><span class="attr">    command:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="bullet">-Dhosts.0.host=http://elasticsearch:9200</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">es7net</span></span><br><span class="line"><span class="attr">  kibana:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">docker.elastic.co/kibana/kibana:7.1.0</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">kibana7</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">I18N_LOCALE=zh-CN</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">XPACK_GRAPH_ENABLED=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">TIMELION_ENABLED=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">XPACK_MONITORING_COLLECTION_ENABLED="true"</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"5601:5601"</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">es7net</span></span><br><span class="line"><span class="attr">  elasticsearch:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">docker.elastic.co/elasticsearch/elasticsearch:7.1.0</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">es7_01</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">cluster.name=geektime</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">node.name=es7_01</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">bootstrap.memory_lock=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">discovery.seed_hosts=es7_01,es7_02</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">cluster.initial_master_nodes=es7_01,es7_02</span></span><br><span class="line"><span class="attr">    ulimits:</span></span><br><span class="line"><span class="attr">      memlock:</span></span><br><span class="line"><span class="attr">        soft:</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">        hard:</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="attr">      - es7data1:</span><span class="string">/usr/share/elasticsearch/data</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="number">9200</span><span class="string">:9200</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">es7net</span></span><br><span class="line"><span class="attr">  elasticsearch2:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">docker.elastic.co/elasticsearch/elasticsearch:7.1.0</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">es7_02</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">cluster.name=geektime</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">node.name=es7_02</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">bootstrap.memory_lock=true</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"ES_JAVA_OPTS=-Xms512m -Xmx512m"</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">discovery.seed_hosts=es7_01,es7_02</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">cluster.initial_master_nodes=es7_01,es7_02</span></span><br><span class="line"><span class="attr">    ulimits:</span></span><br><span class="line"><span class="attr">      memlock:</span></span><br><span class="line"><span class="attr">        soft:</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">        hard:</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="attr">      - es7data2:</span><span class="string">/usr/share/elasticsearch/data</span></span><br><span class="line"><span class="attr">    networks:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">es7net</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line"><span class="attr">  es7data1:</span></span><br><span class="line"><span class="attr">    driver:</span> <span class="string">local</span></span><br><span class="line"><span class="attr">  es7data2:</span></span><br><span class="line"><span class="attr">    driver:</span> <span class="string">local</span></span><br><span class="line"></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  es7net:</span></span><br><span class="line"><span class="attr">    driver:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
+<h4 id="7-3-2-启动运行"><a href="#7-3-2-启动运行" class="headerlink" title="7.3.2 启动运行"></a>7.3.2 启动运行</h4><ul>
+<li>进入有<code>docker-compose.yaml</code>文件的目录运行</li>
+<li>我这里的目录在<code></code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/12.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/13.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/14.png" alt="image"></p>
+<h2 id="8-Logstash安装与导入数据"><a href="#8-Logstash安装与导入数据" class="headerlink" title="8. Logstash安装与导入数据"></a>8. <code>Logstash</code>安装与导入数据</h2><h3 id="8-1-下载并安装"><a href="#8-1-下载并安装" class="headerlink" title="8.1 下载并安装"></a>8.1 下载并安装</h3><ul>
+<li>下载时，我们必须要保证我们的<code>Logstash</code>的版本和我们的<code>Elasticsearch</code>的版本一致</li>
+<li><a href="https://elasticsearch.cn/download/" target="_blank" rel="noopener">https://elasticsearch.cn/download/</a></li>
+</ul>
+<h3 id="8-2-下载logstash数据文件"><a href="#8-2-下载logstash数据文件" class="headerlink" title="8.2 下载logstash数据文件"></a>8.2 下载logstash数据文件</h3><ul>
+<li><code>D:\WorkSpace\rickying-geektime-ELK-master</code></li>
+<li>并将数据导入到Linux中的<code>/opt/module/logstash_data</code><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/15.png" alt="image"><br><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/16.png" alt="image"></li>
+</ul>
+<h3 id="8-2-修改logstash-conf配置文件"><a href="#8-2-修改logstash-conf配置文件" class="headerlink" title="8.2 修改logstash.conf配置文件"></a>8.2 修改<code>logstash.conf</code>配置文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">input &#123;</span><br><span class="line">  file &#123;</span><br><span class="line">    path =&gt; &quot;/opt/module/logstash-7.1.0/bin/movies.csv&quot;</span><br><span class="line">    start_position =&gt; &quot;beginning&quot;</span><br><span class="line">    sincedb_path =&gt; &quot;/dev/null&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">filter &#123;</span><br><span class="line">  csv &#123;</span><br><span class="line">    separator =&gt; &quot;,&quot;</span><br><span class="line">    columns =&gt; [&quot;id&quot;,&quot;content&quot;,&quot;genre&quot;]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mutate &#123;</span><br><span class="line">    split =&gt; &#123; &quot;genre&quot; =&gt; &quot;|&quot; &#125;</span><br><span class="line">    remove_field =&gt; [&quot;path&quot;, &quot;host&quot;,&quot;@timestamp&quot;,&quot;message&quot;]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mutate &#123;</span><br><span class="line"></span><br><span class="line">    split =&gt; [&quot;content&quot;, &quot;(&quot;]</span><br><span class="line">    add_field =&gt; &#123; &quot;title&quot; =&gt; &quot;%&#123;[content][0]&#125;&quot;&#125;</span><br><span class="line">    add_field =&gt; &#123; &quot;year&quot; =&gt; &quot;%&#123;[content][1]&#125;&quot;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  mutate &#123;</span><br><span class="line">    convert =&gt; &#123;</span><br><span class="line">      &quot;year&quot; =&gt; &quot;integer&quot;</span><br><span class="line">    &#125;</span><br><span class="line">    strip =&gt; [&quot;title&quot;]</span><br><span class="line">    remove_field =&gt; [&quot;path&quot;, &quot;host&quot;,&quot;@timestamp&quot;,&quot;message&quot;,&quot;content&quot;]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">output &#123;</span><br><span class="line">   elasticsearch &#123;</span><br><span class="line">     hosts =&gt; &quot;http://localhost:9200&quot;</span><br><span class="line">     index =&gt; &quot;movies&quot;</span><br><span class="line">     document_id =&gt; &quot;%&#123;id&#125;&quot;</span><br><span class="line">   &#125;</span><br><span class="line">  stdout &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/17.png" alt="image"></p>
+<h3 id="8-3-指定配置文件运行logstash"><a href="#8-3-指定配置文件运行logstash" class="headerlink" title="8.3 指定配置文件运行logstash"></a>8.3 指定配置文件运行<code>logstash</code></h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./logstash -f logstash.conf</span><br></pre></td></tr></table></figure>
+<p><img src="http://l.027cgb.com/606599/%E6%9E%81%E5%AE%A2%E6%97%B6%E9%97%B4/ES/%E7%AC%AC%E4%B8%80%E4%BA%8C%E7%AB%A0%E6%A6%82%E8%BF%B0%E4%B8%8E%E5%AE%89%E8%A3%85/18.png" alt="image"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Elasticsearch/" rel="tag"># Elasticsearch</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/02/24/Sqoop/" rel="next" title="Sqoop基础学习">
+                <i class="fa fa-chevron-left"></i> Sqoop基础学习
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/03/ES基础学习二/" rel="prev" title="Elasticsearch基础学习二">
+                Elasticsearch基础学习二 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/We.jpg"
+                alt="RickYinPeng" />
+            
+              <p class="site-author-name" itemprop="name">RickYinPeng</p>
+              <p class="site-description motion-element" itemprop="description">毕生追求无他，爱与自由而已。</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives">
+              
+                  <span class="site-state-item-count">120</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/RickYinPeng" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://weibo.com/u/1041120045?is_hot=1" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-globe"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#二、安装上手"><span class="nav-number">1.</span> <span class="nav-text">二、安装上手</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-Elasticsearch的安装和简单配置"><span class="nav-number">1.1.</span> <span class="nav-text">1. Elasticsearch的安装和简单配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Elasticsearch的文件目录结构"><span class="nav-number">1.2.</span> <span class="nav-text">2. Elasticsearch的文件目录结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-JVM配置"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 JVM配置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-运行Elasticsearch"><span class="nav-number">1.3.</span> <span class="nav-text">3. 运行Elasticsearch</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-启动出现的问题"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 启动出现的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#max-file-descriptors-4096-for-elasticsearch-process-is-too-low-increase-to-at-least-65536"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#max-number-of-threads-3818-for-user-es-is-too-low-increase-to-at-least-4096"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">max number of threads [3818] for user [es] is too low, increase to at least [4096]</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#max-virtual-memory-areas-vm-max-map-count-65530-is-too-low-increase-to-at-least-262144"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-启动"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-为Elasticsearch安装插件-我们可以利用插件来实现一些安全策略，来保护我们存储的数据"><span class="nav-number">1.4.</span> <span class="nav-text">4. 为Elasticsearch安装插件(我们可以利用插件来实现一些安全策略，来保护我们存储的数据)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-查看当前Elasticsearch已经安装的插件"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 查看当前Elasticsearch已经安装的插件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-安装analysis-icu-analysis是一个国际化的分词插件"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 安装analysis-icu(analysis是一个国际化的分词插件)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-页面查看安装的插件"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 页面查看安装的插件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-在开发机上运行多个Elasticsearch实例"><span class="nav-number">1.5.</span> <span class="nav-text">5. 在开发机上运行多个Elasticsearch实例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-修改config-elasticsearch-yml"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 修改config/elasticsearch.yml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-修改config-jvm-options"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 修改config/jvm.options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-创建数据目录和日志目录"><span class="nav-number">1.5.3.</span> <span class="nav-text">5.3 创建数据目录和日志目录</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-启动"><span class="nav-number">1.5.4.</span> <span class="nav-text">5.4 启动</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Kibana的安装和界面快速浏览"><span class="nav-number">1.6.</span> <span class="nav-text">6. Kibana的安装和界面快速浏览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-下载（都是国内的社区）"><span class="nav-number">1.6.1.</span> <span class="nav-text">6.1 下载（都是国内的社区）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-配置"><span class="nav-number">1.6.2.</span> <span class="nav-text">6.2 配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-3-启动"><span class="nav-number">1.6.3.</span> <span class="nav-text">6.3 启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-设置中文"><span class="nav-number">1.6.4.</span> <span class="nav-text">6.4 设置中文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-4-访问及简单介绍"><span class="nav-number">1.6.5.</span> <span class="nav-text">6.4 访问及简单介绍</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-在Docker容器中运行Elasticsearch-Kibana和Cerebro"><span class="nav-number">1.7.</span> <span class="nav-text">7. 在Docker容器中运行Elasticsearch Kibana和Cerebro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-安装Docker和Docker-Compose"><span class="nav-number">1.7.1.</span> <span class="nav-text">7.1 安装Docker和Docker Compose</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-Docker-Compose相关命令"><span class="nav-number">1.7.2.</span> <span class="nav-text">7.2 Docker Compose相关命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-运行Docker-comose，本地构建开发环境，直观了解Elasticsearch分布式特性-并集成Cerebro-方便查看集群状态"><span class="nav-number">1.7.3.</span> <span class="nav-text">7.3 运行Docker-comose，本地构建开发环境，直观了解Elasticsearch分布式特性,并集成Cerebro,方便查看集群状态</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-1-docker-compose-yaml文件"><span class="nav-number">1.7.3.1.</span> <span class="nav-text">7.3.1 docker-compose.yaml文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#7-3-2-启动运行"><span class="nav-number">1.7.3.2.</span> <span class="nav-text">7.3.2 启动运行</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-Logstash安装与导入数据"><span class="nav-number">1.8.</span> <span class="nav-text">8. Logstash安装与导入数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-下载并安装"><span class="nav-number">1.8.1.</span> <span class="nav-text">8.1 下载并安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-下载logstash数据文件"><span class="nav-number">1.8.2.</span> <span class="nav-text">8.2 下载logstash数据文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-修改logstash-conf配置文件"><span class="nav-number">1.8.3.</span> <span class="nav-text">8.2 修改logstash.conf配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-指定配置文件运行logstash"><span class="nav-number">1.8.4.</span> <span class="nav-text">8.3 指定配置文件运行logstash</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">RickYinPeng</span>
+
+  
+</div>
+<div class="powered-by">
+<i class="fa fa-user-md"></i>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+    <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量：<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客：<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
